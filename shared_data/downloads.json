@@ -1,0 +1,37 @@
+{
+  "description": "Model files that are downloaded once instead of being committed. tools/fetch_assets.py (Python) and web/scripts/copy-assets.mjs (Node) download each missing file and refuse it unless its size and SHA-256 match. tests/test_asl_islr.py checks that every hash here equals the one in data/LICENSES.yaml.",
+  "files": [
+    {
+      "path": "models/pose_landmarker_lite.task",
+      "asset_id": "mediapipe-pose-landmarker-lite",
+      "url": "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task",
+      "bytes": 5777746,
+      "sha256": "59929e1d1ee95287735ddd833b19cf4ac46d29bc7afddbbf6753c459690d574a",
+      "needed_for": "capture v2 (both PSL and ASL modes)"
+    },
+    {
+      "path": "models/face_landmarker.task",
+      "asset_id": "mediapipe-face-landmarker",
+      "url": "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task",
+      "bytes": 3758596,
+      "sha256": "64184e229b263107bc2b804c6625db1341ff2bb731874b0bcc2fe6544e0bc9ff",
+      "needed_for": "capture v2 (both PSL and ASL modes)"
+    },
+    {
+      "path": "models/asl/model.tflite",
+      "asset_id": "asl-islr-1st-place-tflite",
+      "url": "https://huggingface.co/sign/kaggle-asl-signs-1st-place/resolve/main/model.tflite",
+      "bytes": 11242036,
+      "sha256": "f55a2bb1ebe6d1e912a98e31c6ef3f995c9ae261f408fe115f2008099d3f0bb7",
+      "needed_for": "ASL mode"
+    },
+    {
+      "path": "models/asl/sign_to_prediction_index_map.json",
+      "asset_id": "asl-islr-1st-place-tflite",
+      "url": "https://huggingface.co/sign/kaggle-asl-signs-1st-place/resolve/main/sign_to_prediction_index_map.json",
+      "bytes": 3352,
+      "sha256": "1fe747c2f44c68dbb396947e35193c96d363f3dede0be8defa5e08546400bf5d",
+      "needed_for": "ASL mode"
+    }
+  ]
+}

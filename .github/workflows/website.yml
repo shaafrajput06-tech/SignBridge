@@ -1,0 +1,122 @@
+# Builds the SignBridge website, runs every check, and publishes the site on GitHub Pages:
+#   https://<owner>.github.io/<repository>/
+# Runs on every push to main, or by hand from the Actions tab ("Run workflow").
+#
+# The checks never block the website: their results are published with it, in /ci/
+# (status.json, tests.txt, licences-release.txt, asl-selftest.json), so anyone can see them.
+# One-time setting (docs/WEBSITE.md): Settings > Pages > Build and deployment > Source: GitHub Actions.
+name: Website and checks
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build the website and run the checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install Python packages
+        run: python -m pip install -r requirements.txt
+
+      - name: Download the pinned model files (size and SHA-256 checked)
+        run: python tools/fetch_assets.py
+
+      - name: Install website packages
+        working-directory: web
+        run: npm install --no-audit --no-fund
+
+      - name: Run every test suite
+        id: tests
+        continue-on-error: true
+        run: |
+          mkdir -p ci-results
+          python tools/run_all_tests.py 2>&1 | tee ci-results/tests.txt
+          exit ${PIPESTATUS[0]}
+
+      - name: Licence check with store-release rules
+        id: licences
+        continue-on-error: true
+        run: |
+          python tools/check_licenses.py --release 2>&1 | tee ci-results/licences-release.txt
+          exit ${PIPESTATUS[0]}
+
+      - name: Install Chromium for the browser checks
+        working-directory: web
+        run: npm install --no-save --no-audit --no-fund playwright && npx playwright install --with-deps chromium
+
+      - name: Build with the local server enabled (for the browser checks)
+        working-directory: web
+        run: npm run build
+
+      - name: ASL mode in a real browser, compared with the server
+        id: asl
+        continue-on-error: true
+        run: |
+          python -m uvicorn backend.app:app --host 127.0.0.1 --port 8000 > ci-results/server.log 2>&1 &
+          for i in $(seq 1 60); do curl -sf http://127.0.0.1:8000/api/health > /dev/null && break; sleep 1; done
+          cd web
+          SELFTEST_API=http://127.0.0.1:8000 SELFTEST_OUT=../ci-results/asl-selftest.json node tests/asl-selftest-run.mjs
+
+      - name: Build the website for GitHub Pages (no server; everything runs in the browser)
+        working-directory: web
+        env:
+          VITE_API_BASE: none
+        run: npm run build
+
+      - name: Add the check results to the website
+        run: |
+          mkdir -p web/dist/ci
+          cp ci-results/* web/dist/ci/ 2>/dev/null || true
+          cat > web/dist/ci/status.json <<EOF
+          {
+            "commit": "${GITHUB_SHA}",
+            "built_at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+            "tests": "${{ steps.tests.outcome }}",
+            "licence_release_rules": "${{ steps.licences.outcome }}",
+            "asl_browser_and_server_check": "${{ steps.asl.outcome }}",
+            "run": "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          }
+          EOF
+          test -f web/dist/models/asl/model.tflite
+          test -f web/dist/models/pose_landmarker_lite.task
+          test -f web/dist/models/face_landmarker.task
+          test -d web/dist/litert
+          touch web/dist/.nojekyll
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: web/dist
+
+  deploy:
+    name: Publish to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

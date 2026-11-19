@@ -1,0 +1,65 @@
+id,english,category,psl_train_source,psl_train_label,psl_train_match,psl_eval_only_label,psl_reference_clip,psl_reference_note,asl_mode_label,asl_match,fast_track_status,notes
+hello,Hello,Greetings and manners,psl-signspeak-words,hi/hello,exact,,,,hello,exact,PSL camera: trainable from public data,current Phase 0 demo gesture OPEN_PALM is a demo hand shape with no PSL source recorded
+goodbye,Goodbye,Greetings and manners,psl-signspeak-words,goodbye,exact,,,,bye,exact,PSL camera: trainable from public data,
+thank_you,Thank you,Greetings and manners,psl-signspeak-words,thankyou,exact,,,,thankyou,exact,PSL camera: trainable from public data,current Phase 0 demo gesture THREE_FINGERS is a demo hand shape with no PSL source recorded
+please,Please,Greetings and manners,psl-signspeak-words,please,exact,,,,please,exact,PSL camera: trainable from public data,current Phase 0 demo gesture VICTORY is a demo hand shape with no PSL source recorded
+sorry,Sorry,Greetings and manners,,,,,,,,,No shippable PSL data yet,
+welcome,Welcome,Greetings and manners,psl-signspeak-words,welcome,exact,,pk-hfad-1_welcome(reception),sense to check,,,PSL camera: trainable from public data,
+excuse_me,Excuse me,Greetings and manners,psl-signspeak-words,excuseme,exact,,,,,,PSL camera: trainable from public data,
+yes,Yes,Basic communication,,,,yes,,,yes,exact,No shippable PSL data yet,current Phase 0 demo gesture THUMBS_UP is a demo hand shape with no PSL source recorded
+no,No,Basic communication,,,,no,pk-hfad-1_not,token 'no',no,exact,PSL camera: suggestion from one dictionary clip,current Phase 0 demo gesture CLOSED_FIST is a demo hand shape with no PSL source recorded
+help,Help,Basic communication,,,,,pk-hfad-1_help,,,,PSL camera: suggestion from one dictionary clip,current Phase 0 demo gesture POINT is a demo hand shape with no PSL source recorded
+stop,Stop,Basic communication,,,,,,,,,No shippable PSL data yet,current Phase 0 demo gesture STOP_PALM is a demo hand shape with no PSL source recorded
+wait,Wait,Basic communication,,,,,pk-hfad-1_wait,,wait,exact,PSL camera: suggestion from one dictionary clip,current Phase 0 demo gesture INDEX_UP is a demo hand shape with no PSL source recorded
+come,Come,Basic communication,psl-signspeak-words,comehere,phrase 'come here': check with a Deaf validator,,pk-hfad-1_aao,Urdu imperative 'come',,,PSL camera: trainable from public data,
+go,Go,Basic communication,,,,,pk-hfad-1_jao,Urdu imperative 'go',go,exact,PSL camera: suggestion from one dictionary clip,"psl-signspeak-words has 'goaway' (go away), a different phrase: not mapped"
+understand,Understand,Basic communication,,,,,,,,,No shippable PSL data yet,
+i_do_not_understand,I do not understand,Basic communication,,,,,,,,,No shippable PSL data yet,
+repeat,Repeat,Basic communication,,,,,,,,,No shippable PSL data yet,
+speak_slowly,Speak slowly,Basic communication,,,,,,,,,No shippable PSL data yet,
+sit,Sit,Daily actions,,,,,,,,,No shippable PSL data yet,
+stand,Stand,Daily actions,,,,,,,,,No shippable PSL data yet,
+eat,Eat,Daily actions,,,,,,,,,No shippable PSL data yet,
+drink,Drink,Daily actions,,,,,,,drink,exact,No shippable PSL data yet,
+sleep,Sleep,Daily actions,,,,,,,sleep,exact,No shippable PSL data yet,
+open,Open,Daily actions,,,,,,,open,exact,No shippable PSL data yet,
+close,Close,Daily actions,,,,,pk-hfad-1_shut,,close,exact,PSL camera: suggestion from one dictionary clip,
+write,Write,Daily actions,,,,,,,,,No shippable PSL data yet,
+read,Read,Daily actions,,,,,,,read,exact,No shippable PSL data yet,
+play,Play,Daily actions,,,,,pk-hfad-1_play(sports),sense: sports,,,PSL camera: suggestion from one dictionary clip,
+mother,Mother,People and places,,,,,pk-hfad-1_mother,,mom,exact,PSL camera: suggestion from one dictionary clip,
+father,Father,People and places,,,,,pk-hfad-1_papa,,dad,exact,PSL camera: suggestion from one dictionary clip,
+friend,Friend,People and places,,,,,pk-hfad-1_friend,,,,PSL camera: suggestion from one dictionary clip,
+family,Family,People and places,,,,,pk-hfad-1_family,,,,PSL camera: suggestion from one dictionary clip,
+teacher,Teacher,People and places,,,,,pk-hfad-1_teacher,,,,PSL camera: suggestion from one dictionary clip,
+doctor,Doctor,People and places,,,,,pk-hfad-1_doctor(physician),,,,PSL camera: suggestion from one dictionary clip,
+home,Home,People and places,,,,,pk-hfad-1_house,token 'home',home,exact,PSL camera: suggestion from one dictionary clip,
+school,School,People and places,,,,,pk-hfad-1_school,,,,PSL camera: suggestion from one dictionary clip,
+hospital,Hospital,People and places,,,,,pk-hfad-1_hospital,,,,PSL camera: suggestion from one dictionary clip,
+market,Market,People and places,,,,,pk-hfad-1_market,,store,related,PSL camera: suggestion from one dictionary clip,
+water,Water,Food and objects,psl-signspeak-words,water,exact,,,,water,exact,PSL camera: trainable from public data,current Phase 0 demo gesture FOUR_FINGERS is a demo hand shape with no PSL source recorded
+food,Food,Food and objects,,,,,,,food,exact,No shippable PSL data yet,
+tea,Tea,Food and objects,,,,,pk-hfad-1_tea,,,,PSL camera: suggestion from one dictionary clip,
+phone,Phone,Food and objects,psl-signspeak-words,mobilephone,exact (mobile phone),,,,callonphone,related,PSL camera: trainable from public data,current Phase 0 demo gesture CALL_ME is a demo hand shape with no PSL source recorded
+money,Money,Food and objects,,,,,,,,,No shippable PSL data yet,
+book,Book,Food and objects,,,,,pk-hfad-1_book,,book,exact,PSL camera: suggestion from one dictionary clip,
+bag,Bag,Food and objects,,,,,pk-hfad-1_bag(noun),,,,PSL camera: suggestion from one dictionary clip,
+medicine,Medicine,Food and objects,,,,,pk-hfad-1_medication,,,,PSL camera: suggestion from one dictionary clip,
+good,Good,Feelings and emergency,,,,good,pk-hfad-1_good,,,,PSL camera: suggestion from one dictionary clip,current Phase 0 demo gesture OK is a demo hand shape with no PSL source recorded
+bad,Bad,Feelings and emergency,psl-pkslmnm,bad,exact,,,,bad,exact,PSL camera: trainable from public data,current Phase 0 demo gesture THUMBS_DOWN is a demo hand shape with no PSL source recorded
+happy,Happy,Feelings and emergency,psl-pkslmnm,glad,'glad': check it is the same sign as 'happy',,pk-hfad-1_happiness,token 'happy',happy,exact,PSL camera: trainable from public data,
+sad,Sad,Feelings and emergency,psl-pkslmnm,sad,exact,,pk-hfad-1_unhappy,token 'sad',sad,exact,PSL camera: trainable from public data,
+pain,Pain,Feelings and emergency,,,,,pk-hfad-1_ache,token 'pain',owie,related,PSL camera: suggestion from one dictionary clip,
+emergency,Emergency,Feelings and emergency,,,,,pk-hfad-1_emergency,,,,PSL camera: suggestion from one dictionary clip,current Phase 0 demo gesture FIVE_FINGERS is a demo hand shape with no PSL source recorded
+call,Call,Feelings and emergency,,,,,,,callonphone,related,No shippable PSL data yet,
+dangerous,Dangerous,Feelings and emergency,,,,dangerous,,,,,No shippable PSL data yet,
+what,What?,Questions and time,,,,,pk-hfad-1_what,,,,PSL camera: suggestion from one dictionary clip,
+where,Where?,Questions and time,,,,,,,where,exact,No shippable PSL data yet,
+who,Who?,Questions and time,,,,,pk-hfad-1_who,,who,exact,PSL camera: suggestion from one dictionary clip,
+when,When?,Questions and time,,,,,pk-hfad-1_when,,,,PSL camera: suggestion from one dictionary clip,
+how_are_you,How are you?,Questions and time,,,,,aap + kesy (word by word),,,,"PSL clips only, word by word",
+i_am_fine,I am fine,Questions and time,,,,,,,fine,related,No shippable PSL data yet,
+my_name_is,My name is,Questions and time,,,,,mera + name (word by word),,,,"PSL clips only, word by word",
+today,Today,Questions and time,,,,,pk-hfad-1_today,,,,PSL camera: suggestion from one dictionary clip,
+tomorrow,Tomorrow,Questions and time,,,,,pk-hfad-1_tomorrow,,tomorrow,exact,PSL camera: suggestion from one dictionary clip,
+time,Time,Questions and time,,,,,pk-hfad-1_time,,time,exact,PSL camera: suggestion from one dictionary clip,

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SignBridge capture v2 benchmark</title>
+    <style>
+      body { font-family: system-ui, sans-serif; margin: 24px; max-width: 760px; background: #0d1917; color: #e9f2ee; }
+      button { font-size: 16px; padding: 10px 16px; margin-right: 8px; border-radius: 8px; border: 0; background: #55b993; color: #0d1917; cursor: pointer; }
+      button:disabled { opacity: 0.5; cursor: default; }
+      label { display: inline-block; margin: 12px 12px 12px 0; }
+      video { width: 320px; border-radius: 8px; transform: scaleX(-1); background: #13221f; display: block; margin: 12px 0; }
+      pre { background: #13221f; padding: 12px; border-radius: 8px; white-space: pre-wrap; }
+      .note { color: #9fb8ad; font-size: 14px; }
+    </style>
+  </head>
+  <body>
+    <h1>Capture v2 benchmark</h1>
+    <p class="note">Measures how many frames per second this browser can landmark with the v2 capture (both hands, pose, face). Phase 1 needs at least 24 fps on a mid-range laptop. Camera frames stay in this tab: nothing is recorded, saved or uploaded. Plug the laptop in, close other heavy tabs, and sit in front of the camera so all parts are detected.</p>
+    <label>Seconds <input id="seconds" type="number" min="5" max="120" value="30" /></label>
+    <label>Resolution
+      <select id="resolution">
+        <option value="640x480">640 x 480</option>
+        <option value="1280x720" selected>1280 x 720</option>
+      </select>
+    </label>
+    <label><input id="face" type="checkbox" checked /> Face</label>
+    <div>
+      <button id="start">Start benchmark</button>
+      <button id="copy" disabled>Copy result</button>
+    </div>
+    <video id="video" playsinline muted></video>
+    <pre id="output">Not started.</pre>
+    <script type="module" src="/src/bench.js"></script>
+  </body>
+</html>

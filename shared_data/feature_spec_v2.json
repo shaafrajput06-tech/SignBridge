@@ -1,0 +1,72 @@
+{
+  "spec": "SignBridge feature spec",
+  "feature_version": "v2",
+  "spec_version": "2.0.0",
+  "implementations": [
+    "ml_engine/features_v2.py (reference)",
+    "web/src/features_v2.js"
+  ],
+  "coordinate_frame": {
+    "canonical_view": "unmirrored",
+    "description": "Landmarks are stored as the camera sees the signer: an upright, unmirrored image (the signer's right hand appears on the image's left). Mirroring is a display concern only. Inputs that were mirrored before landmarking are un-mirrored by canonicalize, and the left/right labels of pose and face points are swapped back.",
+    "sides": "left and right always mean the signer's anatomical left and right",
+    "units": "x and y are normalised image coordinates (0..1 across width and height) after rotation correction; z is MediaPipe's relative depth for that part",
+    "rotation": "frames are rotated to upright before landmarking (see tests/golden/rotation_cases.json)"
+  },
+  "parts": [
+    {"name": "left_hand", "count": 21, "source": "MediaPipe Hand Landmarker, 21 points, signer's left hand"},
+    {"name": "right_hand", "count": 21, "source": "MediaPipe Hand Landmarker, 21 points, signer's right hand"},
+    {"name": "pose", "count": 9, "source": "MediaPipe Pose Landmarker, upper-body subset", "indices": [0, 11, 12, 13, 14, 15, 16, 23, 24],
+     "names": ["nose", "left_shoulder", "right_shoulder", "left_elbow", "right_elbow", "left_wrist", "right_wrist", "left_hip", "right_hip"]},
+    {"name": "face", "count": 69, "source": "MediaPipe Face Landmarker (478-point mesh), fixed subset",
+     "groups": {
+       "lips_outer": [61, 146, 91, 181, 84, 17, 314, 405, 321, 375, 291, 185, 40, 39, 37, 0, 267, 269, 270, 409],
+       "lips_inner": [78, 95, 88, 178, 87, 14, 317, 402, 318, 324, 308, 191, 80, 81, 82, 13, 312, 311, 310, 415],
+       "right_eyebrow": [46, 53, 52, 65, 55, 70, 63, 105, 66, 107],
+       "left_eyebrow": [276, 283, 282, 295, 285, 300, 293, 334, 296, 336],
+       "eye_corners": [33, 133, 362, 263],
+       "nose_tip": [1],
+       "head": [10, 152, 234, 454]
+     },
+     "group_order": ["lips_outer", "lips_inner", "right_eyebrow", "left_eyebrow", "eye_corners", "nose_tip", "head"],
+     "notes": "Lips, eyebrows and eye corners use MediaPipe's FACE_LANDMARKS_LIPS / _EYEBROW / _EYE sets (checked against mediapipe 0.10.32). 'head' (forehead 10, chin 152, face edges 234/454) is added for head pose, which Phase 6 needs for head-shake negation."}
+  ],
+  "mirror_pairs": {
+    "pose": [[11, 12], [13, 14], [15, 16], [23, 24]],
+    "face": [[61, 291], [146, 375], [91, 321], [181, 405], [84, 314], [185, 409], [40, 270], [39, 269], [37, 267],
+             [78, 308], [95, 324], [88, 318], [178, 402], [87, 317], [191, 415], [80, 310], [81, 311], [82, 312],
+             [46, 276], [53, 283], [52, 282], [65, 295], [55, 285], [70, 300], [63, 293], [105, 334], [66, 296], [107, 336],
+             [33, 263], [133, 362], [234, 454]],
+    "notes": "Indices in the source model's numbering. Midline points (face 17, 0, 14, 13, 1, 10, 152; pose 0) map to themselves. Lip pairs follow the ring order of FACE_LANDMARKS_LIPS; the 234/454 pair sits 8 steps either side of 10 on FACE_LANDMARKS_FACE_OVAL."
+  },
+  "hand_assignment": {
+    "order": ["pose", "label", "position"],
+    "pose": "When the pose is present, each detected hand goes to the nearer pose wrist (left_wrist 15, right_wrist 16), measured in aspect-correct pixels; with two hands the pairing with the smaller total distance wins.",
+    "label": "Without a pose, MediaPipe's handedness label is used. MediaPipe labels assume a mirrored (selfie) input, so for unmirrored input the label is swapped.",
+    "position": "If both hands get the same label, the hand further left in the canonical (unmirrored) image is the signer's right hand.",
+    "codes": {"none": 0, "pose": 1, "label": 2, "position": 3}
+  },
+  "normalisation": {
+    "pixels": "X = x * image_width, Y = y * image_height, Z = z * image_width (aspect-correct units)",
+    "origin": "component-wise median over the sequence of the shoulder midpoint (pose 11 and 12, X and Y only), using frames with a pose",
+    "scale": "median over the same frames of the 2D shoulder width",
+    "fallback": "no pose frame, or scale <= 1e-6: origin = centre of the first frame's image, scale = first frame's image_height / 4, and the reference_from_pose mask is 0",
+    "z": "Z is divided by the scale but not re-centred. Each part keeps MediaPipe's own depth origin (hand: wrist, face: face centre, pose: hip midpoint), so z is not comparable across parts. Distances therefore use X and Y only."
+  },
+  "blocks": [
+    {"name": "positions", "size": 360, "description": "all 120 points in part order, (X - origin_x)/scale, (Y - origin_y)/scale, Z/scale; zeros where the part is absent"},
+    {"name": "hand_shape", "size": 126, "description": "per hand (left then right): 21 points minus the wrist, divided by the largest 2D wrist distance; never mirrored; zeros when absent or degenerate (scale <= 1e-9)"},
+    {"name": "velocity", "size": 360, "description": "(positions[t] - positions[t-1]) / dt_seconds per point; zero at t = 0 and wherever the part is absent in either frame"},
+    {"name": "hand_face_distance", "size": 84, "description": "per hand (left then right), per hand point [0, 4, 8, 12, 16, 20], per face anchor [1, 13, 14, 152, 10, 33, 263]: 2D distance in positions units; zeros when the hand or the face is absent", "hand_points": [0, 4, 8, 12, 16, 20], "face_anchors": [1, 13, 14, 152, 10, 33, 263]},
+    {"name": "hand_hand_distance", "size": 36, "description": "left hand point i to right hand point j for i, j in [0, 4, 8, 12, 16, 20]: 2D distance in positions units; zeros unless both hands are present", "hand_points": [0, 4, 8, 12, 16, 20]},
+    {"name": "masks", "size": 5, "description": "1.0 / 0.0 for left_hand, right_hand, pose, face present, and reference_from_pose (sequence-wide)"}
+  ],
+  "features_per_frame": 971,
+  "timestamps": "integer milliseconds, strictly increasing within a sequence",
+  "capture_models": {
+    "hand": {"file": "hand_landmarker.task", "url": "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task", "num": 2},
+    "pose": {"file": "pose_landmarker_lite.task", "url": "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task", "num": 1},
+    "face": {"file": "face_landmarker.task", "url": "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task", "num": 1},
+    "notes": "Pose + Hand + Face landmarkers are used on Python and web alike. The Python mediapipe package (0.10.32 here) has no Holistic Landmarker, so the split models keep both platforms on the same model stack. Licence entries for these files belong in data/LICENSES.yaml (Phase 2)."
+  }
+}

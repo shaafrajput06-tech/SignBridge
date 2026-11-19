@@ -1,0 +1,559 @@
+# SignBridge licence ledger (CLAUDE.md section 4).
+#
+# Every dataset, model weight file, reference-clip collection, font and own-data collection the
+# project uses or has evaluated has one entry here. tools/check_licenses.py validates this file
+# against data/licenses.schema.json and fails when a file in models/, data/, fonts/,
+# web/public/models/ or mobile/assets/ is not covered by an entry that allows its use.
+# Code that trains on or ships an asset calls data_engine.ledger.assert_allowed(asset_id, use).
+#
+# Uses (allowed_uses):
+#   pretrain_encoder      train a motion encoder on it, no labels carried over
+#   train_labels          train a classifier on its labels
+#   evaluate              measure accuracy on it; nothing from it is shipped
+#   reference_clip        show its clips to users
+#   redistribute_weights  ship model weights (its own, or weights trained on it)
+#   redistribute_data     ship or re-publish its files
+#
+# status: cleared | cleared_with_conditions | permission_needed | blocked | not_available | unverified
+# Only cleared / cleared_with_conditions entries may have files in the repository.
+# label_scope asl_mode_only: labels may be used only inside the separate ASL mode (CLAUDE.md 8.2).
+#
+# All entries below were checked on 2026-11-18 by the agent from the public pages named in
+# licence_evidence. Facts marked "third-party" come from a catalogue, not the publisher, and must be
+# re-checked when the data is downloaded. Sizes are bytes unless a unit is given.
+
+schema_version: 1
+assets:
+
+  # ------------------------------------------------------------------ capture models (shipped)
+
+  - id: mediapipe-hand-landmarker
+    name: MediaPipe Hand Landmarker model bundle (float16, version 1)
+    kind: capture_model
+    sign_language: none
+    label_scope: none
+    source_url: https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task
+    other_urls:
+      - https://storage.googleapis.com/mediapipe-assets/Model%20Card%20Hand%20Tracking%20(Lite_Full)%20with%20Fairness%20Oct%202021.pdf
+    licence: Apache-2.0
+    licence_url: https://www.apache.org/licenses/LICENSE-2.0
+    licence_evidence: "MediaPipe model card 'Hand Tracking (Lite/Full) with Fairness, Oct 2021' states it is licensed under the Apache License, Version 2.0 (read 2026-11-18)."
+    allowed_uses: {pretrain_encoder: false, train_labels: false, evaluate: true, reference_clip: false, redistribute_weights: true, redistribute_data: true}
+    conditions: [attribution]
+    attribution: "MediaPipe Hand Landmarker, Copyright Google LLC, Apache License 2.0."
+    status: cleared_with_conditions
+    checked_on: "2026-11-18"
+    checked_by: agent
+    files:
+      - path: models/hand_landmarker.task
+        sha256: fbc2a30080c3c557093b5ddfc334698132eb341044ccee322ccf8bcf3607cde1
+      - path: web/public/models/hand_landmarker.task
+        sha256: fbc2a30080c3c557093b5ddfc334698132eb341044ccee322ccf8bcf3607cde1
+    facts: {size_bytes: 7819105, committed: true}
+    notes: "Committed in models/ since Phase 0; copied into web/public/models/ by web/scripts/copy-assets.mjs."
+
+  - id: mediapipe-pose-landmarker-lite
+    name: MediaPipe Pose Landmarker lite model bundle (float16, version 1)
+    kind: capture_model
+    sign_language: none
+    label_scope: none
+    source_url: https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task
+    licence: Apache-2.0
+    licence_url: https://www.apache.org/licenses/LICENSE-2.0
+    licence_evidence: "MediaPipe models are published under Apache-2.0 (hand model card read 2026-11-18). The BlazePose model card itself was not re-read in this session: re-read it before the first store release."
+    allowed_uses: {pretrain_encoder: false, train_labels: false, evaluate: true, reference_clip: false, redistribute_weights: true, redistribute_data: true}
+    conditions: [attribution]
+    attribution: "MediaPipe Pose Landmarker, Copyright Google LLC, Apache License 2.0."
+    status: cleared_with_conditions
+    checked_on: "2026-11-18"
+    checked_by: agent
+    files:
+      - path: models/pose_landmarker_lite.task
+        sha256: 59929e1d1ee95287735ddd833b19cf4ac46d29bc7afddbbf6753c459690d574a
+      - path: web/public/models/pose_landmarker_lite.task
+        sha256: 59929e1d1ee95287735ddd833b19cf4ac46d29bc7afddbbf6753c459690d574a
+    facts: {size_bytes: 5777746}
+    notes: "Downloaded on first use (tools/fetch_assets.py, ml_engine/capture_v2.ensure_capture_model, web/scripts/copy-assets.mjs); not committed. SHA-256 recorded 2026-11-18 from the official URL."
+
+  - id: mediapipe-face-landmarker
+    name: MediaPipe Face Landmarker model bundle (float16, version 1)
+    kind: capture_model
+    sign_language: none
+    label_scope: none
+    source_url: https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task
+    licence: Apache-2.0
+    licence_url: https://www.apache.org/licenses/LICENSE-2.0
+    licence_evidence: "MediaPipe models are published under Apache-2.0 (hand model card read 2026-11-18). The Face Mesh V2 model card itself was not re-read in this session: re-read it before the first store release."
+    allowed_uses: {pretrain_encoder: false, train_labels: false, evaluate: true, reference_clip: false, redistribute_weights: true, redistribute_data: true}
+    conditions: [attribution]
+    attribution: "MediaPipe Face Landmarker, Copyright Google LLC, Apache License 2.0."
+    status: cleared_with_conditions
+    checked_on: "2026-11-18"
+    checked_by: agent
+    files:
+      - path: models/face_landmarker.task
+        sha256: 64184e229b263107bc2b804c6625db1341ff2bb731874b0bcc2fe6544e0bc9ff
+      - path: web/public/models/face_landmarker.task
+        sha256: 64184e229b263107bc2b804c6625db1341ff2bb731874b0bcc2fe6544e0bc9ff
+    facts: {size_bytes: 3758596}
+    notes: "Downloaded on first use; not committed. SHA-256 recorded 2026-11-18 from the official URL."
+
+  # ------------------------------------------------------------------ PSL: sign -> text
+
+  - id: psl-signspeak-words
+    name: Dynamic Word-Level Pakistan Sign Language dataset (SignSpeak, Sherwani et al., COMSATS Abbottabad)
+    kind: dataset
+    sign_language: PSL
+    label_scope: psl
+    source_url: https://www.kaggle.com/datasets/mohib123456/dynamic-word-level-pakistan-sign-language-dataset
+    other_urls:
+      - https://huggingface.co/datasets/mohibkhansherwani/DynamicWordLevelPakistanSignLanguageDataset
+      - https://github.com/MohibUllahKhanSherwani/SignSpeak_FYP
+    licence: Apache-2.0
+    licence_url: https://www.apache.org/licenses/LICENSE-2.0
+    licence_evidence: "Kaggle dataset API metadata (licence 'Apache 2.0', version 3, updated 2026-06-28) and Hugging Face dataset card (license: apache-2.0, DOI 10.57967/hf/8164), both read 2026-11-18."
+    allowed_uses: {pretrain_encoder: true, train_labels: true, evaluate: true, reference_clip: false, redistribute_weights: true, redistribute_data: true}
+    conditions: [attribution]
+    attribution: "Dynamic Word-Level Pakistan Sign Language Dataset by Mohib Ullah Khan Sherwani and the SignSpeak team, COMSATS University Islamabad, Abbottabad Campus (Apache License 2.0, doi:10.57967/hf/8164)."
+    status: cleared_with_conditions
+    checked_on: "2026-11-18"
+    checked_by: agent
+    files:
+      - path: data/psl-signspeak-words/*
+    facts:
+      kaggle_v3: "70+ words, 100 samples per word (mobile 30, laptop 50, webcam 20), 410548665 bytes"
+      huggingface: "60+ words, 70 samples per word (MP_Data 50 webcam, MP_Data_mobile 20), two zips 158784931 + 276450712 bytes"
+      format: "MediaPipe hand landmarks only: 21 points x (x, y, z) x 2 hands = 126 values per frame, 60 frames per sample; no video kept"
+      signers: "multiple; count not stated; no signer IDs published"
+      deaf_validation: "not stated"
+    notes: "No signer IDs, so any split is 'weaker' (CLAUDE.md 1). Signs were copied from PSL website clips listed in links_to_words.txt. No pose or face, so features v2 is computed with the documented no-pose fallback (reference_from_pose = 0)."
+
+  - id: psl-ualpha40
+    name: "UAlpha40: Urdu alphabet for Pakistan Sign Language (Bahria University Karachi)"
+    kind: dataset
+    sign_language: PSL
+    label_scope: psl
+    source_url: https://data.mendeley.com/datasets/3pvnnckxyb/3
+    other_urls:
+      - https://pmc.ncbi.nlm.nih.gov/articles/PMC11848795/
+    licence: CC-BY-4.0
+    licence_url: https://creativecommons.org/licenses/by/4.0/
+    licence_evidence: "Mendeley Data page, version 3 (7 January 2025), licence CC BY 4.0, read 2026-11-18. Data in Brief article doi:10.1016/j.dib.2025.111342."
+    allowed_uses: {pretrain_encoder: true, train_labels: true, evaluate: true, reference_clip: true, redistribute_weights: true, redistribute_data: true}
+    conditions: [attribution]
+    attribution: "UAlpha40 by Sameena Javaid, Shahood Sajid and Yusra Khan Baloch, Bahria University (CC BY 4.0, doi:10.17632/3pvnnckxyb.3)."
+    status: cleared_with_conditions
+    checked_on: "2026-11-18"
+    checked_by: agent
+    files:
+      - path: data/psl-ualpha40/*
+    facts:
+      classes: "40 Urdu letters: 36 static (JPG) + 4 dynamic (MP4)"
+      samples: "22,280 images (2,897 original + 19,383 augmented) and 393 videos"
+      signers: "100 or 110 (the article gives both); signer IDs not mentioned; students and professionals aged 20-45"
+      size: "not stated by the publisher; third-party catalogue lists 5,837 MB"
+      deaf_validation: "collected 'with the assistance of domain experts'; follows FESF published standards; no Deaf validator named"
+    notes: "Images and videos: landmarks must be extracted with capture v2 (agent-run notebook). Static letters become 1-frame sequences."
+
+  - id: psl-pkslmnm
+    name: "PkSLMNM: PSL manual and non-manual gestures (Bahria University Karachi)"
+    kind: dataset
+    sign_language: PSL
+    label_scope: psl
+    source_url: https://data.mendeley.com/datasets/m3m9924p3v/2
+    other_urls:
+      - https://www.techscience.com/cmc/v74n1/49833/html
+    licence: CC-BY-4.0
+    licence_url: https://creativecommons.org/licenses/by/4.0/
+    licence_evidence: "Mendeley Data page, version 2 (26 September 2022), licence CC BY 4.0, read 2026-11-18."
+    allowed_uses: {pretrain_encoder: true, train_labels: true, evaluate: true, reference_clip: true, redistribute_weights: true, redistribute_data: true}
+    conditions: [attribution]
+    attribution: "PkSLMNM by Sameena Javaid and Safdar Rizvi, Bahria University (CC BY 4.0, doi:10.17632/m3m9924p3v.2)."
+    status: cleared_with_conditions
+    checked_on: "2026-11-18"
+    checked_by: agent
+    files:
+      - path: data/psl-pkslmnm/*
+    facts:
+      classes: "7 adjective signs: bad, best, sad, glad, scared, stiff, surprised (each with a facial expression)"
+      signers: "100 individuals (Mendeley page) or 180 (CMC article); Deaf status not stated; no signer IDs mentioned"
+      format: "MP4, 1920x1080, about 2 s per clip"
+      size: "not stated by the publisher; third-party catalogue lists 7,470 MB"
+    notes: "Useful for face (non-manual) features. Needs landmark extraction from video."
+
+  - id: psl-expression-hands
+    name: Expression through Hands_PSL (7 PSL adjectives, mobile capture)
+    kind: dataset
+    sign_language: PSL
+    label_scope: psl
+    source_url: https://data.mendeley.com/datasets/4d6tj5snkd/3
+    licence: CC-BY-4.0
+    licence_url: https://creativecommons.org/licenses/by/4.0/
+    licence_evidence: "Mendeley Data page, version 3 (26 September 2022), licence CC BY 4.0, read 2026-11-18."
+    allowed_uses: {pretrain_encoder: true, train_labels: true, evaluate: true, reference_clip: true, redistribute_weights: true, redistribute_data: true}
+    conditions: [attribution]
+    attribution: "Expression through Hands_PSL by Sameena Javaid et al. (CC BY 4.0, doi:10.17632/4d6tj5snkd.3)."
+    status: cleared_with_conditions
+    checked_on: "2026-11-18"
+    checked_by: agent
+    files:
+      - path: data/psl-expression-hands/*
+    facts:
+      classes: "same 7 adjectives as PkSLMNM"
+      format: "not stated (captured on an OPPO A76 phone)"
+      size: "not stated by the publisher; third-party catalogue lists 3.5 MB"
+    notes: "Low priority: same classes as PkSLMNM, format unknown until downloaded."
+
+  - id: psl-wlpsl-naeem
+    name: Word Level Pakistani Sign Language (WLPSL) video dataset (Naeem et al.)
+    kind: dataset
+    sign_language: PSL
+    label_scope: psl
+    source_url: https://www.kaggle.com/datasets/jahanzebnaeem/wlpsl
+    licence: C-UDA-1.0 (non-commercial)
+    licence_evidence: "Kaggle dataset API metadata: licence 'Other (specified in description)'; the description names the Computational Use of Data Agreement and says academic and computational use only, no commercial use (read 2026-11-18)."
+    allowed_uses: {pretrain_encoder: false, train_labels: false, evaluate: true, reference_clip: false, redistribute_weights: false, redistribute_data: false}
+    conditions: [attribution, non_commercial, research_only]
+    attribution: "WLPSL dataset by Jahanzeb Naeem et al. (C-UDA, non-commercial)."
+    status: cleared_with_conditions
+    checked_on: "2026-11-18"
+    checked_by: agent
+    files:
+      - path: data/psl-wlpsl-naeem/*
+    facts:
+      classes: "31 words: alert, careful, cheap, crazy, dangerous, decent, dumb, excited, extreme, fantastic, far, fearful, foreign, funny, good, healthy, heavy, important, intelligent, interesting, late, less, new, no, noisy, peaceful, quick, ready, secure, smart, yes"
+      samples: "248 videos, 370276472 bytes"
+      signers: "12 people (2 team members + 10 volunteers); Deaf status not stated"
+    notes: "Evaluation only: nothing trained on it may ship (an encoder pretrained on it would ship its weights), because the app is going to public stores. Ask the authors before any other use."
+
+  - id: psl-128
+    name: "PSL-128: multi-signer Pakistan Sign Language video dataset (Usman, Farooq, Ali, Alhejaili)"
+    kind: dataset
+    sign_language: PSL
+    label_scope: psl
+    source_url: https://zenodo.org/records/21946282
+    licence: CC-BY-NC-4.0 plus research-use terms
+    licence_url: https://creativecommons.org/licenses/by-nc/4.0/
+    licence_evidence: "Zenodo record 21946282 (version 1.0.0, published 2026-09-12): CC BY-NC 4.0, research use only, files restricted until the paper is accepted, access by request (read 2026-11-18)."
+    allowed_uses: {pretrain_encoder: false, train_labels: false, evaluate: false, reference_clip: false, redistribute_weights: false, redistribute_data: false}
+    conditions: [attribution, non_commercial, research_only, access_by_request]
+    attribution: "PSL-128 by Muhammad Usman, Muhammad Farooq, Zulfiqar Ali and Reham Alhejaili (CC BY-NC 4.0, doi:10.5281/zenodo.21946282)."
+    status: permission_needed
+    checked_on: "2026-11-18"
+    checked_by: agent
+    files: []
+    facts:
+      classes: "128 word-level signs incl. 11 greetings and phrases, 15 categories"
+      samples: "9,068 clips"
+      signers: "68, all male, special-education college students (some minors at recording); signer folders S01-S68; signer-independent split file included"
+      format: "224x224 video and MediaPipe Holistic landmarks, one (32, 258) float32 array per clip; full-resolution copy on Kaggle (about 55 GiB)"
+    notes: "The only PSL dataset found with signer IDs and a signer-independent split. Request access and ask whether a free, non-commercial exhibition app may use it (docs/permission_requests.md)."
+
+  - id: psl-umt-anwar-usama
+    name: Pakistan Sign Language (Dataset), UMT Lahore (Haroon Anwar, Muhammad Usama)
+    kind: dataset
+    sign_language: PSL
+    label_scope: psl
+    source_url: https://escholar.umt.edu.pk/handle/123456789/18672
+    licence: none stated
+    licence_evidence: "UMT eScholar DSpace record (REST API, read 2026-11-18) has no dc.rights or dc.rights.uri field; type 'Thesis', issued 2021-09-14."
+    allowed_uses: {pretrain_encoder: false, train_labels: false, evaluate: false, reference_clip: false, redistribute_weights: false, redistribute_data: false}
+    conditions: []
+    attribution: ""
+    status: permission_needed
+    checked_on: "2026-11-18"
+    checked_by: agent
+    files: []
+    facts:
+      content: "images and videos of Deaf people from several Deaf institutes performing alphabets, numbers and common daily words"
+      counts: "not stated"
+    notes: "Valuable because the signers are Deaf. No licence, so nothing may be used until the authors give written permission (docs/permission_requests.md)."
+
+  - id: psl-saadbutt-openpose
+    name: Pakistan Sign Language Dataset (OpenPose), Saad Butt
+    kind: dataset
+    sign_language: PSL
+    label_scope: psl
+    source_url: https://www.kaggle.com/datasets/saadbutt321/pakistan-sign-language-dataset
+    licence: GPL-2.0
+    licence_url: https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+    licence_evidence: "Kaggle dataset API metadata: licence 'GPL 2', 9200060 bytes, read 2026-11-18."
+    allowed_uses: {pretrain_encoder: false, train_labels: false, evaluate: true, reference_clip: false, redistribute_weights: false, redistribute_data: false}
+    conditions: [share_alike]
+    attribution: "Pakistan Sign Language Dataset (OpenPose) by Saad Butt (GPL-2.0)."
+    status: cleared_with_conditions
+    checked_on: "2026-11-18"
+    checked_by: agent
+    files:
+      - path: data/psl-saadbutt-openpose/*
+    facts:
+      classes: "37 Urdu letters + 12 Urdu words"
+      format: "2D OpenPose key points in main_dataset.db: right hand only (42 values) for letters; both hands + 13 body points (110 values) for words; single images"
+      signers: "9 non-expert subjects"
+    notes: "Not recommended. GPL-2.0 is a software licence; weights trained on it could have to be released under GPL, so it is evaluation-only. 2D single images from non-expert signers add little."
+
+  - id: psl-fesf-dictionary
+    name: Pakistan Sign Language dictionary, FESF / Deaf Reach (psl.org.pk)
+    kind: reference_clips
+    sign_language: PSL
+    label_scope: psl
+    source_url: https://psl.org.pk/
+    licence: All rights reserved (FESF)
+    licence_evidence: "Listed as 'all rights reserved' by a third-party catalogue (github.com/juleshenry/marionet issue 152) and as 'permission required' in docs/CONTEXT.md; the site's own terms were not re-read in this session."
+    allowed_uses: {pretrain_encoder: false, train_labels: false, evaluate: false, reference_clip: false, redistribute_weights: false, redistribute_data: false}
+    conditions: []
+    attribution: ""
+    status: permission_needed
+    checked_on: "2026-11-18"
+    checked_by: agent
+    files: []
+    facts:
+      size: "5,000+ words (2015 launch) / 7,500+ signs (docs/CONTEXT.md)"
+    notes: "The reference standard most public PSL datasets copy (UAlpha40 and SignSpeak cite it). Ask permission (docs/permission_requests.md). Never scraped."
+
+  - id: psl-nise-compendium
+    name: NISE / DGSE standardised PSL compendium, Vol. I
+    kind: reference_clips
+    sign_language: PSL
+    label_scope: psl
+    source_url: project:docs/CONTEXT.md
+    licence: not released
+    licence_evidence: "docs/CONTEXT.md lists it as 1,500 signs, not yet released; nothing newer found on 2026-11-18."
+    allowed_uses: {pretrain_encoder: false, train_labels: false, evaluate: false, reference_clip: false, redistribute_weights: false, redistribute_data: false}
+    conditions: []
+    attribution: ""
+    status: not_available
+    checked_on: "2026-11-18"
+    checked_by: agent
+    files: []
+
+  - id: psl-lexicon-noorullah
+    name: Pakistani Sign Language (PSL) Lexicon Dataset (Kaggle, shayannoorullah)
+    kind: lexicon
+    sign_language: PSL
+    label_scope: psl
+    source_url: https://www.kaggle.com/datasets/shayannoorullah/pakistani-sign-language-psl-lexicon-dataset
+    licence: CC-BY-SA-4.0 or CC-BY-4.0 (conflicting)
+    licence_evidence: "Kaggle API metadata says CC BY-SA 4.0 while the description says CC BY 4.0 (read 2026-11-18)."
+    allowed_uses: {pretrain_encoder: false, train_labels: false, evaluate: false, reference_clip: false, redistribute_weights: false, redistribute_data: false}
+    conditions: [attribution, share_alike]
+    attribution: "Pakistani Sign Language (PSL) Lexicon Dataset by Shayan Noorullah (Kaggle)."
+    status: unverified
+    checked_on: "2026-11-18"
+    checked_by: agent
+    files: []
+    facts:
+      content: "635 lexicon rows (Roman Urdu / Urdu keys, gloss, part of speech, sense hints), 83 animation-clip rows; the motion files are not included; 80901 bytes"
+    notes: "Text only, source of signs not named, licence conflict. Not needed now."
+
+  # ------------------------------------------------------------------ PSL: text -> sign (reference clips)
+
+  - id: psl-slt-dictionary
+    name: Sign Language Translator datasets, Pakistan dictionary pk-hfad-1 (Mudassar Iqbal)
+    kind: reference_clips
+    sign_language: PSL
+    label_scope: psl
+    source_url: https://github.com/sign-language-translator/sign-language-datasets
+    other_urls:
+      - https://github.com/sign-language-translator/sign-language-datasets/releases
+    licence: CC-BY-4.0
+    licence_url: https://creativecommons.org/licenses/by/4.0/
+    licence_evidence: "Repository LICENSE file is the CC BY 4.0 legal code and the README says the dataset may be used for any purpose with credit (read 2026-11-18)."
+    allowed_uses: {pretrain_encoder: true, train_labels: true, evaluate: true, reference_clip: true, redistribute_weights: true, redistribute_data: true}
+    conditions: [attribution, provenance_unverified]
+    attribution: "Pakistan Sign Language dictionary clips from Sign Language Datasets by Mudassar Iqbal (2023), github.com/sign-language-translator/sign-language-datasets, CC BY 4.0."
+    status: cleared_with_conditions
+    checked_on: "2026-11-18"
+    checked_by: agent
+    files:
+      - path: data/psl-slt-dictionary/*
+      - path: web/public/clips/psl/*
+      - path: mobile/assets/clips/psl/*
+    facts:
+      clips: "788 pk-hfad-1 dictionary videos in releases v0.0.3/v0.0.4 (README: 776 signs, 27 min) plus 1 pk-hfad-2 clip"
+      landmarks: "v0.0.4: pk-hfad-1.landmarks-mediapipe-image-csv.zip and -world-csv.zip; MediaPipe pose (33 points) + 2 hands (21 points each), 5 values per point (x, y, z, visibility, presence), one row per video frame"
+      mapping: "parallel_texts/pk-dictionary-mapping.json maps Urdu/English tokens to clip labels"
+      performer: "one performer per clip; Deaf or hearing not stated"
+    notes: "The upstream organisation behind 'hfad' is not named and no permission chain is documented. Licence as stated allows shipping with attribution; confirm provenance with the maintainer before a store release (docs/permission_requests.md). Labels are dictionary glosses, one example each, so recognition built on them is Tier B."
+
+  - id: psl-slt-replications
+    name: Sign Language Translator dictionary replications (multi-signer, multi-camera)
+    kind: dataset
+    sign_language: PSL
+    label_scope: psl
+    source_url: https://github.com/sign-language-translator/sign-language-datasets/releases
+    licence: CC-BY-4.0 (when released)
+    licence_evidence: "Releases page lists 'Dictionary Replications (788 x 12 x 4 = 37,824)' as coming soon (read 2026-11-18)."
+    allowed_uses: {pretrain_encoder: false, train_labels: false, evaluate: false, reference_clip: false, redistribute_weights: false, redistribute_data: false}
+    conditions: [attribution]
+    attribution: "Dictionary replications from Sign Language Datasets by Mudassar Iqbal, CC BY 4.0."
+    status: not_available
+    checked_on: "2026-11-18"
+    checked_by: agent
+    files: []
+    notes: "Would give multi-signer PSL data with person codes (deaf/hearing) for a signer-independent split. Re-check before each release (tools/auto_improve.py)."
+
+  # ------------------------------------------------------------------ ASL mode (separate language)
+
+  - id: asl-islr-1st-place-tflite
+    name: Google Isolated Sign Language Recognition 1st-place model (Hoyeol Sohn), TFLite, 250 ASL signs
+    kind: model_weights
+    sign_language: ASL
+    label_scope: asl_mode_only
+    source_url: https://huggingface.co/sign/kaggle-asl-signs-1st-place
+    other_urls:
+      - https://www.kaggle.com/code/hoyso48/1st-place-solution-inference
+      - https://github.com/hoyso48/Google---Isolated-Sign-Language-Recognition-1st-place-solution
+    licence: MIT
+    licence_url: https://opensource.org/license/mit
+    licence_evidence: "Hugging Face model page licence tag 'mit'; the author's GitHub repository is MIT-licensed (both read 2026-11-18). Training data: GISLR competition data, CC BY 4.0."
+    allowed_uses: {pretrain_encoder: false, train_labels: true, evaluate: true, reference_clip: false, redistribute_weights: true, redistribute_data: false}
+    conditions: [attribution]
+    attribution: "ASL recogniser: 1st-place solution of Google - Isolated Sign Language Recognition by Hoyeol Sohn (MIT); trained on data by the Deaf Professional Arts Network and Georgia Institute of Technology (CC BY 4.0)."
+    status: cleared_with_conditions
+    checked_on: "2026-11-18"
+    checked_by: agent
+    files:
+      - path: models/asl/model.tflite
+        sha256: f55a2bb1ebe6d1e912a98e31c6ef3f995c9ae261f408fe115f2008099d3f0bb7
+      - path: models/asl/sign_to_prediction_index_map.json
+        sha256: 1fe747c2f44c68dbb396947e35193c96d363f3dede0be8defa5e08546400bf5d
+      - path: web/public/models/asl/model.tflite
+        sha256: f55a2bb1ebe6d1e912a98e31c6ef3f995c9ae261f408fe115f2008099d3f0bb7
+      - path: web/public/models/asl/sign_to_prediction_index_map.json
+        sha256: 1fe747c2f44c68dbb396947e35193c96d363f3dede0be8defa5e08546400bf5d
+      - path: mobile/assets/models/asl/*
+    facts:
+      files: "model.tflite 11242036 bytes; sign_to_prediction_index_map.json 3352 bytes (250 classes)"
+      input: "signature serving_default: inputs [-1, 543, 3] float32 -> outputs [250] float32; 1,408 operators of 32 built-in kinds, no custom ops (read from the flatbuffer 2026-11-18)"
+    notes: "ASL mode only; never shown as PSL. The index map is committed; the model is downloaded once (tools/fetch_assets.py or npm run assets) and checked against the SHA-256 above."
+
+  - id: asl-gislr-competition-data
+    name: Google Isolated Sign Language Recognition corpus v1.0 (Kaggle asl-signs)
+    kind: dataset
+    sign_language: ASL
+    label_scope: asl_mode_only
+    source_url: https://www.kaggle.com/competitions/asl-signs
+    licence: CC-BY-4.0 (Kaggle competition rules also apply)
+    licence_url: https://creativecommons.org/licenses/by/4.0/
+    licence_evidence: "Competition page: the dataset provided by the Deaf Professional Arts Network and the Georgia Institute of Technology is licensed under CC-BY 4.0 (read 2026-11-18). A third-party catalogue reports that the competition rules forbid redistributing the raw data; not re-read here."
+    allowed_uses: {pretrain_encoder: true, train_labels: true, evaluate: true, reference_clip: false, redistribute_weights: true, redistribute_data: false}
+    conditions: [attribution, no_raw_redistribution]
+    attribution: "Isolated Sign Language Recognition corpus v1.0, Deaf Professional Arts Network and Georgia Institute of Technology (CC BY 4.0)."
+    status: cleared_with_conditions
+    checked_on: "2026-11-18"
+    checked_by: agent
+    files:
+      - path: data/asl-gislr-competition-data/*
+    facts:
+      signs: 250
+      signers: "21 Deaf signers recruited by DPAN"
+      sequences: "about 94,477"
+      format: "MediaPipe Holistic 0.9.0.1 landmarks, 543 points per frame (face 468, left hand 21, pose 33, right hand 21), x/y/z, parquet"
+    notes: "The 1st-place model was trained on these signers, so accuracy measured on this set is not held-out."
+
+  - id: asl-gislr-rerun-set
+    name: ASL Isolated Sign Recognition Rerun Set (GISLR hidden test data)
+    kind: dataset
+    sign_language: ASL
+    label_scope: asl_mode_only
+    source_url: https://www.kaggle.com/datasets/sohier/461054610546105
+    licence: CC0-1.0
+    licence_url: https://creativecommons.org/publicdomain/zero/1.0/
+    licence_evidence: "Kaggle dataset metadata: 'CC0: Public Domain', version 5, 14150884811 bytes (search result metadata, 2026-11-18)."
+    allowed_uses: {pretrain_encoder: true, train_labels: true, evaluate: true, reference_clip: false, redistribute_weights: true, redistribute_data: true}
+    conditions: []
+    attribution: "ASL Isolated Sign Recognition Rerun Set (Kaggle, CC0)."
+    status: cleared
+    checked_on: "2026-11-18"
+    checked_by: agent
+    files:
+      - path: data/asl-gislr-rerun-set/*
+    facts:
+      signers: "reported by a third-party project as 10 Deaf signers absent from the training set; confirm from the files in Stage 2"
+    notes: "Planned held-out test set for the Stage 2 ASL accuracy number. 14.2 GB: evaluate inside a Kaggle notebook, do not download."
+
+  - id: asl-popsign-v1
+    name: PopSign ASL v1.0 (Georgia Tech, NTID, DPAN)
+    kind: dataset
+    sign_language: ASL
+    label_scope: asl_mode_only
+    source_url: https://signdata.cc.gatech.edu/view/datasets/popsign_v1_0/index.html
+    licence: CC-BY-4.0
+    licence_url: https://creativecommons.org/licenses/by/4.0/
+    licence_evidence: "PopSign v1.0 data card: licensed under CC BY 4.0 (read 2026-11-18)."
+    allowed_uses: {pretrain_encoder: true, train_labels: true, evaluate: true, reference_clip: true, redistribute_weights: true, redistribute_data: true}
+    conditions: [attribution]
+    attribution: "PopSign ASL v1.0, Georgia Institute of Technology and Deaf Professional Arts Network (CC BY 4.0)."
+    status: cleared_with_conditions
+    checked_on: "2026-11-18"
+    checked_by: agent
+    files:
+      - path: data/asl-popsign-v1/*
+    facts:
+      signs: 250
+      signers: "47 Deaf adults (paper split: 31 train, 8 validation, 8 test)"
+      videos: "200,686 (data card), 1.1 TB"
+    notes: "Possible ASL reference clips for ASL mode. Whether its signers overlap the GISLR training signers is unknown."
+
+  - id: asl-fingerspelling-1st-place
+    name: Google ASL Fingerspelling Recognition 1st-place solution (Henkel, Hanley)
+    kind: model_weights
+    sign_language: ASL
+    label_scope: asl_mode_only
+    source_url: https://github.com/ChristofHenkel/kaggle-asl-fingerspelling-1st-place-solution
+    licence: Apache-2.0 (code); no weights published
+    licence_url: https://www.apache.org/licenses/LICENSE-2.0
+    licence_evidence: "GitHub repository is Apache-2.0; the README explains how to train the model and links no weight files (read 2026-11-18)."
+    allowed_uses: {pretrain_encoder: false, train_labels: false, evaluate: false, reference_clip: false, redistribute_weights: false, redistribute_data: false}
+    conditions: []
+    attribution: ""
+    status: not_available
+    checked_on: "2026-11-18"
+    checked_by: agent
+    files: []
+    notes: "No public weights; training it is far beyond a free 2-hour notebook. ASL fingerspelling is dropped from the fast track."
+
+  # ------------------------------------------------------------------ own project data
+
+  - id: signbridge-vocabulary
+    name: SignBridge vocabulary files (project-authored)
+    kind: own_data
+    sign_language: PSL
+    label_scope: psl
+    source_url: project:vocabulary.json
+    licence: project-owned
+    licence_evidence: "Written for this project (Phase 0); synced by tools/sync_vocabulary.py."
+    allowed_uses: {pretrain_encoder: false, train_labels: false, evaluate: false, reference_clip: false, redistribute_weights: false, redistribute_data: true}
+    conditions: []
+    attribution: ""
+    status: cleared
+    checked_on: "2026-11-18"
+    checked_by: agent
+    files:
+      - path: mobile/assets/vocabulary.json
+
+  - id: signbridge-own-recordings
+    name: SignBridge's own recordings, local database and models trained on them
+    kind: own_data
+    sign_language: PSL
+    label_scope: psl
+    source_url: project:collect_data.py
+    licence: project-owned, per-recording consent
+    licence_evidence: "Recorded with this project's own tools; recording format v2 stores consent per recording and training_use_refusal() blocks records without it."
+    allowed_uses: {pretrain_encoder: true, train_labels: true, evaluate: true, reference_clip: false, redistribute_weights: true, redistribute_data: false}
+    conditions: [consent_required]
+    attribution: ""
+    status: cleared_with_conditions
+    checked_on: "2026-11-18"
+    checked_by: agent
+    files:
+      - path: data/*.csv
+      - path: data/*.sqlite3
+      - path: data/*.sqlite3-shm
+      - path: data/*.sqlite3-wal
+      - path: data/*.local.*
+      - path: data/recordings_v2/*
+      - path: models/*.joblib
+      - path: models/model_metadata.json
+    notes: "Local only (git-ignored). Each training path must still call training_use_refusal() per recording."

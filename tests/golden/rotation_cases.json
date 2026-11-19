@@ -1,0 +1,22 @@
+{
+  "fixture": "SignBridge camera rotation cases",
+  "rule": "clockwise degrees that make a raw camera frame upright. Android (Camera2 SENSOR_ORIENTATION): front = (sensor + device) % 360, back = (sensor - device + 360) % 360. iOS: the plugin's sensor orientation, as in Google's ML Kit Flutter example (not yet tested on an iPhone).",
+  "device_orientation_degrees": {"portraitUp": 0, "landscapeLeft": 90, "portraitDown": 180, "landscapeRight": 270},
+  "implementations": ["ml_engine/capture_v2.py correction_rotation_degrees", "mobile/lib/frame_rotation.dart correctionRotationDegrees"],
+  "cases": [
+    {"platform": "android", "lens": "back", "sensor": 90, "device": "portraitUp", "expected": 90},
+    {"platform": "android", "lens": "back", "sensor": 90, "device": "landscapeLeft", "expected": 0},
+    {"platform": "android", "lens": "back", "sensor": 90, "device": "portraitDown", "expected": 270},
+    {"platform": "android", "lens": "back", "sensor": 90, "device": "landscapeRight", "expected": 180},
+    {"platform": "android", "lens": "front", "sensor": 270, "device": "portraitUp", "expected": 270},
+    {"platform": "android", "lens": "front", "sensor": 270, "device": "landscapeLeft", "expected": 0},
+    {"platform": "android", "lens": "front", "sensor": 270, "device": "portraitDown", "expected": 90},
+    {"platform": "android", "lens": "front", "sensor": 270, "device": "landscapeRight", "expected": 180},
+    {"platform": "android", "lens": "back", "sensor": 270, "device": "portraitUp", "expected": 270},
+    {"platform": "android", "lens": "back", "sensor": 270, "device": "landscapeLeft", "expected": 180},
+    {"platform": "android", "lens": "front", "sensor": 90, "device": "portraitUp", "expected": 90},
+    {"platform": "android", "lens": "external", "sensor": 0, "device": "portraitUp", "expected": 0},
+    {"platform": "ios", "lens": "back", "sensor": 90, "device": "portraitUp", "expected": 90},
+    {"platform": "ios", "lens": "front", "sensor": 90, "device": "landscapeLeft", "expected": 90}
+  ]
+}
