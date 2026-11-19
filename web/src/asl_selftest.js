@@ -112,6 +112,8 @@ async function main() {
   summary.verdict = {
     browserRuns: Boolean(browser) && summary.signs.every((s) => s.browser?.finite && s.browser.deterministic && Math.abs(s.browser.probabilitySum - 1) < 1e-3),
     serverRuns: Boolean(server),
+    // The camera view stays smooth only when the model runs in the worker; the page thread is a fallback.
+    workerRuns: summary.browser?.thread === "worker",
     runtimesAgree: parity.length ? parity.every((p) => p.sameTop1 && p.maxAbsProbabilityDifference < 1e-3) : null,
   };
   browser?.close();
@@ -120,7 +122,7 @@ async function main() {
 
 main().then((summary) => {
   window.__aslSelfTest = summary;
-  statusEl.textContent = `Done. Browser runtime: ${summary.verdict.browserRuns ? "works" : "FAILED"} · server runtime: ${summary.verdict.serverRuns ? "works" : "not available"} · runtimes agree: ${summary.verdict.runtimesAgree === null ? "not compared" : summary.verdict.runtimesAgree ? "yes" : "NO"}`;
+  statusEl.textContent = `Done. Browser runtime: ${summary.verdict.browserRuns ? "works" : "FAILED"} (${summary.verdict.workerRuns ? "background worker" : "page thread fallback"}) · server runtime: ${summary.verdict.serverRuns ? "works" : "not available"} · runtimes agree: ${summary.verdict.runtimesAgree === null ? "not compared" : summary.verdict.runtimesAgree ? "yes" : "NO"}`;
   resultEl.textContent = JSON.stringify(summary, null, 2);
 }).catch((error) => {
   window.__aslSelfTest = { error: String(error.message || error) };

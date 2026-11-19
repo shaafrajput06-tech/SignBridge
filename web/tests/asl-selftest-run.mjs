@@ -8,6 +8,7 @@
 //   node tests/asl-selftest-run.mjs                      browser only
 //   SELFTEST_API=http://127.0.0.1:8000 node tests/...    also the server (start it first)
 //   SELFTEST_OUT=result.json                             also write the summary to a file
+//   SELFTEST_REQUIRE_WORKER=1                            fail unless the model ran in the background worker
 // Needs Playwright with Chromium: npm install --no-save playwright && npx playwright install chromium
 import { createRequire } from "node:module";
 import { existsSync, writeFileSync } from "node:fs";
@@ -30,6 +31,7 @@ if (!existsSync(path.join(webDir, "dist", "asl-selftest.html"))) {
 }
 
 const api = process.env.SELFTEST_API;
+const requireWorker = process.env.SELFTEST_REQUIRE_WORKER === "1"; // GitHub Actions: Chromium must run the model off the page thread
 const proxy = api ? { "/api": { target: api, changeOrigin: true } } : {};
 const server = await preview({ root: webDir, logLevel: "silent", preview: { host: "127.0.0.1", port: 4175, strictPort: false, proxy } });
 const base = server.resolvedUrls.local[0];
@@ -48,7 +50,8 @@ try {
   const verdict = result.selftest.verdict || {};
   if (!verdict.browserRuns) failed = true;
   if (api && (!verdict.serverRuns || verdict.runtimesAgree === false)) failed = true;
-  console.log(`self-test: browser runs ${verdict.browserRuns}, server runs ${verdict.serverRuns}, runtimes agree ${verdict.runtimesAgree}`);
+  if (requireWorker && !verdict.workerRuns) failed = true;
+  console.log(`self-test: browser runs ${verdict.browserRuns} (worker ${verdict.workerRuns}), server runs ${verdict.serverRuns}, runtimes agree ${verdict.runtimesAgree}`);
   await page.close();
 } catch (error) {
   result.selftestError = String(error.message || error).split("\n")[0];

@@ -4,6 +4,7 @@ dry run of every notebook cell with a stand-in model and stand-in landmark files
 from __future__ import annotations
 
 import hashlib
+import importlib.util
 import json
 import math
 import os
@@ -132,6 +133,8 @@ class NotebookTests(unittest.TestCase):
         expected = json.dumps(builder.build(), indent=1, ensure_ascii=False) + "\n"
         self.assertEqual(builder.OUT.read_text(encoding="utf-8"), expected, "run python tools/build_asl_eval_notebook.py")
 
+    @unittest.skipUnless(importlib.util.find_spec("pandas"), "pandas is not installed: the notebook reads Kaggle's parquet files with it "
+                         "(Kaggle has it; SignBridge itself does not need it). pip install pandas to run this test.")
     def test_every_cell_runs_with_a_stand_in_model_and_data(self):
         notebook = json.loads(builder.OUT.read_text(encoding="utf-8"))
         cells = ["".join(c["source"]) for c in notebook["cells"] if c["cell_type"] == "code"]
