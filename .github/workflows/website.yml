@@ -37,8 +37,16 @@ jobs:
           node-version: 22
 
       # libEGL/libGLES: MediaPipe's native library needs them on Linux (the first run failed without them).
+      # A mirror outage must not stop the website: if this fails, only the MediaPipe tests report it.
       - name: Install system libraries for MediaPipe
-        run: sudo apt-get update -q && sudo apt-get install -y -q libegl1 libgles2
+        continue-on-error: true
+        timeout-minutes: 8
+        run: |
+          for attempt in 1 2 3; do
+            sudo apt-get -o Acquire::Retries=3 update -q && sudo apt-get -o Acquire::Retries=3 install -y -q --no-install-recommends libegl1 libgles2 && exit 0
+            echo "apt attempt $attempt failed; waiting"; sleep 20
+          done
+          exit 1
 
       # pandas: only for the Kaggle notebook test (the notebook reads parquet files with it).
       - name: Install Python packages
