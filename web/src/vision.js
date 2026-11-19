@@ -10,7 +10,7 @@ export async function createHandDetector() {
       const options = {
         baseOptions: { modelAssetPath: assetUrl("models/hand_landmarker.task"), delegate: "GPU" },
         runningMode: "VIDEO",
-        numHands: 1,
+        numHands: 2, // both hands, always (CLAUDE.md 8.4)
         minHandDetectionConfidence: 0.55,
         minHandPresenceConfidence: 0.5,
         minTrackingConfidence: 0.5,
@@ -99,7 +99,10 @@ export function normalizeLandmarks(points, handedness = "Right") {
   return centered.flatMap((point) => [point.x / scale, point.y / scale, point.z / scale]);
 }
 
-export function drawLandmarks(canvas, video, points) {
+// hands: null, one hand (21 points), or a list of { points, colour }. Points may be {x, y} objects
+// (MediaPipe) or [x, y, z] rows (capture v2), in unmirrored image coordinates; the drawing is mirrored
+// to match the mirrored preview and follows the video's object-fit: cover crop.
+export function drawLandmarks(canvas, video, hands) {
   if (!canvas || !video) return;
   const rect = video.getBoundingClientRect();
   const width = Math.max(1, Math.round(rect.width * devicePixelRatio));
@@ -110,29 +113,33 @@ export function drawLandmarks(canvas, video, points) {
   }
   const context = canvas.getContext("2d");
   context.clearRect(0, 0, width, height);
-  if (!points) return;
+  if (!hands || !video.videoWidth) return;
+  const list = Array.isArray(hands) && hands.length && hands[0]?.points ? hands : [{ points: hands }];
   const scale = Math.max(width / video.videoWidth, height / video.videoHeight);
   const offsetX = (width - video.videoWidth * scale) / 2;
   const offsetY = (height - video.videoHeight * scale) / 2;
-  const mapX = (value) => offsetX + value * video.videoWidth * scale;
-  const mapY = (value) => offsetY + value * video.videoHeight * scale;
+  const px = (point) => offsetX + (Array.isArray(point) ? point[0] : point.x) * video.videoWidth * scale;
+  const py = (point) => offsetY + (Array.isArray(point) ? point[1] : point.y) * video.videoHeight * scale;
   const links = [[0,1],[1,2],[2,3],[3,4],[0,5],[5,6],[6,7],[7,8],[5,9],[9,10],[10,11],[11,12],[9,13],[13,14],[14,15],[15,16],[13,17],[17,18],[18,19],[19,20],[0,17]];
   context.save();
   context.scale(-1, 1);
   context.translate(-width, 0);
   context.lineWidth = Math.max(2, width / 460);
-  context.strokeStyle = "#69d9b5";
-  for (const [a, b] of links) {
-    context.beginPath();
-    context.moveTo(mapX(points[a].x), mapY(points[a].y));
-    context.lineTo(mapX(points[b].x), mapY(points[b].y));
-    context.stroke();
-  }
-  for (const point of points) {
-    context.beginPath();
-    context.arc(mapX(point.x), mapY(point.y), Math.max(3, width / 260), 0, Math.PI * 2);
-    context.fillStyle = "#f7ca69";
-    context.fill();
+  for (const { points, colour } of list) {
+    if (!points?.length) continue;
+    context.strokeStyle = colour || "#69d9b5";
+    context.fillStyle = colour || "#f7ca69";
+    for (const [a, b] of links) {
+      context.beginPath();
+      context.moveTo(px(points[a]), py(points[a]));
+      context.lineTo(px(points[b]), py(points[b]));
+      context.stroke();
+    }
+    for (const point of points) {
+      context.beginPath();
+      context.arc(px(point), py(point), Math.max(3, width / 260), 0, Math.PI * 2);
+      context.fill();
+    }
   }
   context.restore();
 }

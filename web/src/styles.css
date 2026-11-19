@@ -329,3 +329,15 @@ h1, h2, h3, p { margin-top: 0; }
 .asl-history { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 14px; }
 .asl-history-item { font-size: 13px; padding: 3px 9px; border-radius: 8px; background: var(--panel-2); }
 .asl-history-item.unsure, .asl-history-item.none { color: var(--muted); }
+
+/* PSL status panel (fast track): says plainly that PSL recognition is not installed yet, with the
+   off-by-default gesture demo and the optional personal signs as clearly labelled switches. */
+.psl-status { display: flex; flex-direction: column; gap: 6px; max-width: 360px; padding: 16px 18px; border-radius: 16px; }
+.psl-status strong { font-size: 15px; color: var(--gold); }
+.psl-status > small { color: var(--muted); font-size: 11px; line-height: 1.45; }
+.toggle-row { display: flex; gap: 10px; align-items: flex-start; margin-top: 6px; font-size: 12px; cursor: pointer; }
+.toggle-row input { margin-top: 3px; accent-color: var(--mint); width: 16px; height: 16px; flex: none; }
+.toggle-row b { display: block; color: var(--text); }
+.toggle-row span { color: var(--muted); line-height: 1.4; }
+.camera-overlay-top .hands-chip { margin-left: 8px; }
+@media (max-width: 800px) { .psl-status { max-width: none; width: 100%; } }

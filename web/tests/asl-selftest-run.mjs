@@ -90,6 +90,44 @@ try {
   console.log(`ASL mode in the app FAILED: ${result.appError}`);
 }
 
+// 3. The PSL screen (the default): capture v2 tracks both hands, PSL recognition says "Not installed yet",
+//    and the Phase 0 gesture demo is off until the person turns it on.
+try {
+  const context = await browser.newContext({ permissions: ["camera"] });
+  const page = await context.newPage();
+  const errors = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  await page.goto(base);
+  const demoSwitch = page.locator(".psl-status input[type=checkbox]").first();
+  const demoOffAtStart = !(await demoSwitch.isChecked());
+  await page.getByRole("button", { name: /Enable camera/ }).first().click();
+  const consent = page.locator(".help-modal input[type=checkbox]");
+  if (await consent.count()) {
+    await consent.check();
+    await page.getByRole("button", { name: /Agree and enable camera/ }).click();
+  }
+  await page.waitForSelector(".camera-card .hands-chip", { timeout: 180_000 });
+  await page.waitForTimeout(4000);
+  await demoSwitch.check(); // the demo can still be turned on, and the camera keeps running
+  await page.waitForTimeout(1500);
+  result.psl = {
+    status: (await page.locator(".psl-status strong").innerText()).trim(),
+    demoOffAtStart,
+    camera: (await page.locator(".camera-card .camera-indicator").innerText()).trim(),
+    hands: (await page.locator(".camera-card .hands-chip").innerText()).trim(),
+    modeAfterDemoOn: (await page.locator(".overlay-mode").innerText()).trim(),
+    cameraProblem: (await page.locator(".camera-placeholder").count()) ? (await page.locator(".camera-placeholder").innerText()).replace(/\s+/g, " ").slice(0, 160) : null,
+    errors,
+  };
+  if (result.psl.camera !== "Camera on" || !demoOffAtStart || result.psl.cameraProblem || errors.length) failed = true;
+  console.log(`PSL screen: ${result.psl.status}; ${result.psl.camera}; ${result.psl.hands}; demo off at start ${demoOffAtStart}; ${errors.length} page errors`);
+  await context.close();
+} catch (error) {
+  result.pslError = String(error.message || error).split("\n")[0];
+  failed = true;
+  console.log(`PSL screen FAILED: ${result.pslError}`);
+}
+
 await browser.close();
 server.httpServer.close();
 result.passed = !failed;

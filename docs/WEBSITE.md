@@ -20,9 +20,11 @@ GitHub only publishes the site after this is switched on once:
 
 | Feature | Website | Laptop with `start_signbridge.bat` |
 |---|---|---|
-| PSL mode (Phase 0 demo hand shapes, vocabulary, Urdu/English text, speech) | yes | yes |
+| PSL screen: both hands, shoulders and face tracked; PSL recognition not installed yet (Stage 3) | yes | yes |
+| Gesture demo (Phase 0 hand shapes, off by default, not PSL) | yes | yes |
+| Vocabulary in English and Urdu, with speech | yes | yes |
 | ASL mode (250 ASL words) | yes, in the browser (LiteRT.js, signs resampled to 32 frames) | yes, through the local server (each sign's real length) |
-| Saving training samples, training report, CSV download | no (needs the server) | yes |
+| Teach a sign (optional personal signs, Tier C), its report and CSV | no (needs the server) | yes |
 
 The header says **"Website version"** when there is no server. Everything runs on the device:
 camera frames never leave the browser, and the website has no server that could receive them.

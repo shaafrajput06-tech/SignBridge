@@ -47,7 +47,7 @@ async function scenario(name, action, expectedCameraStarts) {
   let crashed = false;
   page.on("crash", () => { crashed = true; });
   page.on("pageerror", (error) => errors.push(error.message));
-  page.on("console", (message) => { if (/Aborted\(\)|recognition paused/i.test(message.text())) errors.push(message.text()); });
+  page.on("console", (message) => { if (/Aborted\(\)|recognition paused|tracking paused/i.test(message.text())) errors.push(message.text()); });
   const problems = [];
   try {
     await page.goto(url);

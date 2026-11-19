@@ -5,7 +5,21 @@ It is a sign language translator which will help deaf people to communicate.
 **Try it in a browser:** <https://shaafrajput06-tech.github.io/SignBridge/> (camera needed; nothing
 leaves your device). How the website is built and what works there: [docs/WEBSITE.md](docs/WEBSITE.md).
 
-SignBridge is a local-first English–Urdu accessibility prototype. MediaPipe Hand Landmarker finds 21 hand landmarks. The exhibition demo uses conservative hand-shape geometry rules immediately, without training. A separate scikit-learn pipeline compares an SVM with a Random Forest after users collect real examples. The vocabulary browser remains useful for every phrase even when no demo gesture is assigned.
+SignBridge is a Pakistan Sign Language (PSL) ↔ Urdu/English translator that runs on your own device.
+It is being built on a **fast track** ([docs/prompts/fast-track.md](docs/prompts/fast-track.md)): nobody has
+to record, label or train signs for it to work.
+
+**Where the project stands (Stage 2 of 7):**
+
+| Part | State |
+|---|---|
+| Tracking | Both hands, shoulders and face at once (capture v2), left and right assigned by the F12 rules and the pose wrists. Same numbers in Python and JavaScript (parity tests). |
+| PSL recognition (main language) | **Not installed yet.** Stage 3 trains it from public PSL data. Until it passes its test on signers it has never seen, the app does not guess PSL signs. |
+| ASL mode (separate, clearly labelled) | Works today: 250 everyday ASL words with Google's ISLR 1st-place model (MIT), in the browser and on the local server. Accuracy not measured yet ([reports/asl_mode_v1.md](reports/asl_mode_v1.md)). |
+| Vocabulary | 64 phrases in English, Urdu script and Roman Urdu, with speech. |
+| Gesture demo | The Phase 0 hand-shape rules, **off unless you turn it on**, and never called PSL. |
+| Personal signs (Tier C) | Optional extra in the desktop app: teach your own signs. Never a required step. |
+| Licences | Every model and dataset is in [data/LICENSES.yaml](data/LICENSES.yaml); a checker blocks anything not allowed. |
 
 The proposal's 90% figure is treated as a target. SignBridge reports measured model results only when a real dataset supports a validation split, and it names the validation method.
 
