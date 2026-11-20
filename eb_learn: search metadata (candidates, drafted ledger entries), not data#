@@ -1,0 +1,2 @@
+IGNORED_PATTERNS = ("data/LICENSES.yaml", "data/licenses.schema.json", "data/cards/*", "data/mappings/*", "models/*.download",
+                    "data/web_learn/*")  

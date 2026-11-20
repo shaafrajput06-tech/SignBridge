@@ -46,3 +46,6 @@ baseline/v1-site/models/*.task
 baseline/v1-site/models/asl/model.tflite
 baseline/out/
 web/dist-shared/
+
+# Web-learned landmarks are data: never committed (the web-learn workflow uploads them as an artifact).
+data/web_learned/
