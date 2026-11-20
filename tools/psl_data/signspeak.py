@@ -34,10 +34,14 @@ from data_engine.ledger import assert_allowed
 LEDGER_ID = "psl-signspeak-words"
 REPO = "mohibkhansherwani/DynamicWordLevelPakistanSignLanguageDataset"
 REVISION = "1ba8b9fc58ad01431e50031fe3fe31e4d01f689d"  # read 2026-11-20 (tools/psl_data/discover.py)
-ARCHIVES = ("PakistanSignLanguageDataset.zip", "PakistanSignLanguageDatasetV2.zip")
+# The second archive first: it names its camera folders more precisely (laptop / webcam / mobile), and
+# exact duplicates found later in the first archive are dropped.
+ARCHIVES = ("PakistanSignLanguageDatasetV2.zip", "PakistanSignLanguageDataset.zip")
 UA = {"User-Agent": "SignBridge-psl-data/1.0 (https://github.com/shaafrajput06-tech/SignBridge)"}
-MEMBER = re.compile(r"^(?:.*/)?(MP_Data[^/]*)/([^/]+)/([^/]+)/(\d+)\.npy$")
-DEVICES = {"MP_Data": "webcam", "MP_Data_mobile": "phone"}
+MEMBER = re.compile(r"^(?:.*/)?(MP_Data[^/]*|laptop_data|webcam_data|mobile_data)/([^/]+)/([^/]+)/(\d+)\.npy$")
+# First archive: MP_Data = "standard webcams and fixed desktop cameras" (its README), MP_Data_mobile = phones.
+# Second archive (Kaggle version 3): laptop_data, webcam_data, mobile_data.
+DEVICES = {"MP_Data": "desktop", "MP_Data_mobile": "phone", "laptop_data": "laptop", "webcam_data": "webcam", "mobile_data": "phone"}
 UNKNOWN_FOLDERS = {"nothing"}  # becomes the "not a sign" class
 NOT_WORDS = {"left_hand", "s", "test_word"}  # test folders of the dataset's authors; not PSL words
 FULL_LENGTH = 60

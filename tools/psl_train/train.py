@@ -6,7 +6,7 @@ Actions (.github/workflows/psl-train.yml) or on Kaggle/Colab with the same comma
 What it does, in order:
   1. Loads the converted SignSpeak data and maps each camera's shape to the reference shape.
   2. Protocol "device held out" (weaker: the dataset has no signer ids, so the same people may appear
-     in both parts): trains on the webcam folder, tests on the phone folder. Both architectures
+     in both parts): trains on the computer-camera folders, tests on the phone folders. Both architectures
      (islr_lite and the GRU baseline) are trained and reported.
   3. Trains the shipped model on both folders (10 % kept aside for calibration and the export check).
   4. Exports TFLite float32 / float16 / int8, checks each against the Keras model, keeps the smallest one
@@ -163,10 +163,12 @@ def probabilities(model, data, idx, temperature, mirror_average):
     return p
 
 
-def fit_temperature(z: np.ndarray, labels: np.ndarray) -> float:
+def fit_temperature(z: np.ndarray, labels: np.ndarray, mirrored: np.ndarray | None = None) -> float:
+    """The temperature with the lowest negative log-likelihood; with `mirrored` logits, for the average of
+    the sign and its mirror image (what the shipped model outputs)."""
     best, best_nll = 1.0, float("inf")
     for t in np.arange(0.5, 3.001, 0.05):
-        p = softmax(z, t)
+        p = softmax(z, t) if mirrored is None else (softmax(z, t) + softmax(mirrored, t)) / 2
         nll = float(-np.mean(np.log(p[np.arange(len(labels)), labels] + 1e-12)))
         if nll < best_nll:
             best, best_nll = round(float(t), 2), nll
@@ -217,6 +219,48 @@ def measure(p: np.ndarray, labels: np.ndarray, classes: list[str], hands_per_cla
         "confusions": [{"sign": a, "taken_for": b, "times": k} for (a, b), k in confusions.most_common(15)],
         "per_class": per_class,
     }
+
+
+def independent_clips(folder: Path | None, classes: list[str]) -> dict:
+    """Landmarks of the SLT PSL dictionary clips (Stage 1, web-learned v1): one performer who is not a
+    SignSpeak signer, one clip per sign. Returns hands (N, L, 2, 21, 3), spans, labels and clip names."""
+    if not folder or not (folder / "manifest.json").exists():
+        return {}
+    from data_engine.ledger import LicenceError
+
+    manifest = json.loads((folder / "manifest.json").read_text(encoding="utf-8"))
+    index = {key(c): i for i, c in enumerate(classes) if c != UNKNOWN}
+    picked = []
+    for record in manifest["clips"]:
+        label = index.get(key(str(record.get("gloss", "")).split(".")[0]))
+        if label is None or record.get("language") != "PSL":
+            continue
+        try:
+            assert_allowed(record["ledger_id"], "evaluate")
+        except LicenceError:
+            continue
+        with np.load(folder / record["file"], allow_pickle=False) as z:
+            meta = json.loads(bytes(z["meta"]).decode("utf-8"))
+            points, present = z["points"].astype(np.float64), z["present"]
+        hands = points[:, :42].reshape(-1, 2, 21, 3)
+        hands[present[:, 0] == 0, 0] = np.nan
+        hands[present[:, 1] == 0, 1] = np.nan
+        aspect = meta["image_width"] / meta["image_height"]
+        picked.append((psl_hands.adjust_aspect(hands, aspect), label, record["gloss"]))
+    if not picked:
+        return {}
+    length = max(len(h) for h, _, _ in picked)
+    hands = np.full((len(picked), length, 2, 21, 3), np.nan, dtype=np.float32)
+    lengths = np.zeros(len(picked), dtype=np.int64)
+    for i, (h, _, _) in enumerate(picked):
+        hands[i, : len(h)] = h
+        lengths[i] = len(h)
+    keep = np.array([psl_hands.trim_window(hands[i, : lengths[i]]) is not None for i in range(len(picked))])
+    data = {"hands": hands[keep], "lengths": lengths[keep]}
+    data["spans"] = aug.windows(data["hands"], data["lengths"])
+    data["labels"] = np.array([l for (_, l, _), k in zip(picked, keep) if k])
+    data["names"] = [g for (_, _, g), k in zip(picked, keep) if k]
+    return data
 
 
 # ---------------------------------------------------------------------------------------------- export
@@ -308,7 +352,7 @@ def markdown(result: dict) -> str:
         "",
         "## Device held out (weaker: no signer ids, the same people may be in both parts)",
         "",
-        "Trained on the webcam folder, tested on the phone folder (never seen in training).",
+        "Trained on the computer-camera folders (desktop, laptop, webcam), tested on the phone folders (never seen in training).",
         "",
         "| Model | Test signs | Top-1 | Top-5 | One-handed top-1 | Two-handed top-1 | Calibration error |",
         "|---|---|---|---|---|---|---|",
@@ -332,12 +376,24 @@ def markdown(result: dict) -> str:
     for s in shown["speak_limits"]:
         lines.append(f"| {s['at_least']:.1f} | {pct(s['answered_share'])} | {pct(s['wrong_share_of_answered'])} |")
     lines += ["", "Most frequent confusions: " + "; ".join(f"{c['sign']} → {c['taken_for']} ({c['times']})" for c in shown["confusions"][:10]), ""]
+    ind = result.get("independent_signer")
+    lines += ["## Independent signer (shipped model)", ""]
+    if ind:
+        lines += [f"SLT PSL dictionary clips of the same words: one performer who is not a SignSpeak signer, one clip per sign "
+                  f"({ind['samples']} clips). Top-1 {pct(ind['top1'])}, top-5 {pct(ind['top5'])}. A different dictionary: a miss can "
+                  "also mean a regional variant of the sign, not only a model error.", "",
+                  "| Sign | Answer | Probability | In top-5 |", "|---|---|---|---|"]
+        lines += [f"| {c['sign']} | {c['answer']} | {c['probability']:.2f} | {'yes' if c['top5'] else 'no'} |" for c in ind["clips"]]
+        lines.append("")
+    else:
+        lines += ["Not measured in this run (no web-learned SLT landmarks given).", ""]
     s = result["shipped"]
     lines += [
         "## Shipped model",
         "",
         f"Trained on both folders except a 10 % calibration part ({s['validation']['samples']} signs; same people and sessions, so weaker). "
-        f"Calibration part top-1 {pct(s['validation']['top1'])}, top-5 {pct(s['validation']['top5'])}. Temperature {s['temperature']}, "
+        f"Calibration part top-1 {pct(s['validation']['top1'])}, top-5 {pct(s['validation']['top5'])}. Temperature {s['temperature']} "
+        "(fitted on the held-out device's predictions of the same recipe), "
         f"mirror averaging {'on' if s['mirror_average'] else 'off'}.",
         "",
         "| Export | Bytes | Top-1 | Same top-1 as Keras | ms per sign (Python, CPU) |",
@@ -372,6 +428,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--epochs", type=int, default=int(os.environ.get("PSL_EPOCHS", "100")))
     parser.add_argument("--gru-epochs", type=int, default=None)
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--independent", type=Path, default=None,
+                        help="web-learned folder (Stage 1) whose SLT dictionary clips test one signer absent from SignSpeak")
     args = parser.parse_args(argv)
     for ledger_id in LEDGER_IDS:
         assert_allowed(ledger_id, "train_labels")
@@ -395,10 +453,10 @@ def main(argv: list[str] | None = None) -> int:
                     "training": log}
 
     # 1. device held out
-    webcam = usable[data["device"][usable] == "webcam"]
+    computer = usable[data["device"][usable] != "phone"]
     phone = usable[data["device"][usable] == "phone"]
-    keep, val = stratified_split(labels[webcam], 0.1, rng)
-    train_idx, val_idx = webcam[keep], webcam[val]
+    keep, val = stratified_split(labels[computer], 0.1, rng)
+    train_idx, val_idx = computer[keep], computer[val]
     hands_per_class = class_hands(data, usable, labels, classes)
     held: dict = {}
     for arch, epochs in (("islr_lite", args.epochs), ("gru", args.gru_epochs or args.epochs)):
@@ -407,6 +465,11 @@ def main(argv: list[str] | None = None) -> int:
         held[arch] = {"temperature": t, "plain": measure(probabilities(model, data, phone, t, False), labels[phone], classes, hands_per_class),
                       "validation_plain": measure(probabilities(model, data, val_idx, t, False), labels[val_idx], classes, hands_per_class)}
         if arch == "islr_lite":
+            phone_logits = logits(model, data, phone)
+            phone_mirrored = logits(model, data, phone, mirrored=True)
+            held["temperature_from_held_out_device"] = {
+                "plain": fit_temperature(phone_logits, labels[phone]),
+                "mirror_average": fit_temperature(phone_logits, labels[phone], phone_mirrored)}
             held[arch]["mirror_average"] = measure(probabilities(model, data, phone, t, True), labels[phone], classes, hands_per_class)
             held[arch]["validation_mirror_average"] = measure(probabilities(model, data, val_idx, t, True), labels[val_idx], classes, hands_per_class)
             mirrored = softmax(logits(model, data, phone, mirrored=True), t)
@@ -421,11 +484,27 @@ def main(argv: list[str] | None = None) -> int:
     keep, val = stratified_split(labels[usable], 0.1, rng)
     final_train, final_val = usable[keep], usable[val]
     model = train("islr_lite", data, final_train, labels, classes, args.epochs, args.seed + 1, log)
-    temperature = fit_temperature(logits(model, data, final_val), labels[final_val])
+    # The calibration part comes from the same sessions and is almost always right, which would push the
+    # temperature to its minimum (over-confident). The shipped temperature is the one fitted on the
+    # held-out device's predictions of the same recipe.
+    temperature = held["temperature_from_held_out_device"]["mirror_average" if mirror_average else "plain"]
     val_probs = probabilities(model, data, final_val, temperature, mirror_average)
     validation = measure(val_probs, labels[final_val], classes, hands_per_class)
     exported = export_bundle(model, data, final_val, labels[final_val], classes, temperature, mirror_average, val_probs, args.out)
     blob = exported.pop("blob")
+
+    independent = independent_clips(args.independent, classes)
+    if independent:
+        p = softmax(model.predict(psl_hands.features(aug.fixed(independent["hands"], independent["spans"])), verbose=0), temperature)
+        if mirror_average:
+            mirrored = psl_hands.mirror(aug.fixed(independent["hands"], independent["spans"])).astype(np.float32)
+            p = (p + softmax(model.predict(psl_hands.features(mirrored), verbose=0), temperature)) / 2
+        result["independent_signer"] = measure(p, independent["labels"], classes, hands_per_class)
+        order = np.argsort(-p, axis=1)
+        result["independent_signer"]["clips"] = [{"clip_gloss": name, "sign": classes[l], "answer": classes[o[0]],
+                                                   "probability": round(float(p[i, o[0]]), 3), "top5": l in o[:5]}
+                                                  for i, (name, l, o) in enumerate(zip(independent["names"], independent["labels"], order))]
+        print(f"independent signer (SLT dictionary): {result['independent_signer']['top1']} top-1 on {len(independent['labels'])} clips")
 
     train_counts = Counter(labels[final_train].tolist())
     class_entries = []
@@ -470,11 +549,14 @@ def main(argv: list[str] | None = None) -> int:
         "licences": LEDGER_IDS,
         "attribution": [json.loads(json.dumps(_attribution(i))) for i in LEDGER_IDS],
         "metrics": {
-            "device_held_out": {"protocol": "trained on the webcam folder, tested on the phone folder; weaker (no signer ids)",
+            "device_held_out": {"protocol": "trained on computer-camera recordings, tested on phone recordings; weaker (no signer ids)",
                                 "top1": (held["islr_lite"]["mirror_average"] if mirror_average else held["islr_lite"]["plain"])["top1"],
                                 "top5": (held["islr_lite"]["mirror_average"] if mirror_average else held["islr_lite"]["plain"])["top5"],
                                 "measured_on": "the same recipe trained without the phone folder (the shipped model also learned from it)"},
             "calibration_part": {"protocol": "10 % of both folders, same people and sessions (weaker)", "top1": validation["top1"], "top5": validation["top5"]},
+            **({"independent_signer": {"protocol": "SLT PSL dictionary clips (CC BY 4.0): one performer absent from SignSpeak, one clip per sign; a different dictionary, so a miss can also be a regional variant",
+                                       "samples": result["independent_signer"]["samples"], "top1": result["independent_signer"]["top1"],
+                                       "top5": result["independent_signer"]["top5"]}} if "independent_signer" in result else {}),
         },
     }
     args.out.mkdir(parents=True, exist_ok=True)

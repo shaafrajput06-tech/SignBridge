@@ -195,7 +195,7 @@ class SignSpeakConverterTests(unittest.TestCase):
             self.assertEqual(summary["counts"]["partial_samples_dropped"], 1)
             self.assertEqual(summary["folders_dropped_as_not_words"], {"test_word": 1})
             self.assertEqual(sorted(data["word"].tolist()), ["_unknown", "both", "mine", "mine", "mine"])
-            self.assertEqual(sorted(set(data["device"].tolist())), ["phone", "webcam"])
+            self.assertEqual(sorted(set(data["device"].tolist())), ["desktop", "phone"])
             self.assertEqual(data["hands"].shape, (5, 60, 2, 21, 3))
             mine = data["hands"][data["word"] == "mine"]
             self.assertTrue(np.isnan(mine[:, :, 0]).all() and not np.isnan(mine[:, :, 1]).any())

@@ -20,7 +20,11 @@ on:
       - ".github/workflows/psl-train.yml"
 
 permissions:
-  contents: read
+  contents: write  # only to push the finished bundle to a separate review branch (bundles/psl-run-N)
+  actions: read    # to read the Stage 1 web-learned landmarks artifact
+
+env:
+  WEB_LEARN_RUN: "44767308852"  # Stage 1 run whose SLT dictionary landmarks test one independent signer
 
 concurrency:
   group: psl-train-${{ github.ref_name }}
@@ -51,8 +55,35 @@ jobs:
           else
             python -c "import json; print(json.dumps({k: v for k, v in json.load(open('data/psl-signspeak-words/signspeak_summary.json')).items() if k != 'per_word'}, indent=2))"
           fi
+      - name: Get the Stage 1 SLT dictionary landmarks (independent-signer check)
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: web-learned-v1
+          path: data/web_learned/v1
+          run-id: ${{ env.WEB_LEARN_RUN }}
+          github-token: ${{ github.token }}
       - name: Train, measure and export
-        run: python -m tools.psl_train --data data/psl-signspeak-words/signspeak.npz --out out/psl --epochs "${{ github.event.inputs.epochs || '100' }}"
+        run: |
+          IND=""; [ -f data/web_learned/v1/manifest.json ] && IND="--independent data/web_learned/v1"
+          python -m tools.psl_train --data data/psl-signspeak-words/signspeak.npz --out out/psl --epochs "${{ github.event.inputs.epochs || '100' }}" $IND
+      - name: Push the bundle to a review branch (never to v3/master or main)
+        run: |
+          set -e
+          BRANCH="bundles/psl-run-${{ github.run_number }}"
+          mkdir -p models/psl reports
+          cp out/psl/manifest.json out/psl/psl_v3.tflite models/psl/
+          cp out/psl/parity_cases.json tests/golden/psl_parity_cases.json
+          cp out/psl/report.md reports/psl_v3_run.md
+          cp out/psl/measurements.json reports/psl_v3_measurements.json
+          cp data/psl-signspeak-words/signspeak_summary.json reports/psl_v3_signspeak_summary.json
+          git config user.name "signbridge-psl-train"
+          git config user.email "actions@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add models/psl tests/golden/psl_parity_cases.json reports/psl_v3_run.md reports/psl_v3_measurements.json reports/psl_v3_signspeak_summary.json
+          git commit -m "PSL bundle from training run ${{ github.run_id }} (commit ${{ github.sha }})"
+          git push origin "$BRANCH"
+          echo "Pushed $BRANCH for review."
       - name: Upload the bundle
         if: always()
         uses: actions/upload-artifact@v4
