@@ -7,6 +7,7 @@ import SignClip, { useClips } from "./SignClip.jsx";
 import { QuickPhrases, ReplyPanel, SentenceStrip } from "./Conversation.jsx";
 import { offlineSize, saveForOffline } from "./offline.js";
 import { adapt, forgetPersonal, learn, loadPersonal, savePersonal } from "./personal.js";
+import { cameraAdvice, createCameraCheck, videoBrightness } from "./camera_check.js";
 import { islrFrame, loadAslSpec, SignSegmenter } from "./asl_islr.js";
 import { createPslRecognizer, loadPslManifest } from "./psl_client.js";
 import { loadPslSpec } from "./psl_hands.js";
@@ -137,6 +138,7 @@ export default function App() {
   const [pslSigning, setPslSigning] = useState(false);
   const [sentenceWords, setSentenceWords] = useState([]);
   const [offline, setOffline] = useState({ status: "idle", totalBytes: null });
+  const [cameraCheck, setCameraCheck] = useState(null);
 
   const currentMode = MODE_LABELS[mode];
   modeRef.current = mode;
@@ -313,6 +315,9 @@ export default function App() {
     let lastSeen = "";
     let segmenter = null;
     let lastSigning = false;
+    const check = createCameraCheck();
+    const sampleCanvas = document.createElement("canvas");
+    setCameraCheck(null);
     let pslBusy = false;
     let pslPending = null;
     const psl = pslRef.current;
@@ -370,6 +375,10 @@ export default function App() {
             const seen = left && right ? "both" : left || right ? "one" : "none";
             if (seen !== lastSeen) { lastSeen = seen; setHands(seen); }
             frameNumber += 1;
+            if (!check.done) {
+              check.add(out.frame, frameNumber % 15 === 1 ? videoBrightness(videoRef.current, sampleCanvas) : null);
+              if (check.done) setCameraCheck(cameraAdvice(check.stats));
+            }
             if (modeRef.current === "psl" && psl.recognizer && psl.aslSpec) {
               // The baseline's frame layout and sign cutter (asl_islr_spec.json), then the PSL bundle.
               segmenter ??= new SignSegmenter(psl.aslSpec);
@@ -572,6 +581,8 @@ export default function App() {
               {cameraOn && <button className="camera-switch" aria-label="Switch front or rear camera" title="Switch camera" onClick={() => setFacing((value) => value === "user" ? "environment" : "user")}>↺</button>}
               {cameraOn && <button className="camera-stop" aria-label="Stop camera" onClick={() => { setCameraOn(false); setCurrent(null); setStatus("Camera stopped"); }}>Stop camera</button>}
             </div>
+            {cameraOn && cameraCheck && cameraCheck.some((item) => !item.ok) && <div className="camera-check" role="status"><b>Camera check</b>{cameraCheck.filter((item) => !item.ok).map((item) => <span key={item.id}>{item.text}</span>)}<button className="text-button" onClick={() => setCameraCheck(null)}>OK</button></div>}
+            {cameraOn && cameraCheck && cameraCheck.every((item) => item.ok) && <div className="camera-check ok" role="status"><b>Camera check</b><span>Light, distance and framing look good.</span></div>}
             <div className="camera-caption hand-legend"><span><i style={{ background: HAND_COLOURS.left }} /> Your left hand</span><span><i style={{ background: HAND_COLOURS.right }} /> Your right hand</span>{cameraOn && hands === "one" && <span className="inline-warning">Keep both hands in view.</span>}<button className="text-button" onClick={() => setHelpOpen(true)}>How it works <span>↗</span></button></div>
           </div>
 
