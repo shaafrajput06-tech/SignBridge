@@ -108,6 +108,35 @@ jobs:
           VITE_API_BASE: none
         run: npm run build
 
+      - name: PSL bundle in a real browser (Stage 2 gate, web part)
+        id: psl
+        continue-on-error: true
+        run: node tools/psl_browser/run.mjs | tee ci-results/psl-browser.txt
+
+      - name: Lighthouse on the Pages build (measured on GitHub's computer, simulated throttling)
+        id: lighthouse
+        continue-on-error: true
+        run: |
+          python -m http.server 4173 --directory web/dist > /dev/null 2>&1 &
+          sleep 2
+          export CHROME_PATH="$(cd web && node -e "console.log(require('playwright').chromium.executablePath())")"
+          for preset in desktop mobile; do
+            extra=""; [ "$preset" = desktop ] && extra="--preset=desktop"
+            npx --yes lighthouse@12 http://127.0.0.1:4173/ $extra --only-categories=performance,accessibility,best-practices \
+              --output=json --output-path="ci-results/lighthouse-$preset.json" --chrome-flags="--headless=new --no-sandbox" --quiet
+          done
+          python - <<'PY'
+          import json
+          out = {}
+          for preset in ("desktop", "mobile"):
+              d = json.load(open(f"ci-results/lighthouse-{preset}.json"))
+              out[preset] = {k: round(v["score"] * 100) for k, v in d["categories"].items()}
+              out[preset]["lcp_ms"] = round(d["audits"]["largest-contentful-paint"]["numericValue"])
+              out[preset]["lighthouse"] = d["lighthouseVersion"]
+          json.dump(out, open("ci-results/lighthouse-summary.json", "w"), indent=1)
+          print(json.dumps(out, indent=1))
+          PY
+
       - name: Build the offline shared copy (npm run build:shared)
         id: shared
         continue-on-error: true
@@ -125,7 +154,11 @@ jobs:
             echo "| All test suites (incl. Inference Baseline v1 in Chromium) | ${{ steps.tests.outcome }} |"
             echo "| Licence check, store-release rules | ${{ steps.licences.outcome }} |"
             echo "| ASL in the browser: worker, and same answers as the server | ${{ steps.asl.outcome }} |"
+            echo "| PSL bundle in the browser: same top-1 as Python | ${{ steps.psl.outcome }} |"
+            echo "| Lighthouse measured | ${{ steps.lighthouse.outcome }} |"
             echo "| Offline shared copy built | ${{ steps.shared.outcome }} |"
+            [ -f ci-results/psl-browser.txt ] && { echo ""; echo '```'; cat ci-results/psl-browser.txt; echo '```'; }
+            [ -f ci-results/lighthouse-summary.json ] && { echo ""; echo '```'; cat ci-results/lighthouse-summary.json; echo '```'; }
             echo ""
             echo "Download the preview site and the shared copy from **Artifacts** below."
             if [ -f ci-results/asl-selftest.json ]; then
