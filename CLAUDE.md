@@ -77,3 +77,25 @@ These amend sections 1-7. Where they conflict, this section wins; everything els
    up, the app's built-in AI does it automatically. AI-made labels never become Tier A by themselves,
    and the AI never invents a sign: it learns only from licensed reference clips (section 4 ledger)
    and from the user's own confirmed results.
+
+## 9. Master v3 amendments (added 2026-11-20, docs/prompts/master-v3.md)
+These amend sections 1-8. Where they conflict, this section wins; everything else still applies.
+
+1. **Baseline protection.** The Inference Baseline v1 (master-v3.md section 0; frozen copy in
+   `baseline/v1-site/`, git tag `inference-baseline-v1`, expected outputs in
+   `tests/golden/baseline_v1_outputs.json`) is never broken or replaced without a measured,
+   side-by-side improvement on the same evaluation set.
+2. **Internet videos are a data source, not a free-for-all.** Every video used for training is found,
+   checked and logged by `tools/web_learn/`. It is used only when its licence or the owner's written
+   permission allows that use, recorded in `data/LICENSES.yaml` *before* download. No scraping of sites
+   whose terms forbid it; no bypassing logins, paywalls or rate limits. Where a valuable source has no
+   licence, draft a permission request for the owner [ME] and move on.
+3. **Every sign is trained from internet videos, but no sign is promoted by the internet alone.** A
+   web-learned sign starts as Tier B. Tier A still needs the signer-independent gate (section 1) and,
+   for the "Validated by Deaf signers" badge, a Deaf validator's sign-off (section 3).
+4. **Language purity.** The web pipeline must classify the sign language of each clip; ASL, BSL, ISL or
+   other clips never carry labels into PSL (they may pretrain the encoder only, if licensed).
+5. **AI never invents a sign.** Language models may write sentences, explanations and search queries;
+   they never generate sign descriptions, landmarks or labels that are not backed by a real clip.
+6. **Performance is a feature.** Every release passes the budgets in master-v3.md section 5, measured,
+   not estimated.

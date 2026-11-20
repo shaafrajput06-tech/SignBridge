@@ -4,65 +4,193 @@
   "title": "SignBridge licence ledger (data/LICENSES.yaml)",
   "description": "One entry per dataset, model weight file, reference-clip collection, font or own-data collection. Checked by tools/check_licenses.py. Uses: pretrain_encoder = train a motion encoder without carrying labels over; train_labels = train a classifier on the asset's labels; evaluate = measure accuracy on it, nothing shipped; reference_clip = show its clips to users; redistribute_weights = ship model weights (the asset's own, or weights trained on it); redistribute_data = ship or re-publish the files themselves.",
   "type": "object",
-  "required": ["schema_version", "assets"],
+  "required": [
+    "schema_version",
+    "assets"
+  ],
   "additionalProperties": false,
   "properties": {
-    "schema_version": {"const": 1},
+    "schema_version": {
+      "const": 1
+    },
     "assets": {
       "type": "array",
       "minItems": 1,
       "items": {
         "type": "object",
-        "required": ["id", "name", "kind", "sign_language", "label_scope", "source_url", "licence", "licence_evidence",
-                     "allowed_uses", "conditions", "attribution", "status", "checked_on", "checked_by", "files"],
+        "required": [
+          "id",
+          "name",
+          "kind",
+          "sign_language",
+          "label_scope",
+          "source_url",
+          "licence",
+          "licence_evidence",
+          "allowed_uses",
+          "conditions",
+          "attribution",
+          "status",
+          "checked_on",
+          "checked_by",
+          "files"
+        ],
         "additionalProperties": false,
         "properties": {
-          "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$"},
-          "name": {"type": "string", "minLength": 3},
-          "kind": {"enum": ["dataset", "model_weights", "reference_clips", "capture_model", "lexicon", "font", "own_data"]},
-          "sign_language": {"enum": ["PSL", "ASL", "none"]},
-          "label_scope": {"enum": ["psl", "asl_mode_only", "none"]},
-          "source_url": {"type": "string", "pattern": "^(https://|project:)"},
-          "other_urls": {"type": "array", "items": {"type": "string", "pattern": "^https://"}},
-          "licence": {"type": "string", "minLength": 2},
-          "licence_url": {"type": "string", "pattern": "^https://"},
-          "licence_evidence": {"type": "string", "minLength": 10},
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3
+          },
+          "kind": {
+            "enum": [
+              "dataset",
+              "model_weights",
+              "reference_clips",
+              "capture_model",
+              "lexicon",
+              "font",
+              "own_data"
+            ]
+          },
+          "sign_language": {
+            "enum": [
+              "PSL",
+              "ASL",
+              "none"
+            ]
+          },
+          "label_scope": {
+            "enum": [
+              "psl",
+              "asl_mode_only",
+              "none"
+            ]
+          },
+          "source_url": {
+            "type": "string",
+            "pattern": "^(https://|project:)"
+          },
+          "other_urls": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^https://"
+            }
+          },
+          "licence": {
+            "type": "string",
+            "minLength": 2
+          },
+          "licence_url": {
+            "type": "string",
+            "pattern": "^https://"
+          },
+          "licence_evidence": {
+            "type": "string",
+            "minLength": 10
+          },
           "allowed_uses": {
             "type": "object",
-            "required": ["pretrain_encoder", "train_labels", "evaluate", "reference_clip", "redistribute_weights", "redistribute_data"],
+            "required": [
+              "pretrain_encoder",
+              "train_labels",
+              "evaluate",
+              "reference_clip",
+              "redistribute_weights",
+              "redistribute_data"
+            ],
             "additionalProperties": false,
             "properties": {
-              "pretrain_encoder": {"type": "boolean"},
-              "train_labels": {"type": "boolean"},
-              "evaluate": {"type": "boolean"},
-              "reference_clip": {"type": "boolean"},
-              "redistribute_weights": {"type": "boolean"},
-              "redistribute_data": {"type": "boolean"}
+              "pretrain_encoder": {
+                "type": "boolean"
+              },
+              "train_labels": {
+                "type": "boolean"
+              },
+              "evaluate": {
+                "type": "boolean"
+              },
+              "reference_clip": {
+                "type": "boolean"
+              },
+              "redistribute_weights": {
+                "type": "boolean"
+              },
+              "redistribute_data": {
+                "type": "boolean"
+              }
             }
           },
           "conditions": {
             "type": "array",
-            "items": {"enum": ["attribution", "share_alike", "non_commercial", "research_only", "provenance_unverified",
-                                "consent_required", "access_by_request", "no_raw_redistribution"]}
+            "items": {
+              "enum": [
+                "attribution",
+                "share_alike",
+                "non_commercial",
+                "research_only",
+                "provenance_unverified",
+                "consent_required",
+                "access_by_request",
+                "no_raw_redistribution",
+                "no_derivatives",
+                "platform_terms_forbid_download",
+                "language_unconfirmed",
+                "licence_version_unstated"
+              ]
+            }
           },
-          "attribution": {"type": "string"},
-          "status": {"enum": ["cleared", "cleared_with_conditions", "permission_needed", "blocked", "not_available", "unverified"]},
-          "checked_on": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"},
-          "checked_by": {"type": "string", "minLength": 2},
+          "attribution": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "cleared",
+              "cleared_with_conditions",
+              "permission_needed",
+              "blocked",
+              "not_available",
+              "unverified"
+            ]
+          },
+          "checked_on": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+          },
+          "checked_by": {
+            "type": "string",
+            "minLength": 2
+          },
           "files": {
             "type": "array",
             "items": {
               "type": "object",
-              "required": ["path"],
+              "required": [
+                "path"
+              ],
               "additionalProperties": false,
               "properties": {
-                "path": {"type": "string", "pattern": "^[A-Za-z0-9_.][A-Za-z0-9_./*-]*$"},
-                "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+                "path": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9_.][A-Za-z0-9_./*-]*$"
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
               }
             }
           },
-          "facts": {"type": "object"},
-          "notes": {"type": "string"}
+          "facts": {
+            "type": "object"
+          },
+          "notes": {
+            "type": "string"
+          }
         }
       }
     }

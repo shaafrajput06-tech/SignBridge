@@ -1,6 +1,7 @@
 """Run every automated SignBridge test that this machine can run, and say what was skipped.
 
-    python tools/run_all_tests.py           Python tests + licence ledger check + browser parity tests (Node) + Flutter tests (if installed)
+    python tools/run_all_tests.py           Python tests + licence ledger check + browser parity tests (Node)
+                                            + Inference Baseline v1 in a real browser (if restored) + Flutter tests (if installed)
     python tools/run_all_tests.py --smoke   also the fake-camera browser smoke test (needs Playwright)
 
 Node tests that import src/vision.js need `npm install` in web/ (they load @mediapipe/tasks-vision).
@@ -50,6 +51,19 @@ def main() -> int:
         else:
             results["Browser v1 parity tests (Node)"] = run("Browser v1 parity tests (Node)", [node, "--test", *needs_packages], WEB)
         results["Browser v2 tests (Node)"] = run("Browser v2 tests (Node)", [node, "--test", *standalone], WEB)
+
+    # Inference Baseline v1 (master-v3.md section 0): the frozen build and its real model in Chromium.
+    if not node:
+        results["Baseline v1 in a browser"] = "SKIPPED: Node.js is not installed"
+    else:
+        print("\n=== Baseline v1 in a browser ===", flush=True)
+        completed = subprocess.run([node, str(ROOT / "tools" / "baseline" / "run.mjs")], cwd=ROOT, capture_output=True, text=True)
+        print(completed.stdout + completed.stderr, end="")
+        if completed.returncode == 3:
+            reason = completed.stdout.strip().splitlines()[-1].split(": ", 1)[-1] if completed.stdout.strip() else "see above"
+            results["Baseline v1 in a browser"] = f"SKIPPED: {reason[:120]}"
+        else:
+            results["Baseline v1 in a browser"] = "PASSED" if completed.returncode == 0 else f"FAILED (exit {completed.returncode})"
 
     if args.smoke:
         npm = shutil.which("npm")

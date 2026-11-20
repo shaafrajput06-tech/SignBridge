@@ -186,6 +186,13 @@ export function confidenceBand(probability, aslSpec) {
   return "none";
 }
 
+// Speak a result aloud only when it is "sure" AND at least confidence.speak_at (0.70, measured: at that
+// level 1.7 % of answers were wrong on the GISLR rerun set; master-v3 allows at most 2 % spoken wrong).
+export function shouldSpeak(probability, aslSpec) {
+  const rules = aslSpec.confidence;
+  return confidenceBand(probability, aslSpec) === "sure" && probability >= (rules.speak_at ?? rules.sure);
+}
+
 // ------------------------------------------------------------------ TFLite flatbuffer: read and patch the input
 
 function reader(bytes) {

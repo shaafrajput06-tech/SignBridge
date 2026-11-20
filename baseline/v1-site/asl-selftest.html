@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SignBridge — ASL mode self-test</title>
+    <style>body{color:#edf4ee;background:#10211f;margin:24px;font-family:system-ui,sans-serif}h1{font-size:20px}p{color:#9aada5;max-width:760px}#status{margin:12px 0;font-weight:700}pre{white-space:pre-wrap;background:#142321;border:1px solid #d0e6da33;border-radius:12px;padding:14px;font-size:12px}</style>
+    <script type="module" crossorigin src="./assets/aslSelftest-CcwTSPm3.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/capture_v2-B1HThk3J.js">
+    <link rel="modulepreload" crossorigin href="./assets/asl_client-CAfZVWoY.js">
+  </head>
+  <body>
+    <h1>ASL mode self-test</h1>
+    <p>Runs the ASL model on made-up landmark sequences (no camera) in this browser, and on the SignBridge
+      server if it is running, then compares the two. It checks that the model loads, how long one sign takes,
+      and that both runtimes give the same answer for the same input. It says nothing about accuracy on real
+      signing: that is measured by notebooks/asl_mode_eval.ipynb.</p>
+    <div id="status">Running…</div>
+    <pre id="result"></pre>
+  </body>
+</html>

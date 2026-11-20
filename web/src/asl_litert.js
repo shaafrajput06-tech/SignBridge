@@ -4,6 +4,7 @@
 // Used inside src/asl_worker.js, and on the main thread when a module worker is not available.
 import { loadAndCompile, loadLiteRt, Tensor } from "@litertjs/core";
 import { patchTfliteFrames, readTfliteInput } from "./asl_islr.js";
+import { pointWasmAtRuntimeFolder } from "./wasm_locate.js";
 
 let runtimeLoad = null;
 
@@ -28,6 +29,7 @@ export async function createLiteRtAslModel({ modelUrl, wasmPath, frames, sha256,
   const bytes = new Uint8Array(buffer);
   const originalInput = readTfliteInput(bytes);
   const patched = patchTfliteFrames(bytes, frames, rowsPerFrame);
+  pointWasmAtRuntimeFolder(wasmPath); // in the worker: .wasm files come from litert/, not assets/
   runtimeLoad ??= loadLiteRt(wasmPath);
   await runtimeLoad;
   const model = await loadAndCompile(patched, { accelerator: "wasm" });

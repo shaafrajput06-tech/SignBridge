@@ -1,0 +1,10 @@
+{
+  "name": "SignBridge",
+  "site_url": "https://signbridge-pk.github.io/",
+  "repository": "signbridge-pk/signbridge-pk.github.io",
+  "repository_url": "https://github.com/signbridge-pk/signbridge-pk.github.io",
+  "old_site_urls": ["https://shaafrajput06-tech.github.io/SignBridge/"],
+  "old_repositories": ["shaafrajput06-tech/SignBridge"],
+  "status": "chosen by the owner on 2026-11-20; live once the owner creates the free GitHub organisation 'signbridge-pk' and moves the repository there (docs/DOMAIN.md). Until then the old address keeps working.",
+  "why_not_signbridge_github_io": "The GitHub name 'signbridge' belongs to another organisation (checked 2026-11-20), and only the owner of that name can publish at signbridge.github.io."
+}

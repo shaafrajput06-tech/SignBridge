@@ -225,6 +225,12 @@ def confidence_band(probability: float, spec: dict | None = None) -> str:
     return "none"
 
 
+def should_speak(probability: float, spec: dict | None = None) -> bool:
+    """Speak aloud only when 'sure' and >= confidence.speak_at (0.70; measured 1.7 % wrong on the GISLR rerun set)."""
+    rules = (spec or SPEC)["confidence"]
+    return confidence_band(probability, spec) == "sure" and probability >= rules.get("speak_at", rules["sure"])
+
+
 # --------------------------------------------------------------------------- the model
 
 def sha256_file(path: Path) -> str:

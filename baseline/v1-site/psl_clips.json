@@ -1,0 +1,160 @@
+{
+ "attribution": "Pakistan Sign Language dictionary clips from Sign Language Datasets by Mudassar Iqbal (2023), github.com/sign-language-translator/sign-language-datasets, CC BY 4.0.",
+ "clips": [
+  {
+   "word": "welcome",
+   "label": "welcome.reception",
+   "file": "clips/psl/pk-hfad-1_welcome.reception.mp4"
+  },
+  {
+   "word": "no",
+   "label": "no",
+   "file": "clips/psl/pk-hfad-1_no.mp4"
+  },
+  {
+   "word": "help",
+   "label": "help",
+   "file": "clips/psl/pk-hfad-1_help.mp4"
+  },
+  {
+   "word": "wait",
+   "label": "wait",
+   "file": "clips/psl/pk-hfad-1_wait.mp4"
+  },
+  {
+   "word": "close",
+   "label": "close.shut",
+   "file": "clips/psl/pk-hfad-1_close.shut.mp4"
+  },
+  {
+   "word": "play",
+   "label": "play.sports",
+   "file": "clips/psl/pk-hfad-1_play.sports.mp4"
+  },
+  {
+   "word": "mother",
+   "label": "mother",
+   "file": "clips/psl/pk-hfad-1_mother.mp4"
+  },
+  {
+   "word": "father",
+   "label": "papa",
+   "file": "clips/psl/pk-hfad-1_papa.mp4"
+  },
+  {
+   "word": "friend",
+   "label": "friend",
+   "file": "clips/psl/pk-hfad-1_friend.mp4"
+  },
+  {
+   "word": "family",
+   "label": "family",
+   "file": "clips/psl/pk-hfad-1_family.mp4"
+  },
+  {
+   "word": "teacher",
+   "label": "teacher",
+   "file": "clips/psl/pk-hfad-1_teacher.mp4"
+  },
+  {
+   "word": "doctor",
+   "label": "doctor.physician",
+   "file": "clips/psl/pk-hfad-1_doctor.physician.mp4"
+  },
+  {
+   "word": "home",
+   "label": "house",
+   "file": "clips/psl/pk-hfad-1_house.mp4"
+  },
+  {
+   "word": "school",
+   "label": "school",
+   "file": "clips/psl/pk-hfad-1_school.mp4"
+  },
+  {
+   "word": "hospital",
+   "label": "hospital",
+   "file": "clips/psl/pk-hfad-1_hospital.mp4"
+  },
+  {
+   "word": "market",
+   "label": "market",
+   "file": "clips/psl/pk-hfad-1_market.mp4"
+  },
+  {
+   "word": "tea",
+   "label": "tea",
+   "file": "clips/psl/pk-hfad-1_tea.mp4"
+  },
+  {
+   "word": "book",
+   "label": "book",
+   "file": "clips/psl/pk-hfad-1_book.mp4"
+  },
+  {
+   "word": "bag",
+   "label": "bag.noun",
+   "file": "clips/psl/pk-hfad-1_bag.noun.mp4"
+  },
+  {
+   "word": "medicine",
+   "label": "medication",
+   "file": "clips/psl/pk-hfad-1_medication.mp4"
+  },
+  {
+   "word": "good",
+   "label": "good",
+   "file": "clips/psl/pk-hfad-1_good.mp4"
+  },
+  {
+   "word": "happy",
+   "label": "happiness",
+   "file": "clips/psl/pk-hfad-1_happiness.mp4"
+  },
+  {
+   "word": "sad",
+   "label": "unhappy",
+   "file": "clips/psl/pk-hfad-1_unhappy.mp4"
+  },
+  {
+   "word": "pain",
+   "label": "ache",
+   "file": "clips/psl/pk-hfad-1_ache.mp4"
+  },
+  {
+   "word": "emergency",
+   "label": "emergency",
+   "file": "clips/psl/pk-hfad-1_emergency.mp4"
+  },
+  {
+   "word": "what",
+   "label": "what",
+   "file": "clips/psl/pk-hfad-1_what.mp4"
+  },
+  {
+   "word": "who",
+   "label": "who",
+   "file": "clips/psl/pk-hfad-1_who.mp4"
+  },
+  {
+   "word": "when",
+   "label": "when",
+   "file": "clips/psl/pk-hfad-1_when.mp4"
+  },
+  {
+   "word": "today",
+   "label": "today",
+   "file": "clips/psl/pk-hfad-1_today.mp4"
+  },
+  {
+   "word": "tomorrow",
+   "label": "tomorrow",
+   "file": "clips/psl/pk-hfad-1_tomorrow.mp4"
+  },
+  {
+   "word": "time",
+   "label": "time",
+   "file": "clips/psl/pk-hfad-1_time.mp4"
+  }
+ ]
+}

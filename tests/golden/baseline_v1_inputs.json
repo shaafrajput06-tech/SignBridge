@@ -1,0 +1,24 @@
+{
+  "fixture": "SignBridge Inference Baseline v1: model input cases",
+  "note": "Inputs only. Built from tests/golden/v2_holistic.json.gz (synthetic geometry) and from the seeded synthetic signer (web/src/synthetic_sign.js). Not sign data: never train or evaluate accuracy on these. The baseline's outputs for them are in baseline_v1_outputs.json.",
+  "fixed_frames": 32,
+  "static": {"repeat": 12, "from": "every canonicalize_case whose raw frame is not mirrored, in file order"},
+  "mix": [
+    {"id": "mix_len009", "length": 9, "offset": 0},
+    {"id": "mix_len016", "length": 16, "offset": 3},
+    {"id": "mix_len032", "length": 32, "offset": 6},
+    {"id": "mix_len045", "length": 45, "offset": 9},
+    {"id": "mix_len064", "length": 64, "offset": 12},
+    {"id": "mix_len120", "length": 120, "offset": 15}
+  ],
+  "mix_rule": "frame j of a mix case is the islr frame of unmirrored canonicalize case number (7 * j + offset) mod N, N = number of unmirrored cases",
+  "synthetic": [
+    {"id": "syn_s11_alternating_len10", "seed": 11, "length": 10, "pattern": "alternating"},
+    {"id": "syn_s22_alternating_len32", "seed": 22, "length": 32, "pattern": "alternating"},
+    {"id": "syn_s33_alternating_len57", "seed": 33, "length": 57, "pattern": "alternating"},
+    {"id": "syn_s44_one_len24", "seed": 44, "length": 24, "pattern": "one"},
+    {"id": "syn_s55_two_len48", "seed": 55, "length": 48, "pattern": "two"},
+    {"id": "syn_s66_gap_len40", "seed": 66, "length": 40, "pattern": "gap"},
+    {"id": "syn_s77_two_len90", "seed": 77, "length": 90, "pattern": "two"}
+  ]
+}

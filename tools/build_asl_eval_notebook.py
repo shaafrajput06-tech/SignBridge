@@ -81,14 +81,26 @@ def predict(sequence):
 print("Model ready:", runtime, "| input", interpreter.get_input_details()[0]["shape_signature"])
 """
 
-FIND_DATA = """found = find_label_csv(INPUT_ROOT)
+FIND_DATA = """found = find_label_table(INPUT_ROOT)
 if found is None:
-    raise SystemExit("No CSV with 'path' and 'sign' columns was found. Add the 'ASL Isolated Sign Recognition Rerun Set' dataset as input.")
-csv_path, columns = found
+    raise SystemExit("No label table (CSV or parquet with a 'sign' column and a 'path' or 'sequence_id' column) was found. "
+                     "Add the 'ASL Isolated Sign Recognition Rerun Set' dataset as input.")
+label_path, columns = found
 import pandas as pd
-table = pd.read_csv(csv_path)
-base = os.path.dirname(csv_path)
+table = read_label_table(label_path)
+print(f"Label file: {label_path} | columns: {list(table.columns)}")
+print(table.head(3).to_string())
+base = os.path.dirname(label_path)
+if columns["path"] is None:  # the rerun set lists sequence ids; each names a landmark file
+    stems = index_landmark_files(base, exclude=[label_path])
+    table["path"] = [stems.get(str(value)) for value in table[columns["sequence"]]]
+    print(f"Matched {int(table['path'].notna().sum())} of {len(table)} sequence ids to landmark files")
+    table = table[table["path"].notna()].reset_index(drop=True)
+    columns = {**columns, "path": "path"}
 def resolve(relative):
+    relative = str(relative)
+    if os.path.isabs(relative) and os.path.exists(relative):
+        return relative
     for candidate in (os.path.join(base, relative), os.path.join(INPUT_ROOT, relative)):
         if os.path.exists(candidate):
             return candidate
@@ -97,7 +109,6 @@ def resolve(relative):
             return os.path.join(folder, os.path.basename(relative))
     return None
 unknown = sorted(set(table[columns["sign"]]) - set(labels))
-print(f"Label file: {csv_path}")
 print(f"Samples: {len(table)} | signs: {table[columns['sign']].nunique()} | signers: {table[columns['participant']].nunique() if columns['participant'] else 'not given'}")
 if unknown:
     print("Signs not in the model's 250 (skipped):", unknown[:20])
@@ -107,9 +118,9 @@ if MAX_SAMPLES:
 
 # Optional: if the competition's own train.csv is attached too, check that no rerun signer was in training.
 train_overlap = None
-competition = find_label_csv(INPUT_ROOT, exclude=[csv_path])
+competition = find_label_table(INPUT_ROOT, exclude=[label_path])
 if competition and columns["participant"] and competition[1]["participant"]:
-    train_ids = set(pd.read_csv(competition[0])[competition[1]["participant"]])
+    train_ids = set(read_label_table(competition[0])[competition[1]["participant"]])
     train_overlap = sorted(set(table[columns["participant"]]) & train_ids)
     print(f"Signers also in {competition[0]}: {train_overlap if train_overlap else 'none'}")
 """
@@ -152,7 +163,7 @@ SUMMARY = """summary = summarise(records, labels)
 results = {
     "notebook": "notebooks/asl_mode_eval.ipynb",
     "measured_on": datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"),
-    "dataset": {"name": "ASL Isolated Sign Recognition Rerun Set", "label_file": csv_path, "samples_listed": int(len(table)),
+    "dataset": {"name": "ASL Isolated Sign Recognition Rerun Set", "label_file": label_path, "samples_listed": int(len(table)),
                 "samples_evaluated": len(records), "unreadable": len(errors), "first_errors": errors[:10],
                 "signers": sorted({r["participant"] for r in records if r["participant"] is not None}),
                 "signers_also_in_training_csv": train_overlap},

@@ -3,7 +3,7 @@
 // signs and runs the Google Isolated Sign Language Recognition 1st-place model (250 ASL signs).
 import React, { useEffect, useRef, useState } from "react";
 import { createCaptureV2, loadFeatureSpecV2 } from "./capture_v2.js";
-import { handCounts, islrFrame, loadAslSpec, SignSegmenter } from "./asl_islr.js";
+import { handCounts, islrFrame, loadAslSpec, shouldSpeak, SignSegmenter } from "./asl_islr.js";
 import { createAslRecognizer, loadAslLabels } from "./asl_client.js";
 
 const HAND_LINKS = [[0, 1], [1, 2], [2, 3], [3, 4], [0, 5], [5, 6], [6, 7], [7, 8], [5, 9], [9, 10], [10, 11], [11, 12],
@@ -89,7 +89,7 @@ export default function AslMode({ requestCamera, voiceEnabled }) {
         if (!active) return;
         setResult({ ...answer, twoHandFrames });
         setHistory((items) => [{ ...answer.top[0], band: answer.band, at: Date.now() }, ...items].slice(0, 5));
-        if (answer.band === "sure" && voiceRef.current) speak(answer.top[0].display);
+        if (voiceRef.current && shouldSpeak(answer.top[0].probability, aslSpec)) speak(answer.top[0].display);
       }).catch((error) => {
         if (active) setMessage(`The ASL model stopped: ${error.message || error}`);
       }).finally(() => {
@@ -193,7 +193,7 @@ export default function AslMode({ requestCamera, voiceEnabled }) {
           {result?.band === "none" && <div className="translation-output"><div className="asl-confidence none">I'm not sure. Try once more.</div><div className="translation-helper">Keep both hands and your face in view, and sign a little slower.</div></div>}
           {result && <p className="asl-details">{result.frames} frames · {result.twoHandFrames} with both hands · {Math.round(result.ms)} ms · {result.runtime === "server" ? "ran on the SignBridge server on this computer" : "ran in this browser"}</p>}
           {history.length > 1 && <div className="asl-history"><span className="section-kicker">EARLIER</span>{history.slice(1).map((item) => <span key={item.at} className={`asl-history-item ${item.band}`}>{item.band === "sure" ? item.display : `${item.display}?`}</span>)}</div>}
-          <p className="asl-credit">Runs {runtime ? (runtime.frames ? `in this browser (LiteRT.js, ${runtime.frames}-frame input)` : `on ${runtime.runtime}`) : "on this device"}. Model: 1st place of Google's Isolated Sign Language Recognition competition by Hoyeol Sohn (MIT licence), trained on signs by Deaf signers from the Deaf Professional Arts Network and Georgia Tech (CC BY 4.0). Results are spoken only when it is pretty sure.</p>
+          <p className="asl-credit">Runs {runtime ? (runtime.frames ? `in this browser (LiteRT.js, ${runtime.frames}-frame input)` : `on ${runtime.runtime}`) : "on this device"}. Model: 1st place of Google's Isolated Sign Language Recognition competition by Hoyeol Sohn (MIT licence), trained on signs by Deaf signers from the Deaf Professional Arts Network and Georgia Tech (CC BY 4.0). Results are spoken only when it is very sure (70 % or more).</p>
         </div>
       </div>
     </section>

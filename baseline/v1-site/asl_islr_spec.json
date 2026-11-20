@@ -1,0 +1,83 @@
+{
+  "spec": "SignBridge ASL mode input spec",
+  "spec_version": "1.0.0",
+  "feature_version": "asl-islr-543-v1",
+  "sign_language": "ASL",
+  "implementations": [
+    "ml_engine/asl_islr.py (reference)",
+    "web/src/asl_islr.js"
+  ],
+  "model": {
+    "asset_id": "asl-islr-1st-place-tflite",
+    "file": "models/asl/model.tflite",
+    "url": "https://huggingface.co/sign/kaggle-asl-signs-1st-place/resolve/main/model.tflite",
+    "bytes": 11242036,
+    "sha256": "f55a2bb1ebe6d1e912a98e31c6ef3f995c9ae261f408fe115f2008099d3f0bb7",
+    "input": {"name": "inputs", "shape_signature": [-1, 543, 3], "dtype": "float32"},
+    "output": {"name": "outputs", "shape": [250], "dtype": "float32"},
+    "notes": "Read from the file's flatbuffer on 2026-11-18: one signature 'serving_default', 1,408 operators of 32 built-in kinds, no custom ops, two IF branches inside the model's own preprocessing."
+  },
+  "classes": {
+    "file": "models/asl/sign_to_prediction_index_map.json",
+    "url": "https://huggingface.co/sign/kaggle-asl-signs-1st-place/resolve/main/sign_to_prediction_index_map.json",
+    "bytes": 3352,
+    "sha256": "1fe747c2f44c68dbb396947e35193c96d363f3dede0be8defa5e08546400bf5d",
+    "count": 250
+  },
+  "layout": {
+    "rows_per_frame": 543,
+    "values": ["x", "y", "z"],
+    "missing": "NaN",
+    "parts": [
+      {"name": "face", "start": 0, "count": 468, "source": "Face Landmarker points 0-467 (the 468-point mesh; the 10 iris points 468-477 are dropped)"},
+      {"name": "left_hand", "start": 468, "count": 21, "source": "the signer's left hand, as assigned by features_v2.canonicalize_frame"},
+      {"name": "pose", "start": 489, "count": 33, "source": "all 33 Pose Landmarker points (visibility dropped)"},
+      {"name": "right_hand", "start": 522, "count": 21, "source": "the signer's right hand, as assigned by features_v2.canonicalize_frame"}
+    ],
+    "notes": "The Google Isolated Sign Language Recognition data layout: per frame the parquet rows are face, left_hand, pose, right_hand."
+  },
+  "conventions": {
+    "coordinates": "x and y are normalised coordinates of the upright, unmirrored camera frame; z is MediaPipe's own relative depth for that part",
+    "hand_slots": "anatomical",
+    "hand_slots_status": "assumed; notebooks/asl_mode_eval.ipynb measures it on the rerun set (hand wrists against pose wrists, and which slot holds the dominant hand)",
+    "mirrored_input": "refused: the 468-point face mesh has no mirror map here, so callers pass unmirrored frames and mirror only what they display"
+  },
+  "segmentation": {
+    "rule": "A sign starts on the first frame with a hand and ends after end_after_missing_frames frames without hands. It keeps margin_frames frames before and after. Signs with fewer than min_hand_frames frames that show a hand are dropped; a sign is cut at max_frames.",
+    "min_hand_frames": 6,
+    "end_after_missing_frames": 8,
+    "margin_frames": 2,
+    "max_frames": 192
+  },
+  "fixed_length": {
+    "frames": 32,
+    "rule": "nearest-frame resampling: for T > 1, output frame i is input frame floor((2*i*(L-1) + (T-1)) / (2*(T-1))); for T = 1 it is frame 0",
+    "used_by": "the browser runtime only: LiteRT.js cannot take a variable number of frames, so the model's input is rewritten to frames x 543 x 3 before it is compiled",
+    "status": "32 is a starting value; notebooks/asl_mode_eval.ipynb compares 16, 24, 32, 48 and 64 frames with the native variable length"
+  },
+  "confidence": {
+    "sure": 0.6,
+    "unsure": 0.25,
+    "words": {
+      "sure": "Pretty sure",
+      "unsure": "Not sure. Is it one of these?",
+      "none": "I'm not sure. Try once more."
+    },
+    "status": "starting values, chosen before any measurement; notebooks/asl_mode_eval.ipynb reports accuracy above each threshold",
+    "speak_only_when": "sure"
+  },
+  "display_names": {
+    "TV": "TV",
+    "callonphone": "call on the phone",
+    "frenchfries": "french fries",
+    "glasswindow": "glass / window",
+    "haveto": "have to",
+    "hesheit": "he / she / it",
+    "icecream": "ice cream",
+    "minemy": "mine / my",
+    "thankyou": "thank you",
+    "weus": "we / us",
+    "owie": "owie (hurt)",
+    "shhh": "shhh (quiet)"
+  }
+}

@@ -1,6 +1,7 @@
 # ASL mode v1: report (fast track Stage 2)
 
-Status: **draft, gate not passed yet.** Everything that can be built and checked without the owner's
+Status: **draft, gate not passed yet.** Update 2026-11-20: see "Update (master v3, Stage 0)" at the
+end; the Kaggle numbers and the owner's device numbers are still pending. Everything that can be built and checked without the owner's
 laptop and a Kaggle run is done and tested. The measured numbers below say "pending" until those two
 runs report back; none is estimated.
 
@@ -62,13 +63,13 @@ passed.
 
 | Metric | Value | Dataset / split / signers | Device | Source |
 |---|---|---|---|---|
-| Top-1 accuracy, native length (server path) | pending | GISLR rerun set, signers absent from training (to be confirmed by the notebook) | Kaggle CPU | `notebooks/asl_mode_eval.ipynb` |
-| Top-5 accuracy, native length | pending | same | Kaggle CPU | same |
-| Top-1 at 16 / 24 / 32 / 48 / 64 frames (browser path) | pending | every 5th sample of the same set | Kaggle CPU | same |
-| One-handed vs two-handed top-1 | pending | same | — | same |
-| Left- vs right-dominant top-1 | pending | same | — | same |
-| Accuracy above the "Pretty sure" threshold (0.6, a starting value) | pending | same | — | same |
-| Hand-slot convention (assumed anatomical) | pending | same | — | same |
+| Top-1 accuracy, native length (server path) | **86.2 %** (39,443 signs, 0 unreadable) | GISLR rerun set (CC0), 250 signs; signers reported absent from training by the dataset's publisher (the label file has no signer ids, so this could not be re-checked) | Kaggle CPU, tensorflow 2.21, 2026-11-20 | `reports/asl_eval_results_2026-11-20.json` |
+| Top-5 accuracy, native length | **95.4 %** | same | Kaggle CPU, tensorflow 2.21, 2026-11-20 | `reports/asl_eval_results_2026-11-20.json` |
+| Top-1 at 16 / 24 / 32 / 48 / 64 frames (browser path) | 84.2 / 85.0 / **85.3** / 85.0 / 84.6 % (native on the same 7,889 signs: 86.1 %) | every 5th sample of the same set | Kaggle CPU, tensorflow 2.21, 2026-11-20 | `reports/asl_eval_results_2026-11-20.json` |
+| One-handed vs two-handed top-1 | 86.2 % (39,432 signs) vs 18.2 % (**11 signs only**: too few to mean anything; GISLR signs almost never show both hands in most frames) | same | Kaggle CPU, tensorflow 2.21, 2026-11-20 | `reports/asl_eval_results_2026-11-20.json` |
+| Left- vs right-dominant top-1 | 89.1 % (13,609) vs 84.6 % (25,834): a **4.5-point gap**, over the 3-point target | same | Kaggle CPU, tensorflow 2.21, 2026-11-20 | `reports/asl_eval_results_2026-11-20.json` |
+| Accuracy above the "Pretty sure" threshold | at 0.60: 97.2 % right, covering 76.6 % of signs (2.8 % wrong); at 0.70: 98.3 % (71.1 %, 1.7 % wrong); at 0.80: 99.0 % (64.2 %) | same | Kaggle CPU, tensorflow 2.21, 2026-11-20 | `reports/asl_eval_results_2026-11-20.json` |
+| Hand-slot convention (assumed anatomical) | **confirmed**: the right-hand slot sits at the pose's right wrist in 99.85 % of 679,537 frames, and left of the nose in the (unmirrored) image in 99.52 % | same | Kaggle CPU, tensorflow 2.21, 2026-11-20 | `reports/asl_eval_results_2026-11-20.json` |
 | Browser runtime loads and runs; latency per sign | pending | made-up landmark sequences (no accuracy meaning) | the owner's laptop | `web/asl-selftest.html` |
 | Browser vs server output on identical input | pending | same | the owner's laptop | same |
 | Camera → ASL word on screen | pending | a person signing | the owner's laptop | manual check |
@@ -87,3 +88,34 @@ passed.
   frames; only the display is mirrored.
 - ASL fingerspelling is not included (no published weights).
 - The phone app does not have ASL mode until Stage 6 (on-device capture).
+
+## Update (master v3, Stage 0, 2026-11-20)
+
+Full details and sources: `reports/v3_stage0_baseline.md`.
+
+| Row above | Now |
+|---|---|
+| Browser runtime loads and runs; latency per sign | Runs, in the Web Worker. Median per sign (32 frames, synthetic): 12.8 ms in this workspace (headless Chrome 153, 2 cores, frozen baseline build); 9.8-16.3 ms in GitHub Actions (HeadlessChrome 159, 4 cores, v3 preview build). The owner's laptop and phone: **pending**. |
+| Browser vs server output on identical input | Same top-1 on 3 of 3 self-test signs, largest probability difference 1.9e-8 (GitHub Actions, preview run 44709553244). |
+| Camera → ASL word on screen | The plumbing works end to end (fake camera, baseline build); a person signing ASL: **pending**. |
+| All Kaggle rows | **Filled in** from the run of 2026-11-20 (Kaggle notebook version 2, model SHA-256 f55a2bb1…f0bb7), see the table above and `reports/asl_eval_results_2026-11-20.json`. Server-path latency there: median 10.9 ms, p90 20.1 ms per sign (Kaggle CPU, tensorflow). |
+
+New finding: on the live build the model ran on the page thread, not in the worker (fixed on
+`v3/master`, `web/src/wasm_locate.js`). And "Pretty sure" was shown for a PSL sign the ASL model
+cannot know, so the 0.60 threshold alone does not stop wrong words being spoken; it will be set from
+the Kaggle calibration table.
+
+### Decisions taken from the Kaggle numbers (2026-11-20)
+
+- **Browser frame count stays 32.** It is the most accurate of 16/24/32/48/64 (85.3 %, 0.8 points below native
+  length on the same signs). The rule fixed before the run ("smallest within 0.5 points of native, otherwise the
+  largest within the latency budget") assumed accuracy grows with frames; it does not (48 and 64 are worse), and no
+  length came within 0.5 points, so the most accurate length was kept. The server path (native length) stays the
+  default wherever the local server runs.
+- **Spoken aloud only at 0.70 or more** (`confidence.speak_at`): at 0.60, 2.8 % of "Pretty sure" answers were
+  wrong, more than the 2 % master-v3 allows to be spoken; at 0.70, 1.7 %. What the screen shows is unchanged
+  (the baseline's words and thresholds), so the frozen baseline outputs still match.
+- **Missed targets, with next steps:** left/right gap 4.5 points (target ≤ 3): try averaging the prediction on the
+  original and the mirrored sign (test-time mirroring) in the next notebook run. Two-handed accuracy cannot be
+  judged on GISLR (11 signs); it will be measured on PSL data in Stage 2. Out-of-vocabulary input (a PSL sign)
+  was still shown as "Pretty sure"; an unknown/not-a-sign check is planned with Stage 2.

@@ -43,7 +43,8 @@ SCAN_RULES: tuple[dict[str, Any], ...] = (
     {"root": "data", "all_of": (), "any_of": ("train_labels", "pretrain_encoder", "evaluate", "reference_clip"), "shipped": False},
 )
 IGNORED_NAMES = {".gitkeep", "README.md", ".DS_Store", "Thumbs.db", "desktop.ini"}
-IGNORED_PATTERNS = ("data/LICENSES.yaml", "data/licenses.schema.json", "data/cards/*", "data/mappings/*", "models/*.download")
+IGNORED_PATTERNS = ("data/LICENSES.yaml", "data/licenses.schema.json", "data/cards/*", "data/mappings/*", "models/*.download",
+                    "data/web_learn/*")  # web_learn: search metadata (candidates, drafted ledger entries), not data
 
 
 class LedgerError(Exception):

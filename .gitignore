@@ -37,3 +37,15 @@ web/public/litert/
 web/public/asl_islr_spec.json
 fast-track-history.bundle
 apply_fast_track_history.bat
+# Inference Baseline v1: third-party runtimes, models and clips are restored from the release zip
+# (python tools/baseline_v1.py restore --download), never committed.
+baseline/v1-site/litert/
+baseline/v1-site/wasm/
+baseline/v1-site/clips/
+baseline/v1-site/models/*.task
+baseline/v1-site/models/asl/model.tflite
+baseline/out/
+web/dist-shared/
+
+# Web-learned landmarks are data: never committed (the web-learn workflow uploads them as an artifact).
+data/web_learned/

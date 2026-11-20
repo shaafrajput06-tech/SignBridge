@@ -43,7 +43,7 @@ from ml_engine.features_v2 import LAYOUT, SPEC, sequence_features
 
 FORMAT = "signbridge-recording"
 FORMAT_VERSION = 2
-SOURCES = ("capture_v2", "v1-csv")
+SOURCES = ("capture_v2", "v1-csv", "licensed_clip")
 PARTS = ("left_hand", "right_hand", "pose", "face")
 PART_SIZES = (21, 21, len(LAYOUT.pose_indices), len(LAYOUT.face_indices))
 REQUIRED_META = {
@@ -120,6 +120,14 @@ def validate_meta(meta: dict) -> None:
         raise RecordingError(f"instance_unit must be one of {INSTANCE_UNITS}")
     if meta["video_stored"] and meta.get("video_consent") is not True:
         raise RecordingError("video_stored is true but the signer did not opt in to video (video_consent)")
+    if meta["source"] == "licensed_clip":
+        # A clip from a licensed dataset or a licensed web video (tools/web_learn): there is no consent
+        # record; the licence is the basis, so consent_id holds the clip's data/LICENSES.yaml asset id,
+        # which training code checks with data_engine.ledger.assert_allowed. No video is ever stored.
+        if not ID_PATTERN.match(meta["consent_id"]):
+            raise RecordingError("licensed clips put their ledger asset id in consent_id")
+        if meta["video_stored"]:
+            raise RecordingError("licensed clips store landmarks only (video_stored must be false)")
     if meta["source"] == "capture_v2":
         if not meta["consent_recorded"]:
             raise RecordingError("live captures need a recorded consent (consent_recorded true with a real consent_id)")
@@ -141,6 +149,10 @@ def training_use_refusal(meta: dict) -> str | None:
     itself knows: consent and whether the signer can be told apart for signer-independent splits.
     """
     validate_meta(meta)
+    if meta["source"] == "licensed_clip":
+        # The ledger decides (assert_allowed on consent_id). Without signer ids the split is by source,
+        # which reports must label "weaker" (CLAUDE.md 1).
+        return None
     if not meta["consent_recorded"]:
         return f"no recorded consent (consent_id {meta['consent_id']!r})"
     if meta.get("signer_id_reliable") is False:
