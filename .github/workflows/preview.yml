@@ -117,8 +117,9 @@ jobs:
         id: lighthouse
         continue-on-error: true
         run: |
-          python -m http.server 4173 --directory web/dist > /dev/null 2>&1 &
-          sleep 2
+          # A server that compresses like GitHub Pages does (python's http.server does not).
+          npx --yes serve@14 web/dist -l 4173 > ci-results/lighthouse-server.log 2>&1 &
+          sleep 5
           export CHROME_PATH="$(cd web && node -e "console.log(require('playwright').chromium.executablePath())")"
           for preset in desktop mobile; do
             extra=""; [ "$preset" = desktop ] && extra="--preset=desktop"
