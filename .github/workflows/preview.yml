@@ -133,6 +133,17 @@ jobs:
               out[preset] = {k: round(v["score"] * 100) for k, v in d["categories"].items()}
               out[preset]["lcp_ms"] = round(d["audits"]["largest-contentful-paint"]["numericValue"])
               out[preset]["lighthouse"] = d["lighthouseVersion"]
+              failing = []
+              for cat in ("accessibility", "best-practices"):
+                  for ref in d["categories"][cat]["auditRefs"]:
+                      audit = d["audits"][ref["id"]]
+                      if ref.get("weight", 0) > 0 and audit.get("score") is not None and audit["score"] < 1:
+                          items = [str(i.get("node", {}).get("snippet") or i.get("url") or i.get("description") or "")[:120] for i in (audit.get("details") or {}).get("items", [])[:3]]
+                          failing.append(f"{cat}: {ref['id']} ({audit['title']}) {items}")
+              opportunities = sorted((a for a in d["audits"].values() if (a.get("details") or {}).get("type") == "opportunity" and (a.get("numericValue") or 0) > 100),
+                                     key=lambda a: -a["numericValue"])[:5]
+              out[preset]["failing"] = failing
+              out[preset]["opportunities"] = [f"{a['id']}: {round(a['numericValue'])} ms" for a in opportunities]
           json.dump(out, open("ci-results/lighthouse-summary.json", "w"), indent=1)
           print(json.dumps(out, indent=1))
           PY

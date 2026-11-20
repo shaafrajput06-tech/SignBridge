@@ -1,7 +1,8 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { classifyGesture, drawLandmarks, normalizeLandmarks } from "./vision.js";
-import { createCaptureV2, loadFeatureSpecV2 } from "./capture_v2.js";
-import AslMode, { HAND_COLOURS } from "./AslMode.jsx";
+// MediaPipe (capture_v2) and ASL mode load only when needed, so the first visit stays light (Stage 5).
+const AslMode = lazy(() => import("./AslMode.jsx"));
+const HAND_COLOURS = { left: "#f0c876", right: "#83d7b8" };
 import PslSuggestion from "./PslSuggestion.jsx";
 import SignClip, { useClips } from "./SignClip.jsx";
 import { QuickPhrases, ReplyPanel, SentenceStrip } from "./Conversation.jsx";
@@ -351,6 +352,7 @@ export default function App() {
         await videoRef.current.play();
         // Capture v2: both hands, pose and face, with left and right assigned by the F12 rules and the
         // pose wrists (CLAUDE.md 8.4). The same capture feeds ASL mode and the coming PSL model.
+        const { createCaptureV2, loadFeatureSpecV2 } = await import("./capture_v2.js");
         const featureSpec = await loadFeatureSpecV2();
         capture = await createCaptureV2({ spec: featureSpec });
         if (!active) { capture.close(); return; }
@@ -546,7 +548,7 @@ export default function App() {
     </header>}
 
     <main className="page-wrap">
-      {(view === "translate" || exhibition) && signLanguage === "ASL" && <AslMode requestCamera={requestAslCamera} voiceEnabled={voiceEnabled} />}
+      {(view === "translate" || exhibition) && signLanguage === "ASL" && <Suspense fallback={<div className="panel asl-loading" role="status">Loading ASL mode…</div>}><AslMode requestCamera={requestAslCamera} voiceEnabled={voiceEnabled} /></Suspense>}
       {(view === "translate" || exhibition) && signLanguage === "PSL" && <>
         {!exhibition && <section className="welcome-row">
           <div><div className="eyebrow"><span className="pulse-dot" /> PAKISTAN SIGN LANGUAGE · RUNS ON THIS DEVICE</div><h1>Every hand has <em>something to say.</em></h1><p>SignBridge follows both hands, your shoulders and your face, right here on this device. Browse every phrase in English and Urdu, and choose how SignBridge speaks.</p></div>
