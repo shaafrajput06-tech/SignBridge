@@ -143,31 +143,44 @@ def gru_baseline(classes: int, units: int = 128, drop: float = 0.3) -> keras.Mod
 ARCHITECTURES = {"islr_lite": islr_lite, "gru": gru_baseline}
 
 
-class Export(tf.Module):
+class Export:
     """frames x 543 x 3 (baseline layout, NaN for missing) -> one score per class.
 
     softmax(scores) = the calibrated probabilities: logits / temperature, averaged with the mirrored sign
-    when mirror_average is on (the same sign as a left-handed signer makes it)."""
+    when mirror_average is on (the same sign as a left-handed signer makes it). Written as a SavedModel
+    with keras.export.ExportArchive, which keeps the trained weights with the graph (a plain tf.Module
+    around a Keras 3 model loses them, and the TFLite file then outputs NaN)."""
 
     def __init__(self, model: keras.Model, temperature: float, mirror_average: bool):
-        super().__init__()
         self.model = model
         self.temperature = float(temperature)
         self.mirror_average = bool(mirror_average)
+        self._folder = None
 
-    @tf.function(input_signature=[tf.TensorSpec([FRAMES, psl_hands.ROWS_PER_FRAME, 3], tf.float32, name="inputs")])
     def serve(self, inputs):
         rows = tf.reshape(tf.stack([inputs[:, 468:489], inputs[:, 522:543]], axis=1), [1, FRAMES * 2, 21, 3])
         if self.mirror_average:
             rows = tf.concat([rows, mirror_rows(rows)], axis=0)
         logits = self.model(hands_features(rows), training=False) / self.temperature
         probs = tf.reduce_mean(tf.nn.softmax(logits, axis=-1), axis=0)
-        return {"outputs": tf.math.log(probs + 1e-9)}
+        return tf.math.log(probs + 1e-9)
+
+    def saved_model(self) -> str:
+        if self._folder is None:
+            import tempfile
+
+            self._folder = tempfile.mkdtemp(prefix="psl_export_")
+            archive = keras.export.ExportArchive()
+            archive.track(self.model)
+            archive.add_endpoint(name="serve", fn=self.serve,
+                                 input_signature=[tf.TensorSpec([FRAMES, psl_hands.ROWS_PER_FRAME, 3], tf.float32, name="inputs")])
+            archive.write_out(self._folder)
+        return self._folder
 
 
 def to_tflite(export: Export, kind: str) -> bytes:
     """kind: float32, float16 (fp16 weights) or int8 (dynamic-range int8 weights). Built-in ops only."""
-    converter = tf.lite.TFLiteConverter.from_concrete_functions([export.serve.get_concrete_function()], export)
+    converter = tf.lite.TFLiteConverter.from_saved_model(export.saved_model(), signature_keys=["serve"])
     converter.target_spec.supported_ops = [tf.lite.OpsSet.TFLITE_BUILTINS]
     if kind in ("float16", "int8"):
         converter.optimizations = [tf.lite.Optimize.DEFAULT]

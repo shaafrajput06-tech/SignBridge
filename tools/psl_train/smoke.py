@@ -52,7 +52,8 @@ def main() -> int:
             gap = float(np.abs(p - keras_p).max())
             print(f"mirror_average={mirror_average} {kind}: {len(blob):,} bytes, io {io}, max probability difference {gap:.2e}, "
                   f"same top-1 {np.mean(p.argmax(1) == keras_p.argmax(1)):.2f}")
-            assert np.isfinite(scores).all(), "NaN reached the output"
+            finite = np.isfinite(scores).all(axis=1)
+            assert finite.all(), f"NaN reached the output for cases {np.flatnonzero(~finite).tolist()} (cases 0-2 have missing hands, 3-7 none)"
             if kind == "float32":
                 assert gap < 1e-4, gap
             if kind == "float32" and mirror_average:
