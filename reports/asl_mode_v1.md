@@ -1,6 +1,7 @@
 # ASL mode v1: report (fast track Stage 2)
 
-Status: **draft, gate not passed yet.** Everything that can be built and checked without the owner's
+Status: **draft, gate not passed yet.** Update 2026-11-20: see "Update (master v3, Stage 0)" at the
+end; the Kaggle numbers and the owner's device numbers are still pending. Everything that can be built and checked without the owner's
 laptop and a Kaggle run is done and tested. The measured numbers below say "pending" until those two
 runs report back; none is estimated.
 
@@ -87,3 +88,19 @@ passed.
   frames; only the display is mirrored.
 - ASL fingerspelling is not included (no published weights).
 - The phone app does not have ASL mode until Stage 6 (on-device capture).
+
+## Update (master v3, Stage 0, 2026-11-20)
+
+Full details and sources: `reports/v3_stage0_baseline.md`.
+
+| Row above | Now |
+|---|---|
+| Browser runtime loads and runs; latency per sign | Runs, in the Web Worker. Median per sign (32 frames, synthetic): 12.8 ms in this workspace (headless Chrome 153, 2 cores, frozen baseline build); 9.8-16.3 ms in GitHub Actions (HeadlessChrome 159, 4 cores, v3 preview build). The owner's laptop and phone: **pending**. |
+| Browser vs server output on identical input | Same top-1 on 3 of 3 self-test signs, largest probability difference 1.9e-8 (GitHub Actions, preview run 44709553244). |
+| Camera → ASL word on screen | The plumbing works end to end (fake camera, baseline build); a person signing ASL: **pending**. |
+| All Kaggle rows | **pending** (`docs/HOW_TO_RUN_ASL_EVAL.md`). |
+
+New finding: on the live build the model ran on the page thread, not in the worker (fixed on
+`v3/master`, `web/src/wasm_locate.js`). And "Pretty sure" was shown for a PSL sign the ASL model
+cannot know, so the 0.60 threshold alone does not stop wrong words being spoken; it will be set from
+the Kaggle calibration table.

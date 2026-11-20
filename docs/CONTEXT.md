@@ -1,60 +1,76 @@
-# SignBridge v2 — Context pack (state at the end of fast-track Stage 1)
+# SignBridge — Context pack (state at the end of master v3 Stage 0, 2026-11-20)
 
 ## Product goal
 A Deaf PSL signer and a hearing Urdu/English speaker hold a real conversation through one device.
 Signing becomes text and speech on first launch, with honest confidence; replies become text and
 reference sign clips. Works offline on a laptop, in a browser and on a phone.
 
-## Plan in force: the fast track
-`docs/prompts/fast-track.md` replaces the Phase 2-8 path, because the owner cannot record signers or
-train models. CLAUDE.md section 8 holds its amendments (no user training, separate ASL mode, exhibition
-tiers, both hands always, built-in AI instead of human set-up). Branch `v2/fast-track` (from
-`v2/phase-1`). Stage 1 (asset audit) is done and waits at its gate; next is Stage 2 (ASL mode).
+## Plan in force: master v3
+`docs/prompts/master-v3.md` (Stages 0-7) builds on the fast track (`docs/prompts/fast-track.md`,
+CLAUDE.md section 8) and adds CLAUDE.md section 9 (baseline protection, licensed internet-video
+learning, language purity, AI never invents a sign, measured performance budgets).
+All work happens on branch **`v3/master`**; `main` is the live website and changes only when the
+owner merges the v3 pull request in Stage 7. Stage 0 is done up to its gate (see "Waiting for").
+
+## Where things live
+- GitHub: `shaafrajput06-tech/SignBridge` (moving to `signbridge-pk/signbridge-pk.github.io`,
+  `docs/DOMAIN.md`). Live site today: <https://shaafrajput06-tech.github.io/SignBridge/>; chosen
+  address <https://signbridge-pk.github.io/> (`shared_data/site.json`).
+- Any laptop: clone, `git checkout v3/master`, double-click `setup_windows.bat`
+  (`docs/SETUP_NEW_LAPTOP.md`). The owner has no folder shared with Claude; GitHub is the only home.
+- CI: `.github/workflows/website.yml` (main only: tests, build, deploy to Pages, results at `/ci/`);
+  `.github/workflows/preview.yml` (`v3/**` and pull requests: tests incl. the baseline comparison,
+  ASL worker + server check, Pages build and `build:shared` as artifacts; never deploys).
+
+## Inference Baseline v1 (protected, CLAUDE.md 9.1)
+- `baseline/v1-site/` + `baseline/v1-shared/`: the built shared copy of 2026-11-19, byte for byte
+  (19 files in git; 47 third-party files restored by `python tools/baseline_v1.py restore
+  --download | --zip PATH | --from-sources`, each checked against `baseline/manifest.json`).
+- `tests/golden/baseline_v1_outputs.json`: what it produces on the golden fixtures, recorded in
+  Chromium by `node tools/baseline/run.mjs --record` (frames, resampling, segments, words, real model
+  top-5 for 39 cases). `tests/test_inference_baseline.py` and `web/tests/inference-baseline.test.mjs`
+  hold today's code to it; `run_all_tests.py` runs the browser comparison when the baseline is restored.
+- A new model replaces it only if better on top-1 on the same set and within the latency budget.
 
 ## Current state
-- Hand tracking v1 (default in every client): MediaPipe Hand Landmarker, 1 hand, 13 rule-based demo
-  poses (`ml_engine/gestures.py`, `web/src/vision.js`). No PSL source is recorded for the demo poses.
-- Capture v2 (`ml_engine/capture_v2.py`, `web/src/capture_v2.js`): Pose + Hand (2 hands) + Face
-  landmarkers, frames rotated upright, canonical frames per `shared_data/feature_spec_v2.json` (spec 2.0.0).
-- Features v2: 971 values per frame; Python reference and JS port agree exactly on the fixture.
-- Recording format v2 (`ml_engine/recording_v2.py`): landmarks only, consent required. No recordings.
-- **Licence ledger** `data/LICENSES.yaml` (23 assets) + `data/licenses.schema.json`; checker
-  `tools/check_licenses.py` (also run by `tools/run_all_tests.py`); gate for code
-  `data_engine.ledger.assert_allowed(asset_id, use, purpose_language)`.
-- No trained model exists. Coverage: Tier A 0, Tier B 0, Tier C not supported, Tier D 64.
-- Vocabulary: `vocabulary.json`, 64 entries, synced to `shared_data/` and `mobile/assets/`.
-- API: FastAPI + SQLite (`backend/`). Clients: OpenCV desktop, React/Vite web, Flutter (never built here).
-- Tests: `python tools/run_all_tests.py [--smoke]`. Here: 114 Python tests (2 skipped: API tests need
-  fastapi, speech test needs pygame), licence check, 8 Node v2 tests. On Windows, `phase1_checks.bat`
-  installs everything and runs all suites (`docs/HOW_TO_RUN_PHASE1_CHECKS.md`).
+- PSL: capture v2 (both hands + pose + face) on the PSL screen; PSL recognition "Not installed yet";
+  Phase 0 gesture demo off by default. Coverage: Tier A 0, Tier B 0, Tier C optional (server only),
+  Tier D 64. No trained PSL model.
+- ASL mode: ISLR 1st-place TFLite (250 signs, MIT) — browser (LiteRT.js in a Web Worker, 32 frames)
+  and server (ai-edge-litert, native length). On v3 the worker works again (`web/src/wasm_locate.js`);
+  on the live `main` build it falls back to the page thread. Accuracy on the GISLR rerun set: pending.
+- Features v2 (971 values/frame), recording format v2, licence ledger (`data/LICENSES.yaml`, 23 assets,
+  `data_engine.ledger.assert_allowed`), vocabulary 64 entries — unchanged since fast-track Stage 2.
+- `npm run build:shared` (in `web/`) makes `web/dist-shared/SignBridge-shared-copy.zip`.
+- Tests: `python tools/run_all_tests.py [--smoke]`. CI (preview run 44709553244): 180 Python tests
+  (2 skipped), licence check, Node v1 + v2 suites, baseline browser comparison — all passed.
 
-## Stage 1 findings that shape the next stages (reports/fast_track_assets.md)
-- ASL mode: ISLR 1st-place TFLite (MIT, 250 signs) needs no training; measure on the CC0 GISLR rerun
-  set inside Kaggle, not on the competition training data (the model was trained on it).
-- PSL camera recognition is trainable from public data for 12 of 64 entries (SignSpeak Apache-2.0,
-  PkSLMNM CC BY 4.0) plus UAlpha40 letters. No signer IDs, so splits are "weaker" and everything starts
-  as Tier B until signer IDs or PSL-128 access arrive.
-- PSL reference clips: SLT dictionary (788 clips, CC BY 4.0, provenance unverified) covers 33 entries
-  + 2 phrases word by word.
-- 21 entries have no shippable PSL data. No Deaf-validated public PSL data exists.
-- This workspace cannot download files (shell network blocked); assets must be attached by the owner or
-  fetched through a connected folder on the owner's computer.
+## Waiting for (owner [ME])
+1. Kaggle: `notebooks/asl_mode_eval.ipynb` → `asl_eval_results.json` (`docs/HOW_TO_RUN_ASL_EVAL.md`).
+2. Laptop + phone self-test and camera check (`docs/HOW_TO_MEASURE_SPEED.md`).
+3. Baseline release + tag `inference-baseline-v1` (`docs/HOW_TO_PUBLISH_BASELINE.md`): Claude's
+   session cannot create releases or push tags.
+4. Optional before Stage 7: the move to `signbridge-pk.github.io` (`docs/DOMAIN.md`); after it,
+   Claude needs repo access again under the new name.
 
 ## Open findings
-- F3 rejection only on desktop SVM · F5 Flutter errors (fix not verified on a device) · F7
-  `SVC(probability=True)` removed in scikit-learn 1.11 · F9 browser MediaPipe telemetry · F10 participant
-  names served without auth · F4 Flutter rotation fix not verified on a device.
-- F12 mirroring unverified on real video; the left/right swap rule for mirrored input is an assumption.
-- Phase 1 gate: web capture frame rate unmeasured; full Phase 0 suite (API, browser smoke) not run here.
-- One-hand v1 paths remain: `web/src/vision.js`, `backend/app.py /api/recognize-frame` (used by Flutter).
-- Pose/face `.task` files: SHA-256 not recorded, model cards not re-read; `--release` blocks until done.
-- Pose-based hand assignment ignores wrist visibility.
+- "Pretty sure" (≥ 0.60) was shown for a PSL sign in ASL mode, and for 2 of 39 synthetic inputs: the
+  threshold alone does not keep wrong words from being spoken. Set it from the Kaggle calibration table
+  and add an unknown/not-a-sign check (ASL now; PSL in Stage 2).
+- The baseline's UI extras (10 colour themes, Test signs, How to sign clips, Training screen) have no
+  source in git; rebuild in Stages 3 and 5.
+- Carried over: F3 rejection only on desktop SVM · F4/F5 Flutter fixes not verified on a device · F7
+  `SVC(probability=True)` removed in scikit-learn 1.11 · F9 browser MediaPipe telemetry · F10
+  participant names served without auth · F12 mirroring unverified on real video · pose/face `.task`
+  hashes pinned but model cards not re-read · pose-based hand assignment ignores wrist visibility.
 
 ## People and decisions
-- Deaf validation partner: none yet (FESF / Deaf Reach asked in `docs/permission_requests.md` [ME]).
-- Permission requests drafted, not sent: FESF, PSL-128, UMT, SLT maintainer, SignSpeak, WLPSL.
-- Compute: free Kaggle / Colab GPU via notebooks the owner starts with "Run all".
+- Deaf validation partner: none yet (requests drafted in `docs/permission_requests.md` [ME]).
+- Website address: `signbridge-pk.github.io` (2026-11-20; `signbridge.github.io` is taken).
+- Compute: free Kaggle / Colab GPU via notebooks the owner starts; GitHub Actions for builds/checks.
 
 ## Environment notes
-Python 3.10-3.14, Node 22.12+, mediapipe 0.10.x (Python), @mediapipe/tasks-vision 1.2.x, scikit-learn
-<1.11, PyYAML for the ledger. No GPU, camera or file downloads in the agent's workspace.
+Claude's workspace: no package installs, no artifact downloads, GitHub API limited to this repository,
+no releases or tag pushes; headless Chrome 153 and Python mediapipe are available, so the baseline can
+be run here. Project: Python 3.10-3.14, Node 22.12+, mediapipe 0.10.x, @mediapipe/tasks-vision 1.2.2,
+@litertjs/core 2.6.0, scikit-learn < 1.11.

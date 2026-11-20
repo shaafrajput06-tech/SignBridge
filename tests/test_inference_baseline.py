@@ -162,12 +162,17 @@ class ServerPathTests(unittest.TestCase):
     def test_server_top1_equals_baseline_top1_on_identical_inputs(self):
         expected = {item["id"]: item for item in GOLDEN["model"]}
         tolerance = GOLDEN["tolerance"]["probability_abs"]
-        for case_id, sequence in python_model_cases().items():
+        worst = 0.0
+        cases = python_model_cases()
+        for case_id, sequence in cases.items():
             probs = probabilities(self.recognizer.scores(resample(sequence, INPUTS["fixed_frames"])))
             want = expected[case_id]
             self.assertEqual(max(range(len(probs)), key=lambda i: (probs[i], -i)), want["top"][0]["index"], case_id)
             for t in want["top"]:
-                self.assertLessEqual(abs(probs[t["index"]] - t["probability"]), tolerance, case_id)
+                difference = abs(probs[t["index"]] - t["probability"])
+                worst = max(worst, difference)
+                self.assertLessEqual(difference, tolerance, case_id)
+        print(f"\n  Server path vs baseline browser path: {len(cases)} cases, top-1 identical, largest top-5 probability difference {worst:.2e}", file=sys.stderr)
 
 
 if __name__ == "__main__":

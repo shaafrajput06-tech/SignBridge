@@ -19,10 +19,14 @@ right. You click a few buttons, wait, and send me one file.
 
 ## Step 2. Open the notebook on Kaggle
 
-1. Click **+ Create** (top left), then **New Notebook**.
-2. In the notebook, click **File > Import Notebook**.
-3. Click **Browse Files**, open `Downloads\SignBridge_Complete\notebooks` and choose
-   **`asl_mode_eval.ipynb`**. Click **Import**. You should see cells that start with
+1. Download the notebook file: open
+   <https://github.com/shaafrajput06-tech/SignBridge/blob/v3/master/notebooks/asl_mode_eval.ipynb>
+   and click the **Download raw file** button (a down-arrow, top right of the file). It saves
+   `asl_mode_eval.ipynb` in your Downloads folder. (After the move in `docs/DOMAIN.md` the old link
+   still works; GitHub forwards it.)
+2. On Kaggle, click **+ Create** (top left), then **New Notebook**.
+3. In the notebook, click **File > Import Notebook**, click **Browse Files**, choose
+   **`asl_mode_eval.ipynb`** from Downloads and click **Import**. You should see cells that start with
    "SignBridge ASL mode: accuracy on signers the model never saw".
 
 ## Step 3. Add the test data
@@ -40,10 +44,10 @@ right. You click a few buttons, wait, and send me one file.
 1. In the right-hand panel, open **Settings** (it may be under a "⋮" or "Session options" menu).
 2. Switch **Internet** to **On**.
 
-No internet option? Then add the model as a file instead: after `start_signbridge.bat` has run
-once, your project has `models\asl\model.tflite`. In **+ Add Input** choose **Upload**, then
-**New Dataset**, drop in `model.tflite` and `sign_to_prediction_index_map.json` from
-`Downloads\SignBridge_Complete\models\asl`, name it `signbridge-asl-model`, keep it private and
+No internet option? Then add the model as a file instead: after `setup_windows.bat` (or
+`start_signbridge.bat`) has run once, your SignBridge folder has `models\asl\model.tflite`. In
+**+ Add Input** choose **Upload**, then **New Dataset**, drop in `model.tflite` and
+`sign_to_prediction_index_map.json` from `Documents\SignBridge\models\asl`, name it `signbridge-asl-model`, keep it private and
 click **Create**. The notebook finds it and checks it is the same file (by its SHA-256).
 
 ## Step 5. Run it in the background

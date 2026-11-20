@@ -19,6 +19,7 @@ MAY_NAME_OLD_ADDRESS = {
     "shared_data/site.json",
     "docs/DOMAIN.md",
     "docs/WEBSITE.md",
+    "docs/HOW_TO_MEASURE_SPEED.md",
     "README.md",
     "docs/prompts/master-v3.md",
     "tools/old_address_redirect/README.md",
