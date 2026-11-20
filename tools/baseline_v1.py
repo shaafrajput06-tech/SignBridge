@@ -47,6 +47,8 @@ SHARED = BASELINE / "v1-shared"
 ZIP_PREFIX = "SignBridge/"
 RELEASE_TAG = "inference-baseline-v1"
 RELEASE_ASSET = "SignBridge-shared-copy-v1.zip"
+# The owner uploaded the zip under its original name; both names are tried (the SHA-256 decides).
+RELEASE_ASSET_NAMES = (RELEASE_ASSET, "SignBridge.zip")
 SITE_CONFIG = ROOT / "shared_data" / "site.json"
 
 
@@ -55,7 +57,7 @@ def release_urls() -> list[str]:
     (GitHub forwards a moved repository's downloads, but the new home does not exist before the move)."""
     site = json.loads(SITE_CONFIG.read_text(encoding="utf-8"))
     repositories = [site["repository"], *site.get("old_repositories", [])]
-    return [f"https://github.com/{repo}/releases/download/{RELEASE_TAG}/{RELEASE_ASSET}" for repo in repositories]
+    return [f"https://github.com/{repo}/releases/download/{RELEASE_TAG}/{name}" for repo in repositories for name in RELEASE_ASSET_NAMES]
 
 # Files SignBridge built itself are kept in git. Everything from a third-party package or a dataset
 # (runtimes, models, video clips) is restored from the zip instead.

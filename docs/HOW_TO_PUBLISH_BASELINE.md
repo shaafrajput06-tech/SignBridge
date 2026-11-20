@@ -1,4 +1,8 @@
-# Publish the Inference Baseline v1 release and tag [ME] (about 3 minutes)
+# Publish the Inference Baseline v1 release and tag (done 2026-11-20)
+
+Done: the release exists, with the zip attached as `SignBridge.zip` (the download tool accepts both
+names). The steps below are kept for reference, for example to publish a later baseline.
+
 
 Claude's session may not create GitHub releases or push tags, so this one step is yours. It stores the
 frozen baseline zip on GitHub, so any laptop and every CI run can download it

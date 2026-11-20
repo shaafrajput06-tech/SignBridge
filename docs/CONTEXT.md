@@ -23,6 +23,8 @@ owner merges the v3 pull request in Stage 7. Stage 0 is done up to its gate (see
   ASL worker + server check, Pages build and `build:shared` as artifacts; never deploys).
 
 ## Inference Baseline v1 (protected, CLAUDE.md 9.1)
+- Release `inference-baseline-v1` (tag on `42a572f`, asset `SignBridge.zip`, SHA-256 checked) holds
+  the zip; made in the owner's browser (this session's GitHub access cannot create releases).
 - `baseline/v1-site/` + `baseline/v1-shared/`: the built shared copy of 2026-11-19, byte for byte
   (19 files in git; 47 third-party files restored by `python tools/baseline_v1.py restore
   --download | --zip PATH | --from-sources`, each checked against `baseline/manifest.json`).
@@ -48,9 +50,7 @@ owner merges the v3 pull request in Stage 7. Stage 0 is done up to its gate (see
 ## Waiting for (owner [ME])
 1. Kaggle: `notebooks/asl_mode_eval.ipynb` → `asl_eval_results.json` (`docs/HOW_TO_RUN_ASL_EVAL.md`).
 2. Laptop + phone self-test and camera check (`docs/HOW_TO_MEASURE_SPEED.md`).
-3. Baseline release + tag `inference-baseline-v1` (`docs/HOW_TO_PUBLISH_BASELINE.md`): Claude's
-   session cannot create releases or push tags.
-4. Optional before Stage 7: the move to `signbridge-pk.github.io` (`docs/DOMAIN.md`); after it,
+3. Optional before Stage 7: the move to `signbridge-pk.github.io` (`docs/DOMAIN.md`); after it,
    Claude needs repo access again under the new name.
 
 ## Open findings

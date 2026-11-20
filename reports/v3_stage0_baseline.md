@@ -11,7 +11,7 @@ ASL is a separate language mode (CLAUDE.md 8.2). Nothing here is, or is shown as
 | Item (master-v3.md) | Done | Where |
 |---|---|---|
 | Copy snapshot A's `site/` as a read-only reference | yes: 19 SignBridge-built files in git byte for byte, 47 third-party files (runtimes, models, CC BY 4.0 clips) restored from the zip or from the same pinned sources, every file checked against its SHA-256 | `baseline/`, `tools/baseline_v1.py` |
-| Tag `inference-baseline-v1` | **no: this session may not push tags or create releases** (GitHub refused both). Prepared as an [ME] step | `docs/HOW_TO_PUBLISH_BASELINE.md` |
+| Tag `inference-baseline-v1` | yes: tag on `42a572f` and the pre-release "Inference Baseline v1 (frozen reference)" with the zip as `SignBridge.zip` (GitHub's SHA-256 of the asset equals the frozen one). Made in the owner's browser on 2026-11-20, because this session's GitHub access may not create releases or push tags. `restore --download` restores 66 of 66 files from it | GitHub release `inference-baseline-v1` |
 | Record input → output on the golden fixtures | yes, from the frozen build itself in Chromium, including the real model's top-5 for 39 cases | `tests/golden/baseline_v1_outputs.json`, `tools/baseline/` |
 | Hold today's code to it | yes: Python and JavaScript reproduce the frames and the exact 32 × 543 × 3 model inputs bit for bit; the server path's top-1 is compared with the baseline browser path in CI | `tests/test_inference_baseline.py`, `web/tests/inference-baseline.test.mjs` |
 | `npm run build:shared` | yes; packaging the frozen site reproduces the baseline zip's 66-file list with identical bytes (only `README.txt` is new). CI builds the v3 shared copy on every push | `web/scripts/build-shared.mjs` |
@@ -46,6 +46,7 @@ Synthetic inputs measure plumbing and speed, never accuracy.
 | Model time per sign, baseline build, 32 frames, worker | median 12.8 ms over 39 cases (min 11.2, max 34.6); compile 367 ms | same | this workspace, headless Chrome 153, 2 logical cores | `run.mjs --timings` |
 | Model time per sign, v3 preview build, worker | 16.3 / 10.9 / 9.8 ms (signs of 10 / 32 / 57 frames); compile 569 ms | self-test signs (synthetic) | GitHub Actions, HeadlessChrome 159, 4 logical cores | preview run 44709553244 |
 | Same, live `main` build, page-thread fallback | 19.2 / 13.9 / 13.3 ms | same | GitHub Actions, HeadlessChrome 159, 4 logical cores, 2026-11-19 | Actions run 44525001065 |
+| **Owner's laptop**, live `main` build (page-thread fallback; the worker failed with the same wasm error) | 51.8 / 49.4 / 46.9 ms per sign; 13.1 s from opening the page to a compiled model (includes downloading the 11 MB model and the runtime) | same | owner's Windows laptop (4 logical cores, ≥ 8 GB), the Claude desktop app's built-in browser (Chromium 156), pane displayed, 2026-11-20 | `asl-selftest.html` on the live site |
 | Browser (LiteRT.js) vs server (ai-edge-litert), identical input | largest probability difference 1.9e-8; same top-1 on 3 of 3 | same | GitHub Actions | preview run 44709553244 |
 | Server path (ai-edge-litert 2.3.0) vs the frozen baseline's browser outputs | top-1 identical on 32 of 32 fixture cases; largest top-5 probability difference 5.4e-7 | golden fixtures (synthetic) | GitHub Actions | preview run 44711995910 |
 | Camera → ASL word on screen (plumbing only) | the baseline app showed "Pretty sure · kiss" (10 frames, 4 with both hands, model 68 ms, ran in the browser) | Chrome's fake camera playing the CC BY 4.0 PSL dictionary clip "help", slowed 12× | this workspace, headless Chrome 153 | manual run, 2026-11-20 |
@@ -67,9 +68,9 @@ Synthetic inputs measure plumbing and speed, never accuracy.
    "Test signs" cards, "How to sign" clips, a training screen). The worker fix is now in git. The
    others are user-interface work, rebuilt in later stages (clips: Stage 3; themes: Stage 5), and the
    baseline build stays available for comparison.
-3. **This session cannot create GitHub releases or push tags.** The baseline zip and the
-   `inference-baseline-v1` tag need one manual step from the owner; the release `v3.0.0` in Stage 7
-   will need the same (or a one-click workflow the owner starts).
+3. **This session cannot create GitHub releases or push tags** through its own GitHub access. The
+   baseline release was made in the owner's signed-in browser instead; the release `v3.0.0` in Stage 7
+   will be made the same way.
 4. **Frame count for the browser path is decided by the Kaggle numbers, with a rule fixed in
    advance:** the smallest of 16/24/32/48/64 whose top-1 is within 0.5 points of the native length;
    if none is, the largest within the latency budget, and the server path stays the laptop default.
@@ -79,5 +80,5 @@ Synthetic inputs measure plumbing and speed, never accuracy.
 1. Kaggle: run `notebooks/asl_mode_eval.ipynb` and attach `asl_eval_results.json`
    (`docs/HOW_TO_RUN_ASL_EVAL.md`, about 10 minutes of clicks plus 30-90 minutes of waiting).
 2. Laptop and phone: the self-test and the camera check (`docs/HOW_TO_MEASURE_SPEED.md`).
-3. Publish the baseline release and tag (`docs/HOW_TO_PUBLISH_BASELINE.md`, 3 minutes).
+3. ~~Publish the baseline release and tag~~ — done 2026-11-20.
 4. Optional now, needed by Stage 7: the move to `signbridge-pk.github.io` (`docs/DOMAIN.md`).
