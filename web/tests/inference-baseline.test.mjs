@@ -52,3 +52,12 @@ test("the self-test page's made-up signs are unchanged by moving the signer into
   assert.equal(first.face.length, 478);
   assert.equal(first.hands.length, 1); // frame 0: one hand (t % 5 === 0)
 });
+
+test("results are spoken only at 70 % or more; what is shown keeps the baseline's words", async () => {
+  const { shouldSpeak, confidenceBand } = await import("../src/asl_islr.js");
+  assert.equal(aslSpec.confidence.speak_at, 0.7);
+  assert.equal(confidenceBand(0.65, aslSpec), "sure"); // shown as "Pretty sure", as in the baseline
+  assert.equal(shouldSpeak(0.65, aslSpec), false);     // but not spoken
+  assert.equal(shouldSpeak(0.7, aslSpec), true);
+  assert.equal(shouldSpeak(0.3, aslSpec), false);
+});

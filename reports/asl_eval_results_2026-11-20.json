@@ -1,0 +1,69 @@
+{
+ "source": "Kaggle notebook shaafrajput/signbridge-asl-mode-eval, version 2 (notebooks/asl_mode_eval.ipynb at commit 0b7ef44), CPU, copied from the run log on 2026-11-20",
+ "measured_on": "2026-11-20T11:39:25+00:00",
+ "model": {
+  "sha256": "f55a2bb1ebe6d1e912a98e31c6ef3f995c9ae261f408fe115f2008099d3f0bb7",
+  "runtime": "tensorflow 2.21.0"
+ },
+ "conventions": {
+  "right_slot_near_pose_right_wrist": 0.998504864341456,
+  "right_slot_left_of_nose_in_image": 0.9952298622190853,
+  "samples_with_right_slot_dominant": 0.6549704637071216,
+  "frames_counted": {
+   "right_slot_frames_with_pose": 679537,
+   "right_slot_near_pose_right_wrist": 678521,
+   "right_slot_frames_with_nose": 674404,
+   "right_slot_left_of_nose": 671187
+  }
+ },
+ "dataset": {
+  "name": "ASL Isolated Sign Recognition Rerun Set",
+  "label_file": "/kaggle/input/datasets/sohier/461054610546105/labels.parqet",
+  "samples_listed": 39443,
+  "samples_evaluated": 39443,
+  "unreadable": 0,
+  "first_errors": [],
+  "signers_also_in_training_csv": null
+ },
+ "summary": {
+  "samples": 39443,
+  "native": {
+   "top1": 0.8616991608143397,
+   "top5": 0.9537053469563674
+  },
+  "fixed_length": {
+   "16": {"samples": 7889, "top1": 0.8418050449993663, "native_top1_same_samples": 0.8610723792622639},
+   "24": {"samples": 7889, "top1": 0.8496640892381797, "native_top1_same_samples": 0.8610723792622639},
+   "32": {"samples": 7889, "top1": 0.8529598174673596, "native_top1_same_samples": 0.8610723792622639},
+   "48": {"samples": 7889, "top1": 0.8495373304601344, "native_top1_same_samples": 0.8610723792622639},
+   "64": {"samples": 7889, "top1": 0.8463683610089999, "native_top1_same_samples": 0.8610723792622639}
+  },
+  "best_fixed_length": {
+   "frames": 32,
+   "top1": 0.8529598174673596,
+   "loss_vs_native": 0.008112561794904272
+  },
+  "groups": {
+   "one_handed": {"samples": 39432, "top1": 0.8618888212619192, "top5": 0.9539206735646175},
+   "two_handed": {"samples": 11, "top1": 0.18181818181818182, "top5": 0.18181818181818182},
+   "dominant_left": {"samples": 13609, "top1": 0.8914688808876479, "top5": 0.9656109927254023},
+   "dominant_right": {"samples": 25834, "top1": 0.8460168769838198, "top5": 0.947433614616397},
+   "no_hands": {"samples": 0, "top1": null, "top5": null}
+  },
+  "per_signer": {},
+  "calibration": [
+   {"threshold": 0.25, "coverage": 0.9174758512283548, "accuracy_when_covered": 0.9166021885707969},
+   {"threshold": 0.4, "coverage": 0.8632456963212738, "accuracy_when_covered": 0.9411436459220535},
+   {"threshold": 0.5, "coverage": 0.8171285145653221, "accuracy_when_covered": 0.9576481538938877},
+   {"threshold": 0.6, "coverage": 0.7659914306721092, "accuracy_when_covered": 0.972197398470857},
+   {"threshold": 0.7, "coverage": 0.7109246254088177, "accuracy_when_covered": 0.9829891943939232},
+   {"threshold": 0.8, "coverage": 0.6420911188297036, "accuracy_when_covered": 0.990168206586117},
+   {"threshold": 0.9, "coverage": 0.5206500519737343, "accuracy_when_covered": 0.9956174522789248}
+  ],
+  "suggested_sure_threshold": 0.5,
+  "latency_ms": {
+   "median": 10.929412000223238,
+   "p90": 20.07672600029764
+  }
+ }
+}

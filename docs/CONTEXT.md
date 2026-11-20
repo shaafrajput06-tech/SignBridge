@@ -40,7 +40,9 @@ owner merges the v3 pull request in Stage 7. Stage 0 is done up to its gate (see
   Tier D 64. No trained PSL model.
 - ASL mode: ISLR 1st-place TFLite (250 signs, MIT) — browser (LiteRT.js in a Web Worker, 32 frames)
   and server (ai-edge-litert, native length). On v3 the worker works again (`web/src/wasm_locate.js`);
-  on the live `main` build it falls back to the page thread. Accuracy on the GISLR rerun set: pending.
+  on the live `main` build it falls back to the page thread. GISLR rerun set (39,443 signs, Kaggle,
+  2026-11-20): top-1 86.2 %, top-5 95.4 % (native); 85.3 % at the browser's 32 frames; left/right gap 4.5
+  points (target 3, missed). Spoken aloud only at ≥ 0.70 (1.7 % wrong; 2.8 % at the 0.60 "Pretty sure").
 - Features v2 (971 values/frame), recording format v2, licence ledger (`data/LICENSES.yaml`, 23 assets,
   `data_engine.ledger.assert_allowed`), vocabulary 64 entries — unchanged since fast-track Stage 2.
 - `npm run build:shared` (in `web/`) makes `web/dist-shared/SignBridge-shared-copy.zip`.
@@ -48,15 +50,14 @@ owner merges the v3 pull request in Stage 7. Stage 0 is done up to its gate (see
   (2 skipped), licence check, Node v1 + v2 suites, baseline browser comparison — all passed.
 
 ## Waiting for (owner [ME])
-1. Kaggle: `notebooks/asl_mode_eval.ipynb` → `asl_eval_results.json` (`docs/HOW_TO_RUN_ASL_EVAL.md`).
-2. Laptop + phone self-test and camera check (`docs/HOW_TO_MEASURE_SPEED.md`).
+1. Phone self-test and a camera check with a person signing ASL (`docs/HOW_TO_MEASURE_SPEED.md`).
+   (Kaggle run: done. The owner's Kaggle account is not phone-verified: no internet or GPU in notebooks.)
 3. Optional before Stage 7: the move to `signbridge-pk.github.io` (`docs/DOMAIN.md`); after it,
    Claude needs repo access again under the new name.
 
 ## Open findings
-- "Pretty sure" (≥ 0.60) was shown for a PSL sign in ASL mode, and for 2 of 39 synthetic inputs: the
-  threshold alone does not keep wrong words from being spoken. Set it from the Kaggle calibration table
-  and add an unknown/not-a-sign check (ASL now; PSL in Stage 2).
+- "Pretty sure" (≥ 0.60) was shown for a PSL sign in ASL mode, and for 2 of 39 synthetic inputs: an
+  unknown/not-a-sign check is still needed (ASL and PSL, Stage 2). Speaking now needs ≥ 0.70.
 - The baseline's UI extras (10 colour themes, Test signs, How to sign clips, Training screen) have no
   source in git; rebuild in Stages 3 and 5.
 - Carried over: F3 rejection only on desktop SVM · F4/F5 Flutter fixes not verified on a device · F7

@@ -177,3 +177,18 @@ class ServerPathTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class SpeakThresholdTests(unittest.TestCase):
+    def test_spoken_only_at_seventy_percent_while_the_shown_words_stay(self):
+        from ml_engine.asl_islr import confidence_band, should_speak
+
+        self.assertEqual(SPEC["confidence"]["speak_at"], 0.7)
+        self.assertEqual(confidence_band(0.65), "sure")
+        self.assertFalse(should_speak(0.65))
+        self.assertTrue(should_speak(0.7))
+        self.assertFalse(should_speak(0.3))
+        measured = json.loads((ROOT / "reports" / "asl_eval_results_2026-11-20.json").read_text(encoding="utf-8"))
+        at = {row["threshold"]: row for row in measured["summary"]["calibration"]}
+        self.assertLessEqual(1 - at[0.7]["accuracy_when_covered"], 0.02)   # the reason for 0.70
+        self.assertGreater(1 - at[0.6]["accuracy_when_covered"], 0.02)
