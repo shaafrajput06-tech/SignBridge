@@ -246,30 +246,86 @@ def find_pinned_file(root: str, name: str, sha256: str) -> str | None:
     return None
 
 
-def find_label_csv(root: str, exclude: Iterable[str] = ()) -> tuple[str, dict] | None:
-    """The CSV listing landmark files and signs: (path, column names for path, sign, participant).
+LABEL_TABLE_SUFFIXES = (".csv", ".parquet", ".parqet", ".pq")  # the rerun set names its file "labels.parqet"
+SKIP_DIR_HINTS = ("landmark",)  # folders full of per-sample landmark files are never label tables
 
-    Accepts the competition's layout (path, participant_id, sequence_id, sign) and close variants.
+
+def table_columns(path: str) -> list[str]:
+    """Column names of a CSV or parquet file, without reading all of it."""
+    if path.lower().endswith(".csv"):
+        import csv
+
+        with open(path, newline="", encoding="utf-8") as handle:
+            return [h.strip() for h in next(csv.reader(handle), [])]
+    try:
+        import pyarrow.parquet as pq
+
+        return list(pq.read_schema(path).names)
+    except Exception:  # noqa: BLE001 (no pyarrow, or not a parquet file)
+        try:
+            import pandas as pd
+
+            return [str(c) for c in pd.read_parquet(path).columns]
+        except Exception:  # noqa: BLE001
+            return []
+
+
+def label_columns(names: Iterable[str]) -> dict | None:
+    """Which columns hold the sign, the landmark file (or the sequence id that names it) and the signer."""
+    lower = {str(h).strip().lower(): h for h in names}
+    path_col = lower.get("path") or lower.get("file") or lower.get("filename")
+    sequence_col = lower.get("sequence_id") or lower.get("sequence") or lower.get("id")
+    sign_col = lower.get("sign") or lower.get("label")
+    if not sign_col or not (path_col or sequence_col):
+        return None
+    participant_col = lower.get("participant_id") or lower.get("participant") or lower.get("signer")
+    return {"path": path_col, "sequence": sequence_col, "sign": sign_col, "participant": participant_col}
+
+
+def find_label_table(root: str, exclude: Iterable[str] = ()) -> tuple[str, dict] | None:
+    """The table listing samples and signs: (path, columns for path / sequence, sign, participant).
+
+    Accepts the competition's train.csv (path, participant_id, sequence_id, sign), the rerun set's
+    labels.parqet (sequence ids instead of paths) and close variants, as CSV or parquet.
     """
-    import csv
     import os
 
     excluded = {os.path.abspath(p) for p in exclude}
     candidates = []
-    for folder, _dirs, files in os.walk(root):
+    for folder, dirs, files in os.walk(root):
+        dirs[:] = [d for d in dirs if not any(hint in d.lower() for hint in SKIP_DIR_HINTS)]
         for name in sorted(files):
-            if not name.lower().endswith(".csv") or os.path.abspath(os.path.join(folder, name)) in excluded:
-                continue
             path = os.path.join(folder, name)
-            with open(path, newline="", encoding="utf-8") as handle:
-                header = [h.strip() for h in next(csv.reader(handle), [])]
-            lower = {h.lower(): h for h in header}
-            path_col = lower.get("path") or lower.get("file") or lower.get("filename")
-            sign_col = lower.get("sign") or lower.get("label")
-            if path_col and sign_col:
-                participant_col = lower.get("participant_id") or lower.get("participant") or lower.get("signer")
-                candidates.append((path, {"path": path_col, "sign": sign_col, "participant": participant_col}))
+            if not name.lower().endswith(LABEL_TABLE_SUFFIXES) or os.path.abspath(path) in excluded:
+                continue
+            columns = label_columns(table_columns(path))
+            if columns:
+                candidates.append((path, columns))
     if not candidates:
         return None
-    candidates.sort(key=lambda item: (item[1]["participant"] is None, len(item[0])))
+    candidates.sort(key=lambda item: (item[1]["participant"] is None, item[1]["path"] is None, len(item[0])))
     return candidates[0]
+
+
+find_label_csv = find_label_table  # the name used before the rerun set's parquet label file was known
+
+
+def read_label_table(path: str):
+    import pandas as pd
+
+    return pd.read_csv(path) if path.lower().endswith(".csv") else pd.read_parquet(path)
+
+
+def index_landmark_files(root: str, exclude: Iterable[str] = ()) -> dict[str, str]:
+    """File stem -> path for every landmark parquet file under root (sequence id -> its file)."""
+    import os
+
+    excluded = {os.path.abspath(p) for p in exclude}
+    index = {}
+    for folder, _dirs, files in os.walk(root):
+        for name in files:
+            stem, suffix = os.path.splitext(name)
+            path = os.path.join(folder, name)
+            if suffix.lower() == ".parquet" and os.path.abspath(path) not in excluded:
+                index.setdefault(stem, path)
+    return index

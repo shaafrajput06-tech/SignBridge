@@ -119,13 +119,32 @@ class CoreTests(unittest.TestCase):
             (data / "rerun.csv").write_text("path,participant_id,sequence_id,sign\nx/1.parquet,7,1,hello\n")
             path, columns = core.find_label_csv(root)
             self.assertTrue(path.endswith("rerun.csv"))
-            self.assertEqual(columns, {"path": "path", "sign": "sign", "participant": "participant_id"})
+            self.assertEqual(columns, {"path": "path", "sequence": "sequence_id", "sign": "sign", "participant": "participant_id"})
             self.assertIsNone(core.find_label_csv(root, exclude=[path]))
             blob = Path(root) / "m" / "model.tflite"
             blob.parent.mkdir()
             blob.write_bytes(b"abc")
             self.assertEqual(core.find_pinned_file(root, "model.tflite", hashlib.sha256(b"abc").hexdigest()), str(blob))
             self.assertIsNone(core.find_pinned_file(root, "model.tflite", "0" * 64))
+
+    def test_finding_the_rerun_sets_layout(self):
+        # The real rerun set (seen on Kaggle, 2026-11-20): labels.parqet at the top, landmark files in
+        # test_landmark_files/, and sequence ids instead of paths. A label table inside the landmark
+        # folder is never picked, and sequence ids are matched to files by name.
+        with tempfile.TemporaryDirectory() as root:
+            data = Path(root) / "datasets" / "sohier" / "rerun"
+            (data / "test_landmark_files" / "55372").mkdir(parents=True)
+            (data / "test_landmark_files" / "55372" / "1001.parquet").write_bytes(b"x")
+            (data / "test_landmark_files" / "55372" / "1002.parquet").write_bytes(b"x")
+            (data / "test_landmark_files" / "decoy.csv").write_text("path,sign\na,b\n")
+            (data / "labels.csv").write_text("sequence_id,participant_id,sign\n1001,55372,hello\n1002,55372,bye\n")
+            path, columns = core.find_label_table(root)
+            self.assertTrue(path.endswith("labels.csv"))
+            self.assertEqual(columns, {"path": None, "sequence": "sequence_id", "sign": "sign", "participant": "participant_id"})
+            index = core.index_landmark_files(str(data))
+            self.assertEqual(sorted(index), ["1001", "1002"])
+            self.assertTrue(index["1001"].endswith("1001.parquet"))
+            self.assertIsNone(core.label_columns(["frame", "row_id", "type", "landmark_index", "x", "y", "z"]))
 
 
 class NotebookTests(unittest.TestCase):
@@ -136,6 +155,13 @@ class NotebookTests(unittest.TestCase):
     @unittest.skipUnless(importlib.util.find_spec("pandas"), "pandas is not installed: the notebook reads Kaggle's parquet files with it "
                          "(Kaggle has it; SignBridge itself does not need it). pip install pandas to run this test.")
     def test_every_cell_runs_with_a_stand_in_model_and_data(self):
+        self.run_notebook(layout="paths")
+
+    @unittest.skipUnless(importlib.util.find_spec("pandas"), "pandas is not installed")
+    def test_every_cell_runs_with_the_rerun_sets_layout(self):
+        self.run_notebook(layout="sequence_ids")
+
+    def run_notebook(self, layout):
         notebook = json.loads(builder.OUT.read_text(encoding="utf-8"))
         cells = ["".join(c["source"]) for c in notebook["cells"] if c["cell_type"] == "code"]
         labels = asl_islr.load_classes()
@@ -143,16 +169,17 @@ class NotebookTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as root:
             data = Path(root) / "asl-rerun"
             (data / "landmarks").mkdir(parents=True)
-            rows = ["path,participant_id,sequence_id,sign"]
+            rows = ["path,participant_id,sequence_id,sign"] if layout == "paths" else ["sequence_id,participant_id,sign"]
             sequences = {}
             for i in range(30):
                 sign = labels[i % 5]
-                rel = f"landmarks/{i}.parquet"
+                rel = f"landmarks/{i}.parquet" if layout == "paths" else f"test_landmark_files/{100 + i % 3}/{5000 + i}.parquet"
+                (data / rel).parent.mkdir(parents=True, exist_ok=True)
                 (data / rel).write_bytes(b"stand-in")
                 hands = [frame(right=True), frame(left=True, right=True), frame()][i % 3]
                 sequences[str(data / rel)] = np.stack([hands + rng.normal(0, 0.001, hands.shape).astype(np.float32)] * (10 + i))
-                rows.append(f"{rel},{100 + i % 3},{i},{sign}")
-            (data / "rerun_labels.csv").write_text("\n".join(rows) + "\n")
+                rows.append(f"{rel},{100 + i % 3},{i},{sign}" if layout == "paths" else f"{5000 + i},{100 + i % 3},{sign}")
+            (data / ("rerun_labels.csv" if layout == "paths" else "labels.csv")).write_text("\n".join(rows) + "\n")
             (data / "model.tflite").write_bytes(b"stand-in model")
             classes_bytes = (ROOT / "models" / "asl" / "sign_to_prediction_index_map.json").read_bytes()
             (data / "sign_to_prediction_index_map.json").write_bytes(classes_bytes)
