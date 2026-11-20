@@ -53,3 +53,6 @@ data/web_learned/
 # Stage 2: converted PSL datasets and training output (built on GitHub Actions, never committed)
 data/psl-*/
 out/
+web/public/clips/
+web/public/psl_clips.json
+web/public/psl_hands_spec.json

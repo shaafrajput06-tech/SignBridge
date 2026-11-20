@@ -3,6 +3,7 @@ import { classifyGesture, drawLandmarks, normalizeLandmarks } from "./vision.js"
 import { createCaptureV2, loadFeatureSpecV2 } from "./capture_v2.js";
 import AslMode, { HAND_COLOURS } from "./AslMode.jsx";
 import PslSuggestion from "./PslSuggestion.jsx";
+import SignClip, { useClips } from "./SignClip.jsx";
 import { islrFrame, loadAslSpec, SignSegmenter } from "./asl_islr.js";
 import { createPslRecognizer, loadPslManifest } from "./psl_client.js";
 import { loadPslSpec } from "./psl_hands.js";
@@ -252,6 +253,8 @@ export default function App() {
     setPslResult(null);
   }, [vocabulary, acceptWord]);
   const pslReady = pslBundle.status === "ready" || (pslBundle.status === "error" && pslBundle.manifest);
+  const clips = useClips();
+  const pslVocabulary = useMemo(() => new Set((pslBundle.manifest?.classes || []).filter((entry) => entry.tier && entry.vocabulary_id).map((entry) => entry.vocabulary_id)), [pslBundle.manifest]);
   const pslSigns = pslBundle.manifest ? pslBundle.manifest.classes.filter((entry) => entry.tier).length : 0;
 
   useEffect(() => {
@@ -536,6 +539,7 @@ export default function App() {
                 <div className="translation-main" dir={language === "ur" && !romanUrdu ? "rtl" : "auto"}>{selectedText}</div>
                 <div className="translation-helper" dir={language === "en" && !romanUrdu ? "rtl" : "auto"}>{helperText}</div>
               </div>
+              {current && clips.byWord.has(current.id) && <SignClip word={current.id} title={current.english} compact />}
               {mode === "psl" && pslReady && <PslSuggestion result={pslResult} signing={pslSigning} language={language} badge={pslBundle.manifest.badge} onConfirm={confirmPsl} onDismiss={() => setPslResult(null)} />}
               <div className="recognition-status"><span className={current ? "status-check" : "status-wait"}>{current ? "✓" : "…"}</span><span>{status}</span><span className="rule-label">{current ? ORIGIN_LABELS[origin] || "" : "Waiting"}</span></div>
               {current && origin === "demo" && current.demoAvailable && current.handSignHint?.trim() && <div className="gesture-hint"><span className="hint-icon">✳</span><span><b>Gesture demo shape · not a PSL sign</b>{current.handSignHint}</span></div>}
@@ -552,9 +556,10 @@ export default function App() {
       </>}
 
       {view === "vocabulary" && !exhibition && <section className="content-section">
-        <div className="section-intro"><div><span className="section-kicker">{vocabulary.length} PHRASES · {categories.length - 1} CATEGORIES</span><h1>Vocabulary</h1><p>Every phrase in English and Urdu, with speech. The camera does not recognise any PSL sign yet, so each phrase is marked "Vocabulary only".</p></div><button className="button button-outline" onClick={() => setView("translate")}>Back to translator</button></div>
+        <div className="section-intro"><div><span className="section-kicker">{vocabulary.length} PHRASES · {categories.length - 1} CATEGORIES</span><h1>Vocabulary</h1><p>Every phrase in English and Urdu, with speech. Tap a phrase to hear it{clips.byWord.size ? ` and, for the ${clips.byWord.size} phrases marked ▶, to see a real PSL signer from a community dictionary` : ""}. {pslVocabulary.size ? `${pslVocabulary.size} phrases are also suggested by the PSL camera.` : ""}</p></div><button className="button button-outline" onClick={() => setView("translate")}>Back to translator</button></div>
         <div className="vocab-tools"><label className="search-box"><span>⌕</span><input value={search} onChange={(event) => { setSearch(event.target.value); setPage(0); }} placeholder="Search English, Urdu, Roman Urdu…" aria-label="Search vocabulary" /></label><select value={category} onChange={(event) => { setCategory(event.target.value); setPage(0); }} aria-label="Filter by category">{categories.map((name) => <option key={name}>{name}</option>)}</select><span className="result-count">{filtered.length} phrases</span></div>
-        <div className="vocab-grid">{visibleItems.map((item) => <button key={item.id} className={`vocab-card panel ${selected?.id === item.id ? "chosen" : ""}`} onClick={() => { setSelected(item); acceptWord(item, "vocabulary", ORIGIN_LABELS.vocabulary); }}><span className="vocab-category">{item.category}</span><strong>{item.english}</strong><span className="vocab-urdu" dir="rtl">{item.urdu}</span><small>{item.romanUrdu}</small><span className="availability training">Vocabulary only · not recognised yet{item.demoAvailable ? " · has a gesture demo shape" : ""}</span><span className="card-speak">♪</span></button>)}</div>
+        {selected && <div className="panel vocab-detail"><div><span className="section-kicker">{selected.category}</span><h2>{selected.english} · <span dir="rtl">{selected.urdu}</span></h2></div><SignClip word={selected.id} title={selected.english} showMissing /></div>}
+        <div className="vocab-grid">{visibleItems.map((item) => <button key={item.id} className={`vocab-card panel ${selected?.id === item.id ? "chosen" : ""}`} onClick={() => { setSelected(item); acceptWord(item, "vocabulary", ORIGIN_LABELS.vocabulary); }}><span className="vocab-category">{item.category}</span><strong>{item.english}</strong><span className="vocab-urdu" dir="rtl">{item.urdu}</span><small>{item.romanUrdu}</small>{pslVocabulary.has(item.id) ? <span className="availability demo">PSL camera · suggestion (Tier B)</span> : <span className="availability training">Vocabulary only · not recognised yet</span>}{clips.byWord.has(item.id) && <span className="video-tag">▶ How-to video</span>}<span className="card-speak">♪</span></button>)}</div>
         <div className="pagination"><button disabled={page === 0} onClick={() => setPage((value) => Math.max(0, value - 1))}>← Previous</button><span>Page {page + 1} of {pageCount}</span><button disabled={page + 1 >= pageCount} onClick={() => setPage((value) => Math.min(pageCount - 1, value + 1))}>Next →</button></div>
       </section>}
 
