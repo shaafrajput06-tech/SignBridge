@@ -20,6 +20,7 @@ MAY_NAME_OLD_ADDRESS = {
     "docs/DOMAIN.md",
     "docs/WEBSITE.md",
     "docs/HOW_TO_MEASURE_SPEED.md",
+    "docs/CONTEXT.md",
     "README.md",
     "docs/prompts/master-v3.md",
     "tools/old_address_redirect/README.md",
