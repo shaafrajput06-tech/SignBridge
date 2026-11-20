@@ -6,6 +6,7 @@ import PslSuggestion from "./PslSuggestion.jsx";
 import SignClip, { useClips } from "./SignClip.jsx";
 import { QuickPhrases, ReplyPanel, SentenceStrip } from "./Conversation.jsx";
 import { offlineSize, saveForOffline } from "./offline.js";
+import { adapt, forgetPersonal, learn, loadPersonal, savePersonal } from "./personal.js";
 import { islrFrame, loadAslSpec, SignSegmenter } from "./asl_islr.js";
 import { createPslRecognizer, loadPslManifest } from "./psl_client.js";
 import { loadPslSpec } from "./psl_hands.js";
@@ -91,7 +92,7 @@ export default function App() {
   const acceptWordRef = useRef(() => {});
   const originRef = useRef(null);
   // The PSL bundle and its live state; the camera loop reads it through this ref.
-  const pslRef = useRef({ manifest: null, spec: null, aslSpec: null, recognizer: null });
+  const pslRef = useRef({ manifest: null, spec: null, aslSpec: null, recognizer: null, personal: null });
 
   const [vocabulary, setVocabulary] = useState([]);
   const [connection, setConnection] = useState("checking");
@@ -204,7 +205,7 @@ export default function App() {
     let alive = true;
     Promise.all([loadPslManifest(), loadPslSpec(), loadAslSpec()]).then(([manifest, spec, aslSpec]) => {
       if (!alive) return;
-      Object.assign(pslRef.current, { manifest, spec, aslSpec });
+      Object.assign(pslRef.current, { manifest, spec, aslSpec, personal: loadPersonal(manifest.version, manifest.classes.length) });
       setPslBundle({ status: "ready", manifest });
       setMode((value) => (value === "off" ? "psl" : value));
     }).catch((error) => { if (alive) setPslBundle({ status: "missing", message: String(error?.message || error) }); });
@@ -267,9 +268,21 @@ export default function App() {
     const item = vocabulary.find((phrase) => phrase.id === entry.vocabulary_id)
       ?? { id: `psl:${entry.gloss}`, english: entry.english, urdu: entry.urdu || entry.english, romanUrdu: entry.english, category: "PSL", audioText: entry.english };
     acceptWord(item, "camera", ORIGIN_LABELS.psl);
+    const psl = pslRef.current;
+    if (pslResult?.scores && psl.personal) {
+      // Learn from what the person confirmed; stays in this browser (personal.js).
+      psl.personal = learn(psl.personal, pslResult.scores, entry.index);
+      savePersonal(psl.personal);
+    }
     setPslResult(null);
     setSentenceWords((words) => [...words, { gloss: entry.gloss, english: entry.english, urdu: entry.urdu || entry.english }].slice(-20));
-  }, [vocabulary, acceptWord]);
+  }, [vocabulary, acceptWord, pslResult]);
+  const forgetMine = () => {
+    forgetPersonal();
+    const psl = pslRef.current;
+    if (psl.manifest) psl.personal = loadPersonal(psl.manifest.version, psl.manifest.classes.length);
+    setPslBundle((bundle) => ({ ...bundle }));
+  };
   const speakText = useCallback((text) => {
     if (!voiceEnabled || !text || !("speechSynthesis" in window)) return;
     window.speechSynthesis.cancel();
@@ -307,7 +320,7 @@ export default function App() {
     const classifyPsl = (sign, aspect) => {
       if (pslBusy) { pslPending = [sign, aspect]; return; }
       pslBusy = true;
-      psl.recognizer.predict(sign, aspect)
+      psl.recognizer.predict(sign, aspect, (scores) => adapt(scores, psl.personal))
         .then((answer) => { if (active) setPslResult({ ...answer, at: Date.now() }); })
         .catch((error) => { if (active) setPslBundle((bundle) => ({ ...bundle, status: "error", message: `The PSL model stopped: ${error?.message || error}` })); })
         .finally(() => {
@@ -535,6 +548,7 @@ export default function App() {
               <small>Learned from a public PSL dataset. <b>{pslBundle.manifest.badge}</b>: every answer is a suggestion (Tier B) that you confirm, and nothing is spoken until you do.</small>
               {pslBundle.status === "error" && <small className="inline-warning">{pslBundle.message}</small>}
               <label className="toggle-row"><input type="checkbox" checked={mode === "psl"} onChange={(event) => setMode(event.target.checked ? "psl" : "off")} /><span><b>PSL suggestions</b>Sign one word, lower your hands, then confirm.</span></label>
+              <small>Your confirmations tune the suggestions to your signing, only in this browser{pslRef.current.personal?.confirmed ? ` (${pslRef.current.personal.confirmed} so far)` : ""}. <button className="text-button" onClick={forgetMine}>Forget them</button></small>
             </> : <>
               <strong>{pslBundle.status === "loading" ? "Loading…" : "Not installed"}</strong>
               <small>The PSL model could not be loaded on this device, so SignBridge does not guess PSL signs. The vocabulary and ASL mode still work.</small>

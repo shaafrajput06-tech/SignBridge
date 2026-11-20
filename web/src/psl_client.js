@@ -78,10 +78,12 @@ export async function createPslRecognizer({ manifest, spec, useWorker = true, ba
       const input = pslInput(sequence, aspect, spec);
       return call("run", { input }, [input.buffer]);
     },
-    async predict(sequence, aspect) {
+    // adjust(scores) -> scores lets the page add the person's own adaptation (personal.js) before ranking.
+    async predict(sequence, aspect, adjust = (scores) => scores) {
       const result = await this.scores(sequence, aspect);
-      const top = rankPsl(result.scores, manifest);
-      return { top, band: pslBand(top, manifest), ms: result.ms, frames: sequence.length };
+      const scores = adjust(result.scores);
+      const top = rankPsl(scores, manifest);
+      return { top, band: pslBand(top, manifest), ms: result.ms, frames: sequence.length, scores: result.scores };
     },
     close,
   };
