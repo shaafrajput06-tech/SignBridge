@@ -1,0 +1,3 @@
+# The frozen Inference Baseline v1 must stay byte-for-byte identical (its SHA-256 values are checked),
+# so git never changes its line endings.
+baseline/** -text
