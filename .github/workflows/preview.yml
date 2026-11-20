@@ -19,8 +19,9 @@ on:
 permissions:
   contents: read
 
+# One run per branch: a push and its pull request share the group, so the older run is cancelled.
 concurrency:
-  group: preview-${{ github.ref }}
+  group: preview-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
 
 jobs:
