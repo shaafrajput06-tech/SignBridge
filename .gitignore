@@ -49,3 +49,7 @@ web/dist-shared/
 
 # Web-learned landmarks are data: never committed (the web-learn workflow uploads them as an artifact).
 data/web_learned/
+
+# Stage 2: converted PSL datasets and training output (built on GitHub Actions, never committed)
+data/psl-*/
+out/
