@@ -5,6 +5,7 @@ import AslMode, { HAND_COLOURS } from "./AslMode.jsx";
 import PslSuggestion from "./PslSuggestion.jsx";
 import SignClip, { useClips } from "./SignClip.jsx";
 import { QuickPhrases, ReplyPanel, SentenceStrip } from "./Conversation.jsx";
+import { offlineSize, saveForOffline } from "./offline.js";
 import { islrFrame, loadAslSpec, SignSegmenter } from "./asl_islr.js";
 import { createPslRecognizer, loadPslManifest } from "./psl_client.js";
 import { loadPslSpec } from "./psl_hands.js";
@@ -134,6 +135,7 @@ export default function App() {
   const [pslResult, setPslResult] = useState(null);
   const [pslSigning, setPslSigning] = useState(false);
   const [sentenceWords, setSentenceWords] = useState([]);
+  const [offline, setOffline] = useState({ status: "idle", totalBytes: null });
 
   const currentMode = MODE_LABELS[mode];
   modeRef.current = mode;
@@ -208,6 +210,19 @@ export default function App() {
     }).catch((error) => { if (alive) setPslBundle({ status: "missing", message: String(error?.message || error) }); });
     return () => { alive = false; };
   }, []);
+
+  useEffect(() => {
+    if (!import.meta.env?.PROD || !("serviceWorker" in navigator)) return;
+    offlineSize().then((totalBytes) => setOffline((value) => ({ ...value, totalBytes })));
+  }, []);
+  const startOfflineSave = () => {
+    setOffline((value) => ({ ...value, status: "saving", done: 0, total: 0 }));
+    saveForOffline((message) => {
+      if (message.type === "progress") setOffline((value) => ({ ...value, status: "saving", done: message.done, total: message.total }));
+      else if (message.type === "cached") setOffline((value) => ({ ...value, status: "saved" }));
+      else setOffline((value) => ({ ...value, status: "error", message: message.message }));
+    }).catch((error) => setOffline((value) => ({ ...value, status: "error", message: String(error?.message || error) })));
+  };
 
   useEffect(() => {
     refreshConnection();
@@ -596,7 +611,7 @@ export default function App() {
         {HAS_SERVER && <div className="panel report-body"><div className="panel-heading"><div><span className="section-kicker">PERSONAL SIGNS</span><h2>Training report</h2></div><a className="text-button" href={`${API}/training-data.csv`}>Download examples CSV →</a></div>{report ? <pre>{report}</pre> : <div className="empty-report">{connection === "online" ? "No personal model yet. That's fine: SignBridge works without one." : "The SignBridge server is not running. The vocabulary and ASL mode still work."}</div>}</div>}
       </section>}
 
-      {!exhibition && <footer className="page-footer"><span>SignBridge · Pakistan Sign Language first · runs on your device</span><span>Camera frames are not saved. Personal sign examples need your consent.</span><button onClick={() => setHelpOpen(true)}>Privacy & help</button></footer>}
+      {!exhibition && <footer className="page-footer"><span>SignBridge · Pakistan Sign Language first · runs on your device</span><span>Camera frames are not saved. Personal sign examples need your consent.</span>{offline.totalBytes ? <button onClick={startOfflineSave} disabled={offline.status === "saving" || offline.status === "saved"} title="Stores every SignBridge file on this device so it works with no internet">{offline.status === "saved" ? "Saved: works offline" : offline.status === "saving" ? `Saving for offline… ${offline.total ? Math.round((100 * offline.done) / offline.total) : 0} %` : offline.status === "error" ? `Offline saving failed: ${offline.message}` : `Save for offline use (${Math.round(offline.totalBytes / 1e6)} MB)`}</button> : null}<button onClick={() => setHelpOpen(true)}>Privacy & help</button></footer>}
     </main>
 
     {helpOpen && <div className="modal-scrim" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setHelpOpen(false); }}><section className="help-modal panel" role="dialog" aria-modal="true" aria-labelledby="help-title"><button className="modal-close" onClick={() => setHelpOpen(false)} aria-label="Close help">×</button><span className="section-kicker">A QUICK GUIDE</span><h2 id="help-title">How to use SignBridge</h2><div className="help-columns"><div><h3>What works today</h3><ul><li>{pslReady ? `PSL: ${pslSigns} signs, shown as suggestions you confirm (community dataset, not yet validated by Deaf signers).` : "PSL: both hands, shoulders and face are tracked. PSL recognition is not installed on this device."}</li><li>ASL mode: 250 everyday ASL words. A separate language, not PSL.</li><li>Vocabulary: every phrase in English and Urdu, with speech.</li></ul><h3>Gesture demo (off unless you turn it on; not PSL)</h3><ul><li>Open, spread palm → Hello</li><li>Flat, close fingers → Stop</li><li>Fist → No · thumbs up/down → Yes/Bad</li><li>V sign → Please · index up → Wait</li><li>OK → Good · call-me pose → Phone</li><li>Three fingers → Thank you · four → Water</li><li>Five close fingers → Emergency</li><li>Horizontal point → Help</li></ul></div><div><h3>Keyboard</h3><ul><li>E English · U Urdu · L switch</li><li>R repeat · V voice on/off</li><li>G gesture demo on/off</li><li>M personal signs on/off (when you have some)</li><li>B opens vocabulary · H help · Q quit</li><li>In vocabulary, type to search; Escape closes it</li></ul><h3>Privacy</h3><p>Browser hand images are processed here and are not sent to Google or saved. MediaPipe Tasks may send aggregate performance and usage metrics to Google. Personal sign examples are saved only after you tick consent and press Save.</p></div></div><button className="button button-primary" onClick={() => setHelpOpen(false)}>Got it</button></section></div>}
