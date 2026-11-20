@@ -15,6 +15,10 @@ Commands (run from the project folder)
   python tools/baseline_v1.py check                    the files in git match the manifest (also a test)
   python tools/baseline_v1.py restore --zip PATH       copy the third-party files from SignBridge.zip
   python tools/baseline_v1.py restore --download       the same, downloading the zip from the release
+  python tools/baseline_v1.py restore --from-sources   no zip: take the models from models/ (after
+                                                       tools/fetch_assets.py) and the runtimes from
+                                                       web/node_modules (after npm install); only the
+                                                       PSL clips then stay missing (not needed by tests)
   python tools/baseline_v1.py status                   which files are present, missing or different
   python tools/baseline_v1.py freeze --zip PATH        (once) write baseline/ from the zip; refuses to
                                                        overwrite an existing manifest without --force
@@ -174,6 +178,54 @@ def download(urls: list[str]) -> bytes:
     raise SystemExit("Could not download the baseline zip:\n  " + "\n  ".join(problems))
 
 
+# Where each third-party baseline file can be found in a normal checkout (same pinned versions).
+SOURCES = {
+    "site/models/hand_landmarker.task": "models/hand_landmarker.task",
+    "site/models/pose_landmarker_lite.task": "models/pose_landmarker_lite.task",
+    "site/models/face_landmarker.task": "models/face_landmarker.task",
+    "site/models/asl/model.tflite": "models/asl/model.tflite",
+}
+SOURCE_FOLDERS = {
+    "site/wasm/": "web/node_modules/@mediapipe/tasks-vision/wasm/",
+    "site/litert/": "web/node_modules/@litertjs/core/wasm/",
+}
+
+
+def source_for(relative: str) -> Path | None:
+    if relative in SOURCES:
+        return ROOT / SOURCES[relative]
+    for prefix, folder in SOURCE_FOLDERS.items():
+        if relative.startswith(prefix):
+            return ROOT / folder / relative[len(prefix):]
+    return None
+
+
+def restore_from_sources(manifest: dict) -> int:
+    restored, unavailable = 0, []
+    for entry in manifest["files"]:
+        target = local_path(entry["path"])
+        if target.is_file() and sha256_file(target) == entry["sha256"]:
+            continue
+        source = source_for(entry["path"])
+        if source is None or not source.is_file():
+            unavailable.append(f"{entry['path']} (no local source)")
+            continue
+        if source.stat().st_size != entry["bytes"] or sha256_file(source) != entry["sha256"]:
+            unavailable.append(f"{entry['path']} ({source.relative_to(ROOT).as_posix()} is a different version)")
+            continue
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(source.read_bytes())
+        restored += 1
+    current = status(manifest)
+    print(f"Restored {restored} files from local sources. Baseline: {len(current['ok'])} of {len(manifest['files'])} files present and correct.")
+    for item in unavailable:
+        print(f"  not restored: {item}")
+    needed = [path for path in current["missing"] + current["different"] if not path.startswith("site/clips/")]
+    if needed:
+        print("Files the baseline model tests need are still missing. Run python tools/fetch_assets.py and npm install in web/, or restore from the zip.")
+    return 0 if not needed else 1
+
+
 def restore(manifest: dict, zip_path: Path | None, use_download: bool) -> int:
     data = zip_path.read_bytes() if zip_path else download(release_urls())
     expected = manifest["source_zip"]
@@ -214,6 +266,7 @@ def main(argv: list[str] | None = None) -> int:
     source = restore_parser.add_mutually_exclusive_group(required=True)
     source.add_argument("--zip", type=Path)
     source.add_argument("--download", action="store_true")
+    source.add_argument("--from-sources", action="store_true")
     freeze_parser = sub.add_parser("freeze", help="write baseline/ from the zip (once)")
     freeze_parser.add_argument("--zip", type=Path, required=True)
     freeze_parser.add_argument("--force", action="store_true")
@@ -235,6 +288,8 @@ def main(argv: list[str] | None = None) -> int:
         for relative in current["missing"] + current["different"]:
             print(f"  {relative}")
         return 0
+    if args.from_sources:
+        return restore_from_sources(manifest)
     return restore(manifest, args.zip, args.download)
 
 
