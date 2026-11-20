@@ -341,3 +341,19 @@ h1, h2, h3, p { margin-top: 0; }
 .toggle-row span { color: var(--muted); line-height: 1.4; }
 .camera-overlay-top .hands-chip { margin-left: 8px; }
 @media (max-width: 800px) { .psl-status { max-width: none; width: 100%; } }
+
+/* PSL suggestions (Tier B): always labelled, confirmed by the person before anything is spoken */
+.psl-suggestion { border: 1px solid var(--panel-border); background: var(--panel-2); border-radius: 14px; padding: 14px 16px; margin: 12px 0; display: grid; gap: 10px; }
+.psl-suggestion small { color: var(--muted); font-size: 12px; }
+.psl-suggestion.idle b { font-size: 14px; }
+.psl-suggestion-head { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.tier-chip { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--gold); border: 1px solid rgba(240, 200, 118, .45); border-radius: 999px; padding: 3px 9px; }
+.validation-badge { font-size: 11px; color: var(--muted); border: 1px dashed var(--panel-border); border-radius: 999px; padding: 3px 9px; }
+.psl-word { font-size: clamp(28px, 4vw, 42px); font-weight: 700; line-height: 1.1; color: var(--text); }
+.psl-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.psl-alternatives { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.psl-suggestion button.asl-choice { cursor: pointer; font: inherit; }
+.report-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.report-table th, .report-table td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--panel-border); }
+.report-table th { color: var(--muted); font-weight: 600; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; }
+.report-table a { color: var(--mint); }

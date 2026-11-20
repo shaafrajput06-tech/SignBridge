@@ -1,4 +1,4 @@
-// The ASL model with LiteRT.js (Google's in-browser TFLite runtime), on CPU (WebAssembly + XNNPACK).
+// The ASL model (and, with the same code, the PSL model) with LiteRT.js (Google's in-browser TFLite runtime), on CPU (WebAssembly + XNNPACK).
 // LiteRT.js cannot take a variable number of frames, so the model's input is rewritten to
 // frames x 543 x 3 (patchTfliteFrames) before it is compiled; callers resample each sign to that length.
 // Used inside src/asl_worker.js, and on the main thread when a module worker is not available.
@@ -19,13 +19,13 @@ function details(list) {
 }
 
 // Returns { info, run(Float32Array) -> { scores, ms }, close() }.
-export async function createLiteRtAslModel({ modelUrl, wasmPath, frames, sha256, rowsPerFrame = 543 }) {
+export async function createLiteRtAslModel({ modelUrl, wasmPath, frames, sha256, rowsPerFrame = 543, name = "ASL" }) {
   const started = performance.now();
   const response = await fetch(modelUrl);
-  if (!response.ok) throw new Error(`The ASL model file was not found (${response.status}). Start the website once with internet so npm run assets can download it.`);
+  if (!response.ok) throw new Error(`The ${name} model file was not found (${response.status}). Start the website once with internet so npm run assets can download it.`);
   const buffer = await response.arrayBuffer();
   const hash = await sha256Hex(buffer);
-  if (hash && hash !== sha256) throw new Error(`The ASL model file is not the pinned one (SHA-256 ${hash}).`);
+  if (hash && hash !== sha256) throw new Error(`The ${name} model file is not the pinned one (SHA-256 ${hash}).`);
   const bytes = new Uint8Array(buffer);
   const originalInput = readTfliteInput(bytes);
   const patched = patchTfliteFrames(bytes, frames, rowsPerFrame);

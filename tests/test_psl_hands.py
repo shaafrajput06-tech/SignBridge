@@ -219,3 +219,14 @@ class GlossTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class GoldenInputTests(unittest.TestCase):
+    def test_golden_cases_match_the_reference(self):
+        import importlib.util
+
+        spec = importlib.util.spec_from_file_location("psl_golden", ROOT / "tools" / "psl_golden.py")
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        stored = json.loads((ROOT / "tests" / "golden" / "psl_hands_cases.json").read_text(encoding="utf-8"))
+        self.assertEqual(stored, json.loads(json.dumps(module.build())), "rerun python tools/psl_golden.py")

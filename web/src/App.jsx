@@ -2,20 +2,25 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { classifyGesture, drawLandmarks, normalizeLandmarks } from "./vision.js";
 import { createCaptureV2, loadFeatureSpecV2 } from "./capture_v2.js";
 import AslMode, { HAND_COLOURS } from "./AslMode.jsx";
+import PslSuggestion from "./PslSuggestion.jsx";
+import { islrFrame, loadAslSpec, SignSegmenter } from "./asl_islr.js";
+import { createPslRecognizer, loadPslManifest } from "./psl_client.js";
+import { loadPslSpec } from "./psl_hands.js";
 import { API_BASE, HAS_SERVER, assetUrl } from "./paths.js";
 
 const API = API_BASE;
 const HOLD_FRAMES = 8;
 const LOST_MS = 900;
 const localHost = ["localhost", "127.0.0.1", "::1"].includes(window.location.hostname);
-// PSL screen modes. No PSL model is installed yet (fast-track Stage 3), so the camera tracks without
-// guessing unless the person turns on the Phase 0 gesture demo (off by default, never called PSL) or,
-// with the local server, their own optional personal signs (Tier C, CLAUDE.md 8.1).
-const MODE_LABELS = { off: "PSL · tracking only", demo: "Gesture demo · not PSL", trained: "Personal signs · Tier C" };
-const ORIGIN_LABELS = { demo: "Gesture demo · not a PSL sign", trained: "Personal sign · Tier C", vocabulary: "Chosen from the vocabulary" };
+// PSL screen modes. "psl" runs the PSL bundle (models/psl, master-v3 Stage 2): every sign in it is Tier B,
+// a suggestion the person confirms. Without a bundle the camera tracks without guessing, unless the person
+// turns on the Phase 0 gesture demo (never called PSL) or, with the local server, personal signs (Tier C).
+const MODE_LABELS = { off: "PSL · tracking only", psl: "PSL · suggestions (Tier B)", demo: "Gesture demo · not PSL", trained: "Personal signs · Tier C" };
+const ORIGIN_LABELS = { psl: "PSL · Tier B · you confirmed it", demo: "Gesture demo · not a PSL sign", trained: "Personal sign · Tier C", vocabulary: "Chosen from the vocabulary" };
 const HANDS_TEXT = { both: "Both hands seen", one: "Only one hand seen", none: "No hands seen" };
 const IDLE_STATUS = "Show both hands to the camera";
 const TRACKING_STATUS = "Hands tracked · PSL recognition is not installed yet";
+const PSL_STATUS = "PSL · sign one word, then lower your hands";
 
 // The hand the Phase 0 rules and personal model read: the larger one in view (they were built for one hand).
 function mainHand(rawHands) {
@@ -51,6 +56,24 @@ function speakItem(item, language, enabled) {
 
 function Icon({ children }) { return <span className="icon" aria-hidden="true">{children}</span>; }
 
+const percent = (value) => (value == null ? "—" : `${(value * 100).toFixed(1)} %`);
+
+// The PSL part of the model report: only numbers written into the bundle by the training run.
+function PslReport({ bundle }) {
+  const manifest = bundle.manifest;
+  if (!manifest) return <div className="report-summary panel"><div><span className="section-kicker">PSL · MAIN LANGUAGE</span><h2>Not installed</h2><p>The PSL model is not on this device, so there is nothing to report.</p></div><div className="report-stat"><strong>—</strong><small>not measured</small></div></div>;
+  const held = manifest.metrics.device_held_out;
+  const signs = manifest.classes.filter((entry) => entry.tier);
+  return <>
+    <div className="report-summary panel"><div><span className="section-kicker">PSL · MAIN LANGUAGE · {manifest.version}</span><h2>{signs.length} signs · all Tier B · {manifest.badge}</h2><p>Trained {manifest.created} on SignSpeak (Apache-2.0), a public PSL dataset of hand landmarks. Measured on phone recordings it never saw ({held.protocol}). The dataset has no signer ids, so this is not a test on new signers: no sign is Tier A yet.</p></div><div className="report-stat"><strong>{percent(held.top1)}</strong><small>top-1, device held out</small></div><div className="report-stat"><strong>{percent(held.top5)}</strong><small>top-5</small></div></div>
+    <div className="panel report-body"><div className="panel-heading"><div><span className="section-kicker">PSL · PER SIGN</span><h2>Phone recordings never seen in training</h2></div></div>
+      <table className="report-table"><thead><tr><th>Sign</th><th>اردو</th><th>Hands</th><th>Tested</th><th>Top-1</th><th>Top-5</th></tr></thead>
+        <tbody>{signs.map((entry) => <tr key={entry.gloss}><td>{entry.dictionary_url ? <a href={entry.dictionary_url} target="_blank" rel="noreferrer">{entry.english}</a> : entry.english}</td><td dir="rtl">{entry.urdu}</td><td>{entry.hands === "two" ? "two" : "one"}</td><td>{entry.device_held_out?.samples ?? 0}</td><td>{percent(entry.device_held_out?.top1)}</td><td>{percent(entry.device_held_out?.top5)}</td></tr>)}</tbody></table>
+      <p className="asl-credit">Sign names link to the PSL dictionary page (psl.org.pk) the dataset's signers learned from. {manifest.attribution.map((item) => item.text).join(" ")}</p>
+    </div>
+  </>;
+}
+
 export default function App() {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
@@ -64,6 +87,8 @@ export default function App() {
   const vocabularyRef = useRef([]);
   const acceptWordRef = useRef(() => {});
   const originRef = useRef(null);
+  // The PSL bundle and its live state; the camera loop reads it through this ref.
+  const pslRef = useRef({ manifest: null, spec: null, aslSpec: null, recognizer: null });
 
   const [vocabulary, setVocabulary] = useState([]);
   const [connection, setConnection] = useState("checking");
@@ -103,6 +128,9 @@ export default function App() {
     try { return localStorage.getItem("signbridge_sign_language") === "ASL" ? "ASL" : "PSL"; } catch { return "PSL"; }
   });
   const pendingCameraStartRef = useRef(null);
+  const [pslBundle, setPslBundle] = useState({ status: "loading" });
+  const [pslResult, setPslResult] = useState(null);
+  const [pslSigning, setPslSigning] = useState(false);
 
   const currentMode = MODE_LABELS[mode];
   modeRef.current = mode;
@@ -168,6 +196,17 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    let alive = true;
+    Promise.all([loadPslManifest(), loadPslSpec(), loadAslSpec()]).then(([manifest, spec, aslSpec]) => {
+      if (!alive) return;
+      Object.assign(pslRef.current, { manifest, spec, aslSpec });
+      setPslBundle({ status: "ready", manifest });
+      setMode((value) => (value === "off" ? "psl" : value));
+    }).catch((error) => { if (alive) setPslBundle({ status: "missing", message: String(error?.message || error) }); });
+    return () => { alive = false; };
+  }, []);
+
+  useEffect(() => {
     refreshConnection();
     const timer = window.setInterval(refreshConnection, 12000);
     return () => window.clearInterval(timer);
@@ -205,6 +244,16 @@ export default function App() {
   vocabularyRef.current = vocabulary;
   acceptWordRef.current = acceptWord;
 
+  // The person confirmed a PSL suggestion: show and speak it like any chosen phrase.
+  const confirmPsl = useCallback((entry) => {
+    const item = vocabulary.find((phrase) => phrase.id === entry.vocabulary_id)
+      ?? { id: `psl:${entry.gloss}`, english: entry.english, urdu: entry.urdu || entry.english, romanUrdu: entry.english, category: "PSL", audioText: entry.english };
+    acceptWord(item, "camera", ORIGIN_LABELS.psl);
+    setPslResult(null);
+  }, [vocabulary, acceptWord]);
+  const pslReady = pslBundle.status === "ready" || (pslBundle.status === "error" && pslBundle.manifest);
+  const pslSigns = pslBundle.manifest ? pslBundle.manifest.classes.filter((entry) => entry.tier).length : 0;
+
   useEffect(() => {
     if (!cameraOn) return undefined;
     let active = true;
@@ -216,7 +265,23 @@ export default function App() {
     let frameNumber = 0;
     let lastStatus = "";
     let lastSeen = "";
+    let segmenter = null;
+    let lastSigning = false;
+    let pslBusy = false;
+    let pslPending = null;
+    const psl = pslRef.current;
     const showStatus = (text) => { if (text !== lastStatus) { lastStatus = text; setStatus(text); } };
+    const classifyPsl = (sign, aspect) => {
+      if (pslBusy) { pslPending = [sign, aspect]; return; }
+      pslBusy = true;
+      psl.recognizer.predict(sign, aspect)
+        .then((answer) => { if (active) setPslResult({ ...answer, at: Date.now() }); })
+        .catch((error) => { if (active) setPslBundle((bundle) => ({ ...bundle, status: "error", message: `The PSL model stopped: ${error?.message || error}` })); })
+        .finally(() => {
+          pslBusy = false;
+          if (pslPending && active) { const [nextSign, nextAspect] = pslPending; pslPending = null; classifyPsl(nextSign, nextAspect); }
+        });
+    };
 
     async function start() {
       if (!window.isSecureContext && !localHost) {
@@ -238,6 +303,12 @@ export default function App() {
         const featureSpec = await loadFeatureSpecV2();
         capture = await createCaptureV2({ spec: featureSpec });
         if (!active) { capture.close(); return; }
+        if (psl.manifest && !psl.recognizer) {
+          // Compiled once in a Web Worker and kept while the page is open.
+          createPslRecognizer({ manifest: psl.manifest, spec: psl.spec })
+            .then((recognizer) => { psl.recognizer = recognizer; setPslBundle((bundle) => ({ ...bundle, runtime: recognizer.info })); })
+            .catch((error) => setPslBundle((bundle) => ({ ...bundle, status: "error", message: `The PSL model could not start: ${error?.message || error}` })));
+        }
 
         const loop = () => {
           if (!active || !videoRef.current || videoRef.current.readyState < 2) {
@@ -253,6 +324,17 @@ export default function App() {
             const seen = left && right ? "both" : left || right ? "one" : "none";
             if (seen !== lastSeen) { lastSeen = seen; setHands(seen); }
             frameNumber += 1;
+            if (modeRef.current === "psl" && psl.recognizer && psl.aslSpec) {
+              // The baseline's frame layout and sign cutter (asl_islr_spec.json), then the PSL bundle.
+              segmenter ??= new SignSegmenter(psl.aslSpec);
+              const sign = segmenter.push(islrFrame(out.raw, featureSpec, psl.aslSpec));
+              if (segmenter.active !== lastSigning) { lastSigning = segmenter.active; setPslSigning(lastSigning); }
+              const video = videoRef.current;
+              if (sign) classifyPsl(sign, (video.videoWidth || 4) / (video.videoHeight || 3));
+            } else if (segmenter) {
+              segmenter = null;
+              if (lastSigning) { lastSigning = false; setPslSigning(false); }
+            }
             const hand = mainHand(out.raw.hands);
             if (hand) {
               lastHandAt = performance.now();
@@ -286,7 +368,7 @@ export default function App() {
                 }
               } else {
                 recent = [];
-                showStatus(TRACKING_STATUS);
+                showStatus(modeRef.current === "psl" ? (psl.recognizer ? PSL_STATUS : "PSL · loading the model…") : TRACKING_STATUS);
               }
             } else {
               recent = [];
@@ -415,8 +497,15 @@ export default function App() {
           <div><div className="eyebrow"><span className="pulse-dot" /> PAKISTAN SIGN LANGUAGE · RUNS ON THIS DEVICE</div><h1>Every hand has <em>something to say.</em></h1><p>SignBridge follows both hands, your shoulders and your face, right here on this device. Browse every phrase in English and Urdu, and choose how SignBridge speaks.</p></div>
           <div className="psl-status panel" role="status">
             <span className="section-kicker">PSL RECOGNITION</span>
-            <strong>Not installed yet</strong>
-            <small>The PSL model will be trained from public PSL data in the next stage. Until it passes its test on signers it has never seen, SignBridge does not guess PSL signs.</small>
+            {pslReady ? <>
+              <strong>{pslSigns} PSL signs · suggestions</strong>
+              <small>Learned from a public PSL dataset. <b>{pslBundle.manifest.badge}</b>: every answer is a suggestion (Tier B) that you confirm, and nothing is spoken until you do.</small>
+              {pslBundle.status === "error" && <small className="inline-warning">{pslBundle.message}</small>}
+              <label className="toggle-row"><input type="checkbox" checked={mode === "psl"} onChange={(event) => setMode(event.target.checked ? "psl" : "off")} /><span><b>PSL suggestions</b>Sign one word, lower your hands, then confirm.</span></label>
+            </> : <>
+              <strong>{pslBundle.status === "loading" ? "Loading…" : "Not installed"}</strong>
+              <small>The PSL model could not be loaded on this device, so SignBridge does not guess PSL signs. The vocabulary and ASL mode still work.</small>
+            </>}
             <label className="toggle-row"><input type="checkbox" checked={mode === "demo"} onChange={(event) => setMode(event.target.checked ? "demo" : "off")} /><span><b>Gesture demo</b>Hand shapes from the first prototype. They are not PSL signs.</span></label>
             {modelInfo.available && <label className="toggle-row"><input type="checkbox" checked={mode === "trained"} onChange={(event) => setMode(event.target.checked ? "trained" : "off")} /><span><b>Your personal signs · Tier C</b>Signs you taught on this computer. Only for you.</span></label>}
           </div>
@@ -447,13 +536,14 @@ export default function App() {
                 <div className="translation-main" dir={language === "ur" && !romanUrdu ? "rtl" : "auto"}>{selectedText}</div>
                 <div className="translation-helper" dir={language === "en" && !romanUrdu ? "rtl" : "auto"}>{helperText}</div>
               </div>
+              {mode === "psl" && pslReady && <PslSuggestion result={pslResult} signing={pslSigning} language={language} badge={pslBundle.manifest.badge} onConfirm={confirmPsl} onDismiss={() => setPslResult(null)} />}
               <div className="recognition-status"><span className={current ? "status-check" : "status-wait"}>{current ? "✓" : "…"}</span><span>{status}</span><span className="rule-label">{current ? ORIGIN_LABELS[origin] || "" : "Waiting"}</span></div>
               {current && origin === "demo" && current.demoAvailable && current.handSignHint?.trim() && <div className="gesture-hint"><span className="hint-icon">✳</span><span><b>Gesture demo shape · not a PSL sign</b>{current.handSignHint}</span></div>}
               <div className="result-actions"><button className="button button-primary" onClick={() => current && speakItem(current, language, voiceEnabled)} disabled={!current}><Icon>◖</Icon> Speak</button><button className={`button button-quiet ${voiceEnabled ? "voice-on" : ""}`} onClick={() => { setVoiceEnabled((value) => { persistSettings({ voice_enabled: !value }); return !value; }); }}><Icon>{voiceEnabled ? "♪" : "∅"}</Icon>{voiceEnabled ? "Voice on" : "Voice off"}</button><button className={`button button-quiet ${romanUrdu ? "voice-on" : ""}`} onClick={() => { setRomanUrdu((value) => { persistSettings({ roman_urdu: !value }); return !value; }); }}>Roman Urdu</button></div>
             </div>
             <div className="demo-guide panel">
               <div className="guide-title"><span className="guide-star">✳</span><div><span className="section-kicker">TRY IT TODAY</span><h3>What you can do now</h3></div></div>
-              <div className="guide-steps"><div><span>01</span><p>Keep both hands, your shoulders and your face in view.</p></div><div><span>02</span><p>Open Vocabulary to read and hear every phrase.</p></div><div><span>03</span><p>For live recognition today, switch to ASL (a separate language).</p></div></div>
+              <div className="guide-steps"><div><span>01</span><p>Keep both hands, your shoulders and your face in view.</p></div><div><span>02</span><p>Open Vocabulary to read and hear every phrase.</p></div><div><span>03</span><p>{pslReady ? "Sign one PSL word, lower your hands, then confirm the suggestion." : "For live recognition today, switch to ASL (a separate language)."}</p></div></div>
               <button className="text-button" onClick={() => setHelpOpen(true)}>What works today <span>→</span></button>
             </div>
           </div>
@@ -475,8 +565,8 @@ export default function App() {
 
       {view === "report" && !exhibition && <section className="content-section">
         <div className="section-intro"><div><span className="section-kicker">HONEST NUMBERS ONLY</span><h1>Model report</h1><p>A number appears here only after it has been measured on signers the model has never seen. Nothing is estimated.</p></div>{HAS_SERVER ? <button className="button button-outline" onClick={() => { window.location.href = `${API}/confusion-matrix.csv`; }}>Download confusion matrix</button> : <a className="button button-outline" href={assetUrl("ci/status.json")}>Latest automatic checks</a>}</div>
-        <div className="report-summary panel"><div><span className="section-kicker">PSL · MAIN LANGUAGE</span><h2>Not built yet</h2><p>The PSL model will be trained from public PSL data in the next stage. Its accuracy for every sign, one-handed and two-handed, will be listed here.</p></div><div className="report-stat"><strong>—</strong><small>not measured</small></div></div>
-        <div className="report-summary panel"><div><span className="section-kicker">ASL · SEPARATE MODE</span><h2>Ready-made model · 250 ASL words</h2><p>1st place of Google's Isolated Sign Language Recognition competition (MIT licence). It runs in this browser and on the SignBridge server. Its accuracy on the official test set has not been measured yet.</p></div><div className="report-stat"><strong>—</strong><small>not measured yet</small></div></div>
+        <PslReport bundle={pslBundle} />
+        <div className="report-summary panel"><div><span className="section-kicker">ASL · SEPARATE MODE</span><h2>Ready-made model · 250 ASL words</h2><p>1st place of Google's Isolated Sign Language Recognition competition (MIT licence). Measured on 2026-11-20 on the GISLR rerun set (39,443 signs, CC0; the publisher reports its signers were not in training): 86.2 % top-1 with the full sign, 85.3 % with the 32-frame input this browser uses. Spoken only at 70 % or more, where 1.7 % of answers were wrong.</p></div><div className="report-stat"><strong>85.3 %</strong><small>top-1 in the browser</small></div></div>
         {HAS_SERVER && <div className="report-summary panel"><div><span className="section-kicker">YOUR PERSONAL SIGNS · TIER C</span><h2>{modelInfo.available ? "Personal model ready" : "No personal signs"}</h2><p>{modelInfo.available ? `Selected: ${modelInfo.model_name || "trained classifier"}` : "Optional. Only appears if you teach your own signs."}</p></div><div className="report-stat"><strong>{modelInfo.accuracy == null ? "—" : `${(modelInfo.accuracy * 100).toFixed(1)}%`}</strong><small>{modelInfo.accuracy == null ? "No measured score" : "Measured validation accuracy"}</small></div><div className="report-stat"><strong>{modelInfo.examples || 0}</strong><small>examples used</small></div></div>}
         {HAS_SERVER && <div className="panel report-body"><div className="panel-heading"><div><span className="section-kicker">PERSONAL SIGNS</span><h2>Training report</h2></div><a className="text-button" href={`${API}/training-data.csv`}>Download examples CSV →</a></div>{report ? <pre>{report}</pre> : <div className="empty-report">{connection === "online" ? "No personal model yet. That's fine: SignBridge works without one." : "The SignBridge server is not running. The vocabulary and ASL mode still work."}</div>}</div>}
       </section>}
@@ -484,7 +574,7 @@ export default function App() {
       {!exhibition && <footer className="page-footer"><span>SignBridge · Pakistan Sign Language first · runs on your device</span><span>Camera frames are not saved. Personal sign examples need your consent.</span><button onClick={() => setHelpOpen(true)}>Privacy & help</button></footer>}
     </main>
 
-    {helpOpen && <div className="modal-scrim" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setHelpOpen(false); }}><section className="help-modal panel" role="dialog" aria-modal="true" aria-labelledby="help-title"><button className="modal-close" onClick={() => setHelpOpen(false)} aria-label="Close help">×</button><span className="section-kicker">A QUICK GUIDE</span><h2 id="help-title">How to use SignBridge</h2><div className="help-columns"><div><h3>What works today</h3><ul><li>PSL: both hands, shoulders and face are tracked. PSL recognition is not installed yet.</li><li>ASL mode: 250 everyday ASL words. A separate language, not PSL.</li><li>Vocabulary: every phrase in English and Urdu, with speech.</li></ul><h3>Gesture demo (off unless you turn it on; not PSL)</h3><ul><li>Open, spread palm → Hello</li><li>Flat, close fingers → Stop</li><li>Fist → No · thumbs up/down → Yes/Bad</li><li>V sign → Please · index up → Wait</li><li>OK → Good · call-me pose → Phone</li><li>Three fingers → Thank you · four → Water</li><li>Five close fingers → Emergency</li><li>Horizontal point → Help</li></ul></div><div><h3>Keyboard</h3><ul><li>E English · U Urdu · L switch</li><li>R repeat · V voice on/off</li><li>G gesture demo on/off</li><li>M personal signs on/off (when you have some)</li><li>B opens vocabulary · H help · Q quit</li><li>In vocabulary, type to search; Escape closes it</li></ul><h3>Privacy</h3><p>Browser hand images are processed here and are not sent to Google or saved. MediaPipe Tasks may send aggregate performance and usage metrics to Google. Personal sign examples are saved only after you tick consent and press Save.</p></div></div><button className="button button-primary" onClick={() => setHelpOpen(false)}>Got it</button></section></div>}
+    {helpOpen && <div className="modal-scrim" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setHelpOpen(false); }}><section className="help-modal panel" role="dialog" aria-modal="true" aria-labelledby="help-title"><button className="modal-close" onClick={() => setHelpOpen(false)} aria-label="Close help">×</button><span className="section-kicker">A QUICK GUIDE</span><h2 id="help-title">How to use SignBridge</h2><div className="help-columns"><div><h3>What works today</h3><ul><li>{pslReady ? `PSL: ${pslSigns} signs, shown as suggestions you confirm (community dataset, not yet validated by Deaf signers).` : "PSL: both hands, shoulders and face are tracked. PSL recognition is not installed on this device."}</li><li>ASL mode: 250 everyday ASL words. A separate language, not PSL.</li><li>Vocabulary: every phrase in English and Urdu, with speech.</li></ul><h3>Gesture demo (off unless you turn it on; not PSL)</h3><ul><li>Open, spread palm → Hello</li><li>Flat, close fingers → Stop</li><li>Fist → No · thumbs up/down → Yes/Bad</li><li>V sign → Please · index up → Wait</li><li>OK → Good · call-me pose → Phone</li><li>Three fingers → Thank you · four → Water</li><li>Five close fingers → Emergency</li><li>Horizontal point → Help</li></ul></div><div><h3>Keyboard</h3><ul><li>E English · U Urdu · L switch</li><li>R repeat · V voice on/off</li><li>G gesture demo on/off</li><li>M personal signs on/off (when you have some)</li><li>B opens vocabulary · H help · Q quit</li><li>In vocabulary, type to search; Escape closes it</li></ul><h3>Privacy</h3><p>Browser hand images are processed here and are not sent to Google or saved. MediaPipe Tasks may send aggregate performance and usage metrics to Google. Personal sign examples are saved only after you tick consent and press Save.</p></div></div><button className="button button-primary" onClick={() => setHelpOpen(false)}>Got it</button></section></div>}
     {metricsNoticeOpen && <div className="modal-scrim" role="presentation"><section className="help-modal panel" role="dialog" aria-modal="true" aria-labelledby="metrics-title"><span className="section-kicker">CAMERA PRIVACY</span><h2 id="metrics-title">Before enabling hand tracking</h2><p>Hand images are processed in this browser and are not sent to Google. MediaPipe Tasks may send aggregate performance and usage metrics to Google while online. SignBridge does not save camera images or video.</p><label className="consent-row"><input type="checkbox" checked={metricsNoticeChecked} onChange={(event) => setMetricsNoticeChecked(event.target.checked)} /><span>I understand and agree to use MediaPipe hand tracking with these metrics.</span></label><div className="result-actions"><button className="button button-quiet" onClick={() => setMetricsNoticeOpen(false)}>Not now</button><button className="button button-primary" disabled={!metricsNoticeChecked} onClick={acceptMetricsNotice}>Agree and enable camera</button></div></section></div>}
     {exhibition && <button className="exit-exhibition" onClick={() => { setExhibition(false); if (document.fullscreenElement) document.exitFullscreen?.(); }}>Exit exhibition view · Esc</button>}
   </div>;

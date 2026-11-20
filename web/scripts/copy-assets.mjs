@@ -59,8 +59,16 @@ async function ensureDownload(item) {
 await mkdir(path.join(publicDir, "models", "asl"), { recursive: true });
 await mkdir(path.join(publicDir, "wasm"), { recursive: true });
 for (const name of ["vocabulary.json"]) await cp(path.join(project, name), path.join(publicDir, name));
-for (const name of ["feature_spec_v2.json", "asl_islr_spec.json"]) await cp(path.join(project, "shared_data", name), path.join(publicDir, name));
+for (const name of ["feature_spec_v2.json", "asl_islr_spec.json", "psl_hands_spec.json"]) await cp(path.join(project, "shared_data", name), path.join(publicDir, name));
 await cp(path.join(project, "models", "hand_landmarker.task"), path.join(publicDir, "models", "hand_landmarker.task"));
+// The PSL bundle (manifest + model, committed under models/psl by the Stage 2 training run).
+if (await exists(path.join(project, "models", "psl", "manifest.json"))) {
+  const pslManifest = JSON.parse(await readFile(path.join(project, "models", "psl", "manifest.json"), "utf8"));
+  await mkdir(path.join(publicDir, "models", "psl"), { recursive: true });
+  for (const name of ["manifest.json", pslManifest.model.file]) await cp(path.join(project, "models", "psl", name), path.join(publicDir, "models", "psl", name));
+} else {
+  console.warn("No PSL bundle in models/psl: PSL recognition stays off.");
+}
 await cp(path.join(web, "node_modules", "@mediapipe", "tasks-vision", "wasm"), path.join(publicDir, "wasm"), { recursive: true });
 
 const downloads = JSON.parse(await readFile(path.join(project, "shared_data", "downloads.json"), "utf8")).files;
