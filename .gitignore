@@ -45,3 +45,4 @@ baseline/v1-site/clips/
 baseline/v1-site/models/*.task
 baseline/v1-site/models/asl/model.tflite
 baseline/out/
+web/dist-shared/
