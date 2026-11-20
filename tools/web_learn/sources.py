@@ -50,13 +50,21 @@ def get_json(url: str, fetch: Fetcher = http_get) -> object:
     return json.loads(fetch(url).decode("utf-8"))
 
 
+# A clip counts as a sign-language video only if its own text says so; "PSL" alone is not enough (it is
+# also the name of political parties), and Urdu script alone is not enough (Persian uses it too).
+SIGN_LANGUAGE_VIDEO = r"sign language|signing|\bsigned\b|\bsign(s)? for\b|\bdeaf\b|اشاروں|اشارتی|زبان اشاره"
 SIGN_LANGUAGE_HINTS = (
-    ("PSL", r"\bpakistan(i)?\b|\bpsl\b|\burdu\b|اشار"),
-    ("ASL", r"\bamerican sign\b|\basl\b"),
-    ("BSL", r"\bbritish sign\b|\bbsl\b"),
-    ("ISL", r"\bindian sign\b|\bisl\b|\birish sign\b"),
-    ("other", r"\bauslan\b|\blsf\b|\blibras\b|\bdgs\b|\bjsl\b|\bkorean sign\b|\bchinese sign\b|\barabic sign\b"),
+    ("PSL", r"pakistan(i)? sign language|\bpsl sign|\bpsl\b.{0,30}\bsign language|اشاروں کی زبان|پاکستانی اشار"),
+    ("ASL", r"american sign language|\basl\b"),
+    ("BSL", r"british sign language|\bbsl\b"),
+    ("ISL", r"indian sign language|irish sign language|\bisl\b"),
+    ("other", r"spanish sign|french sign|german sign|japanese sign|korean sign|chinese sign|arabic sign|persian sign|"
+              r"auslan|\blsf\b|\blse\b|libras|\bdgs\b|\bjsl\b|زبان اشاره"),
 )
+
+
+def is_sign_language_video(*texts: str) -> bool:
+    return bool(re.search(SIGN_LANGUAGE_VIDEO, " ".join(t for t in texts if t).lower()))
 
 
 def language_hint(*texts: str) -> str:
@@ -134,22 +142,95 @@ def slt_clips(fetch: Fetcher = http_get) -> list[dict]:
     return sorted(clips.values(), key=lambda c: c["label"])
 
 
-def slt_candidates(words: list[Word], clips: list[dict]) -> list[Candidate]:
-    by_label = {}
+SLT_MAPPING_URL = f"https://raw.githubusercontent.com/{SLT_REPO}/main/parallel_texts/pk-dictionary-mapping.json"
+
+
+def _plain(text: str) -> str:
+    """Lower-case, without punctuation such as ? ؟ ! . , so 'What?' and 'what' match."""
+    return re.sub(r"[\s?؟!.,،۔'\"]+", " ", (text or "").lower()).strip()
+
+
+def mapping_pairs(mapping: object, labels: set[str]) -> list[tuple[str, str]]:
+    """(word, clip label) pairs from the dictionary's own mapping file, whatever its nesting.
+
+    Any string next to a known clip label (as key and value, or a list of values) is taken as a word
+    for that label; labels may carry the 'pk-hfad-1_' prefix.
+    """
+    pairs: list[tuple[str, str]] = []
+
+    def label_of(text: str) -> str | None:
+        text = text.strip()
+        text = text[len("pk-hfad-1_"):] if text.startswith("pk-hfad-1_") else text
+        return text if text in labels else None
+
+    def consider(a: str, b: str) -> None:
+        if label_of(b) and not label_of(a):
+            pairs.append((a, label_of(b)))
+        elif label_of(a) and not label_of(b):
+            pairs.append((b, label_of(a)))
+
+    schema_words = {"label", "labels", "word", "words", "text", "texts", "token", "tokens", "id", "name", "file", "path",
+                    "urdu", "english", "value", "key", "sign", "signs", "gloss", "language", "lang"}
+
+    def walk(node: object) -> None:
+        if isinstance(node, dict):
+            strings = {k: v for k, v in node.items() if isinstance(v, str)}
+            found = [v for v in strings.values() if label_of(v)]
+            for label in found:            # {"word": "hello", "label": "pk-hfad-1_hello"}: siblings pair up
+                for other in strings.values():
+                    if not label_of(other):
+                        consider(other, label)
+            for key, value in node.items():
+                if str(key).strip().lower() in schema_words:
+                    walk(value)
+                    continue
+                if isinstance(value, str):
+                    consider(str(key), value)
+                elif isinstance(value, list) and all(isinstance(v, str) for v in value):
+                    for v in value:
+                        consider(str(key), v)
+                walk(value)
+        elif isinstance(node, list):
+            for item in node:
+                walk(item)
+
+    walk(mapping)
+    return sorted(set(pairs))
+
+
+def vocabulary_labels(words: list[Word], pairs: list[tuple[str, str]], labels: set[str]) -> dict[str, tuple[str, str]]:
+    """clip label -> (vocabulary gloss, evidence). Matches the dictionary's own mapping on a word's
+    Urdu or English text, then exact English = label; never a guessed synonym (CLAUDE.md 9.5)."""
+    out: dict[str, tuple[str, str]] = {}
+    texts = {}
     for word in words:
-        if word.gloss.startswith("slt:"):
-            by_label[word.gloss[4:]] = word
-    by_english = {w.english.lower(): w for w in words if w.in_vocabulary}
+        if word.in_vocabulary:
+            for text in (word.urdu, word.english, word.roman_urdu):
+                if text:
+                    texts.setdefault(_plain(text), word)
+    for token, label in pairs:
+        word = texts.get(_plain(token))
+        if word and label not in out:
+            out[label] = (word.gloss, f"dictionary mapping file: {token!r} -> {label}")
+    for label in labels:
+        head = _plain(label.split(".")[0].replace("_", " "))
+        word = texts.get(head)
+        if word and label not in out:
+            out[label] = (word.gloss, f"dictionary label {label!r} equals the word {word.english!r}")
+    return out
+
+
+def slt_candidates(words: list[Word], clips: list[dict], mapped: dict[str, tuple[str, str]] | None = None) -> list[Candidate]:
+    if mapped is None:
+        mapped = vocabulary_labels(words, [], {c["label"] for c in clips})
     out = []
     for clip in clips:
         label = clip["label"]
-        head = label.split(".")[0].replace("_", " ").lower()
-        word = by_english.get(head) or by_label.get(label)
-        gloss = word.gloss if word else f"slt:{label}"
+        gloss, evidence = mapped.get(label, (f"slt:{label}", f"dictionary label '{label}'"))
         out.append(Candidate(source="slt", source_id=f"pk-hfad-1_{label}", page_url=f"https://github.com/{SLT_REPO}",
                              media_url=clip["url"], title=f"pk-hfad-1 {label}", uploader="Mudassar Iqbal (Sign Language Datasets)",
                              licence_raw="CC BY 4.0 (repository LICENSE)", licence_id="CC-BY-4.0", gloss=gloss,
-                             label_evidence=f"dictionary label '{label}'", language="PSL", size_bytes=clip.get("size"),
+                             label_evidence=evidence, language="PSL", size_bytes=clip.get("size"),
                              ledger_id=SLT_LEDGER_ID))
     return out
 
@@ -178,6 +259,8 @@ def commons_search(word: Word, fetch: Fetcher = http_get, per_query: int = 10) -
                 continue
             title = page.get("title", "")
             description = _strip_html(meta.get("ImageDescription", {}).get("value", ""))
+            if not is_sign_language_video(title, description):
+                continue
             licence_raw = meta.get("LicenseUrl", {}).get("value") or meta.get("LicenseShortName", {}).get("value", "")
             found[title] = Candidate(
                 source="commons", source_id=title, page_url=info.get("descriptionurl", ""), media_url=info.get("url"),
@@ -207,6 +290,8 @@ def archive_search(word: Word, fetch: Fetcher = http_get, rows: int = 10) -> lis
                 continue
             title = doc.get("title") if isinstance(doc.get("title"), str) else " ".join(doc.get("title") or [])
             description = doc.get("description") if isinstance(doc.get("description"), str) else " ".join(doc.get("description") or [])
+            if not is_sign_language_video(title or "", _strip_html(description)):
+                continue
             metadata = get_json(f"https://archive.org/metadata/{urllib.parse.quote(identifier)}", fetch)
             files = [f for f in metadata.get("files", []) if str(f.get("format", "")).lower() in VIDEO_FORMATS]
             media = min(files, key=lambda f: int(f.get("size") or 1 << 40)) if files else None
@@ -240,6 +325,8 @@ def youtube_search(word: Word, api_key: str, fetch: Fetcher = http_get, per_quer
                 continue
             snippet = item.get("snippet", {})
             title, description = snippet.get("title", ""), snippet.get("description", "")
+            if not is_sign_language_video(title, description):
+                continue
             found[video_id] = Candidate(
                 source="youtube", source_id=video_id, page_url=f"https://www.youtube.com/watch?v={video_id}", media_url=None,
                 title=html.unescape(title), uploader=snippet.get("channelTitle", "unknown"),

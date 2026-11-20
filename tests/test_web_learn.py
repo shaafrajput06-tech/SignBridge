@@ -115,7 +115,7 @@ class SourceTests(unittest.TestCase):
         self.assertTrue(clip.download_allowed)
 
     def test_youtube_results_are_listed_never_downloaded(self):
-        web = FakeWeb({"https://www.googleapis.com/youtube/v3/search": {"items": [{"id": {"videoId": "abc"}, "snippet": {"title": "Hello in ASL", "channelTitle": "Someone"}}]}})
+        web = FakeWeb({"https://www.googleapis.com/youtube/v3/search": {"items": [{"id": {"videoId": "abc"}, "snippet": {"title": "Hello in American Sign Language", "channelTitle": "Someone"}}]}})
         found = sources.youtube_search(self.hello, "KEY", fetch=web)
         self.assertEqual(found[0].media_url, None)
         self.assertEqual(found[0].language, "ASL")
@@ -125,7 +125,31 @@ class SourceTests(unittest.TestCase):
         self.assertEqual(sources.language_hint("Hello in Pakistan Sign Language"), "PSL")
         self.assertEqual(sources.language_hint("ASL hello"), "ASL")
         self.assertEqual(sources.language_hint("hello"), "unknown")
-        self.assertEqual(sources.language_hint("PSL and ASL compared"), "mixed")
+        self.assertEqual(sources.language_hint("Pakistan Sign Language and American Sign Language compared"), "mixed")
+        self.assertEqual(sources.language_hint("WIKITONGUES- Mónica signing Spanish Sign Language"), "other")
+
+    def test_false_matches_from_the_first_run_are_not_psl_or_not_sign_videos(self):
+        # Real titles the first live search (2026-11-20) wrongly took for PSL: a party called PSL, and
+        # Persian text in the same script as Urdu. None of them is a sign-language video.
+        for title in ("Join the PSL Today!", "EDUARDO BOLSONARO DESABAFA APÓS DEPUTADOS FORJAREM GOLPE DENTRO DO PSL",
+                      "محمد یعقوبی و تجربه زیستن در مهاجرت", "President Obama on Death of Osama bin Laden", "Character Studies (1927)"):
+            self.assertFalse(sources.is_sign_language_video(title), title)
+            self.assertNotEqual(sources.language_hint(title), "PSL", title)
+        self.assertTrue(sources.is_sign_language_video("WIKITONGUES- Mónica signing Spanish Sign Language"))
+
+    def test_dictionary_mapping_file_matches_vocabulary_words_without_guessing(self):
+        vocab = words.vocabulary_words()
+        labels = {"papa", "house", "what", "hello.greeting"}
+        mapping = {"urdu": {"والد": "papa", "گھر": ["house"]}, "english": [{"word": "hello", "label": "pk-hfad-1_hello.greeting"}]}
+        pairs = sources.mapping_pairs(mapping, labels)
+        self.assertIn(("والد", "papa"), pairs)
+        self.assertIn(("گھر", "house"), pairs)
+        mapped = sources.vocabulary_labels(vocab, pairs, labels)
+        self.assertEqual(mapped["papa"][0], "father")
+        self.assertEqual(mapped["house"][0], "home")
+        self.assertEqual(mapped["what"][0], "what")           # 'What?' equals the label 'what' once punctuation goes
+        self.assertIn(("hello", "hello.greeting"), pairs)      # sibling values in one record pair up
+        self.assertFalse(any(token == "label" for token, _ in pairs))   # field names are not words
 
     def test_dictionary_clips_map_to_vocabulary_glosses(self):
         vocab = words.vocabulary_words()

@@ -29,7 +29,8 @@ import yaml
 from data_engine.ledger import LEDGER_PATH, load_ledger
 from tools.web_learn import ledger as web_ledger
 from tools.web_learn import licences
-from tools.web_learn.sources import USER_AGENT, Candidate, search_all, slt_candidates, slt_clips
+from tools.web_learn.sources import (SLT_MAPPING_URL, USER_AGENT, Candidate, get_json, mapping_pairs, search_all, slt_candidates,
+                                     slt_clips, vocabulary_labels)
 from tools.web_learn.words import vocabulary_words, slt_label_words
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -49,8 +50,18 @@ def run_search(version: int, youtube_key: str | None = None, web_words: int | No
     vocabulary = vocabulary_words()
     clips = slt_clips()
     words = slt_label_words([c["label"] for c in clips], vocabulary)
-    found = slt_candidates(words, clips)
-    log(f"SLT dictionary: {len(clips)} clips")
+    labels = {c["label"] for c in clips}
+    try:
+        pairs = mapping_pairs(get_json(SLT_MAPPING_URL), labels)
+    except Exception as error:  # noqa: BLE001
+        pairs = []
+        log(f"dictionary mapping file not read: {error}")
+    mapped = vocabulary_labels(words, pairs, labels)
+    found = slt_candidates(words, clips, mapped)
+    log(f"SLT dictionary: {len(clips)} clips; mapping file pairs: {len(pairs)}; vocabulary words with a clip: "
+        f"{len({g for g, _ in mapped.values()})} via {len(mapped)} labels")
+    for label, (gloss, evidence) in sorted(mapped.items(), key=lambda item: item[1][0]):
+        log(f"  {gloss} <- {evidence}")
     web_targets = [w for w in words if w.in_vocabulary][: web_words or None]
     web, problems = search_all(web_targets, youtube_key=youtube_key, log=log)
     candidates = found + web
@@ -64,6 +75,8 @@ def run_search(version: int, youtube_key: str | None = None, web_words: int | No
         "searched_on": dt.date.today().isoformat(),
         "words": {"vocabulary": len(vocabulary), "dictionary_labels": len(clips), "total": len(words),
                   "web_searched": [w.gloss for w in web_targets]},
+        "dictionary_mapping": {"url": SLT_MAPPING_URL, "pairs": len(pairs),
+                               "vocabulary_labels": {label: list(value) for label, value in sorted(mapped.items())}},
         "sources_searched": ["slt"] + ["commons", "archive"] + (["youtube"] if youtube_key else []),
         "problems": problems,
         "candidates": [c.to_dict() for c in candidates],
@@ -243,7 +256,7 @@ def write_report(version: int, payload: dict, manifest: dict) -> str:
         "",
         "## Cross-check",
         "",
-        f"Known same-sign pairs from different sources: {threshold['known_positive_pairs']}; known different-sign pairs: {threshold['known_negative_pairs']}.",
+        f"Known same-sign pairs from different sources: {threshold['known_positive_pairs']}" + (f"; known different-sign pairs: {threshold['known_negative_pairs']}." if threshold.get('known_negative_pairs') is not None else " (different-sign pairs not compared: no threshold possible)."),
         (f"Threshold {threshold['threshold']:.3f} (precision {threshold['precision']:.2f}, recall {threshold['recall']:.2f} on the known pairs)."
          if threshold.get("threshold") is not None else f"Threshold not chosen: {threshold.get('reason')}. No clip was accepted by cross-checking; all stay single-source (Tier B)."),
         "",

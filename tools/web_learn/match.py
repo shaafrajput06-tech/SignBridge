@@ -94,6 +94,10 @@ def choose_threshold(known: list[dict]) -> dict:
     """known: clips with a trusted 'gloss' and 'source_group'. Positives: same gloss, different source
     group; negatives: different glosses. Threshold: the largest distance that keeps precision >= 0.95."""
     positives, negatives = [], []
+    possible = sum(1 for i, a in enumerate(known) for b in known[i + 1:] if a["gloss"] == b["gloss"] and a["source_group"] != b["source_group"])
+    if possible < MIN_KNOWN_PAIRS:
+        return {"known_positive_pairs": possible, "known_negative_pairs": None, "threshold": None,
+                "reason": f"too few known pairs ({possible} same-sign pairs from different sources; need {MIN_KNOWN_PAIRS})"}
     for i, a in enumerate(known):
         for b in known[i + 1:]:
             distance = dtw(a["trajectory"], b["trajectory"])
