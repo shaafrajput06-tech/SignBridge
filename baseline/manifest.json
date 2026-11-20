@@ -8,8 +8,7 @@
   },
   "release": {
     "tag": "inference-baseline-v1",
-    "asset": "SignBridge-shared-copy-v1.zip",
-    "url": "https://github.com/shaafrajput06-tech/SignBridge/releases/download/inference-baseline-v1/SignBridge-shared-copy-v1.zip"
+    "asset": "SignBridge-shared-copy-v1.zip"
   },
   "frozen_on": "2026-11-20",
   "files": [

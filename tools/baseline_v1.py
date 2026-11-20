@@ -43,7 +43,15 @@ SHARED = BASELINE / "v1-shared"
 ZIP_PREFIX = "SignBridge/"
 RELEASE_TAG = "inference-baseline-v1"
 RELEASE_ASSET = "SignBridge-shared-copy-v1.zip"
-RELEASE_URL = f"https://github.com/shaafrajput06-tech/SignBridge/releases/download/{RELEASE_TAG}/{RELEASE_ASSET}"
+SITE_CONFIG = ROOT / "shared_data" / "site.json"
+
+
+def release_urls() -> list[str]:
+    """Download addresses for the release zip: the repository's current home first, then its old ones
+    (GitHub forwards a moved repository's downloads, but the new home does not exist before the move)."""
+    site = json.loads(SITE_CONFIG.read_text(encoding="utf-8"))
+    repositories = [site["repository"], *site.get("old_repositories", [])]
+    return [f"https://github.com/{repo}/releases/download/{RELEASE_TAG}/{RELEASE_ASSET}" for repo in repositories]
 
 # Files SignBridge built itself are kept in git. Everything from a third-party package or a dataset
 # (runtimes, models, video clips) is restored from the zip instead.
@@ -112,7 +120,7 @@ def freeze(zip_path: Path, force: bool) -> int:
         "description": "The built shared copy of the SignBridge website (Vite build of 2026-11-19), frozen as the "
                        "reference for master-v3.md section 0. Never edit these files; compare new work against them.",
         "source_zip": {"name": zip_path.name, "bytes": len(data), "sha256": sha256_bytes(data)},
-        "release": {"tag": RELEASE_TAG, "asset": RELEASE_ASSET, "url": RELEASE_URL},
+        "release": {"tag": RELEASE_TAG, "asset": RELEASE_ASSET},
         "frozen_on": "2026-11-20",
         "files": files,
     }
@@ -153,14 +161,21 @@ def check(manifest: dict) -> list[str]:
     return problems
 
 
-def download(url: str) -> bytes:
-    print(f"Downloading {url}")
-    with urllib.request.urlopen(url, timeout=600) as response:  # noqa: S310 (fixed https URL)
-        return response.read()
+def download(urls: list[str]) -> bytes:
+    problems = []
+    for url in urls:
+        print(f"Downloading {url}")
+        try:
+            with urllib.request.urlopen(url, timeout=600) as response:  # noqa: S310 (fixed https URLs)
+                return response.read()
+        except OSError as error:  # HTTPError and URLError are OSErrors
+            problems.append(f"{url}: {error}")
+            print(f"  not available ({error})")
+    raise SystemExit("Could not download the baseline zip:\n  " + "\n  ".join(problems))
 
 
 def restore(manifest: dict, zip_path: Path | None, use_download: bool) -> int:
-    data = zip_path.read_bytes() if zip_path else download(manifest["release"]["url"])
+    data = zip_path.read_bytes() if zip_path else download(release_urls())
     expected = manifest["source_zip"]
     if len(data) != expected["bytes"] or sha256_bytes(data) != expected["sha256"]:
         print(f"Refused: the zip is not the frozen shared copy (expected {expected['bytes']} bytes, SHA-256 {expected['sha256'][:12]}…).")

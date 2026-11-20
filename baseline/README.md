@@ -28,7 +28,7 @@ camera ─▶ capture v2 (MediaPipe tasks-vision WASM: Pose Landmarker lite + Ha
 | `../tests/golden/baseline_v1_outputs.json` | yes | what the baseline produces on the golden fixtures, including the real model's top-5 |
 
 The zip is kept as the asset of the GitHub release
-[`inference-baseline-v1`](https://github.com/shaafrajput06-tech/SignBridge/releases/tag/inference-baseline-v1),
+`inference-baseline-v1` (in the repository named in `shared_data/site.json`),
 and the git tag `inference-baseline-v1` marks the source commit that was live when it was frozen.
 
 ## Restore and run it
