@@ -17,3 +17,9 @@ Source: "SignBridge v2 — Master Prompt Architecture" (17 Nov 2026).
 5. Steps marked **[HUMAN]** need a person (licences, Deaf signers, recordings, GPU time, measurements on real devices). The agent prepares the tooling and stops at them.
 
 The Phase 0 test suite (`python tools/run_all_tests.py`) must pass on every merge.
+
+## Master v3 ("best translator" build, from 2026-11-20)
+
+`docs/prompts/master-v3.md` is the plan in force. It keeps everything above, adds CLAUDE.md section 9
+and runs Stages 0-7 on the branch `v3/master` (pull request into `main`). The live website is updated
+only once, at Stage 7, when the owner merges that pull request.
