@@ -62,6 +62,12 @@ def signspeak() -> None:
     print(f"SignSpeak (Hugging Face {SIGNSPEAK_HF}): sha {info.get('sha')}, licence {info.get('cardData', {}).get('license')}")
     for name in files:
         print("  file:", name)
+    for name in ("README.md", "links_to_words.txt"):
+        if name in files:
+            text = get(f"https://huggingface.co/datasets/{SIGNSPEAK_HF}/resolve/main/{name}").decode("utf-8", errors="replace")
+            print(f"  ----- {name} ({len(text)} chars) -----")
+            for line in text.splitlines()[:120]:
+                print("  |", line[:200])
     zips = [f for f in files if f.lower().endswith(".zip")]
     if not zips:
         return
@@ -88,9 +94,32 @@ def signspeak() -> None:
             for n in names:
                 suffixes[Path(n).suffix.lower()] = suffixes.get(Path(n).suffix.lower(), 0) + 1
             print("  file types:", suffixes)
-            samples = [n for n in names if Path(n).suffix.lower() in (".npy", ".csv", ".json", ".txt")][:4]
-            for n in samples:
-                show_array_like(n, archive.read(n))
+            for n in [n for n in names if n.lower().endswith(".json")]:
+                print(f"  ----- {n} -----")
+                print("  |", archive.read(n).decode("utf-8", errors="replace")[:1500])
+            counts: dict[tuple[str, str], set] = {}
+            frames: dict[tuple[str, str, str], int] = {}
+            for n in names:
+                parts = n.split("/")
+                if len(parts) == 4 and parts[3].endswith(".npy"):
+                    counts.setdefault((parts[0], parts[1]), set()).add(parts[2])
+                    frames[(parts[0], parts[1], parts[2])] = frames.get((parts[0], parts[1], parts[2]), 0) + 1
+            words = sorted({w for _, w in counts})
+            print(f"  words: {len(words)}; samples: {sum(len(v) for v in counts.values())}; frames per sample: "
+                  f"{sorted(set(frames.values()))[:10]}")
+            for folder in sorted({f for f, _ in counts}):
+                per_word = [len(counts.get((folder, w), ())) for w in words]
+                print(f"  {folder}: samples per word min {min(per_word)} max {max(per_word)} total {sum(per_word)}")
+            print("  word list:", ", ".join(words))
+            import numpy as np
+
+            sample_key = sorted(k for k in frames)[len(frames) // 2]
+            stack = np.stack([np.load(io.BytesIO(archive.read(f"{sample_key[0]}/{sample_key[1]}/{sample_key[2]}/{i}.npy")))
+                              for i in range(frames[sample_key])])
+            left, right = stack[:, :63], stack[:, 63:]
+            print(f"  sample {sample_key}: shape {stack.shape}; frames with first block non-zero {int((np.abs(left).sum(1) > 0).sum())}, "
+                  f"second block non-zero {int((np.abs(right).sum(1) > 0).sum())}; x range {stack[:, 0::3][stack[:, 0::3] != 0].min() if (stack != 0).any() else 0:.3f}"
+                  f"..{stack[:, 0::3].max():.3f}")
 
 
 def mendeley(ledger_id: str, dataset: str, version: int) -> None:
