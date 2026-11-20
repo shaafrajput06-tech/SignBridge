@@ -4,6 +4,7 @@ import { createCaptureV2, loadFeatureSpecV2 } from "./capture_v2.js";
 import AslMode, { HAND_COLOURS } from "./AslMode.jsx";
 import PslSuggestion from "./PslSuggestion.jsx";
 import SignClip, { useClips } from "./SignClip.jsx";
+import { QuickPhrases, ReplyPanel, SentenceStrip } from "./Conversation.jsx";
 import { islrFrame, loadAslSpec, SignSegmenter } from "./asl_islr.js";
 import { createPslRecognizer, loadPslManifest } from "./psl_client.js";
 import { loadPslSpec } from "./psl_hands.js";
@@ -132,6 +133,7 @@ export default function App() {
   const [pslBundle, setPslBundle] = useState({ status: "loading" });
   const [pslResult, setPslResult] = useState(null);
   const [pslSigning, setPslSigning] = useState(false);
+  const [sentenceWords, setSentenceWords] = useState([]);
 
   const currentMode = MODE_LABELS[mode];
   modeRef.current = mode;
@@ -251,7 +253,20 @@ export default function App() {
       ?? { id: `psl:${entry.gloss}`, english: entry.english, urdu: entry.urdu || entry.english, romanUrdu: entry.english, category: "PSL", audioText: entry.english };
     acceptWord(item, "camera", ORIGIN_LABELS.psl);
     setPslResult(null);
+    setSentenceWords((words) => [...words, { gloss: entry.gloss, english: entry.english, urdu: entry.urdu || entry.english }].slice(-20));
   }, [vocabulary, acceptWord]);
+  const speakText = useCallback((text) => {
+    if (!voiceEnabled || !text || !("speechSynthesis" in window)) return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = language === "ur" ? "ur-PK" : "en-US";
+    utterance.rate = 0.92;
+    window.speechSynthesis.speak(utterance);
+  }, [voiceEnabled, language]);
+  const replyEntries = useMemo(() => [
+    ...vocabulary.map((item) => ({ id: item.id, english: item.english, urdu: item.urdu, romanUrdu: item.romanUrdu })),
+    ...(pslBundle.manifest?.classes || []).filter((entry) => entry.tier).map((entry) => ({ id: entry.gloss, english: entry.english, urdu: entry.urdu, vocabularyId: entry.vocabulary_id })),
+  ], [vocabulary, pslBundle.manifest]);
   const pslReady = pslBundle.status === "ready" || (pslBundle.status === "error" && pslBundle.manifest);
   const clips = useClips();
   const pslVocabulary = useMemo(() => new Set((pslBundle.manifest?.classes || []).filter((entry) => entry.tier && entry.vocabulary_id).map((entry) => entry.vocabulary_id)), [pslBundle.manifest]);
@@ -551,6 +566,11 @@ export default function App() {
               <button className="text-button" onClick={() => setHelpOpen(true)}>What works today <span>→</span></button>
             </div>
           </div>
+        </section>
+        <section className="conversation-row">
+          <SentenceStrip words={sentenceWords} language={language} onSpeak={speakText} onUndo={() => setSentenceWords((words) => words.slice(0, -1))} onClear={() => setSentenceWords([])} />
+          <QuickPhrases vocabulary={vocabulary} language={language} onPick={(item) => acceptWord(item, "vocabulary", "Quick phrase")} />
+          <ReplyPanel entries={replyEntries} clips={clips} language={language} />
         </section>
         {!exhibition && <section className="feature-row"><article><span className="feature-icon mint">◌</span><div><b>Both hands, body and face</b><small>Tracked on this device, nothing recorded</small></div></article><article><span className="feature-icon gold">Aa</span><div><b>English + Urdu</b><small>Urdu script and Roman fallback</small></div></article><article><span className="feature-icon violet">♪</span><div><b>Speech support</b><small>Uses voices available on your device</small></div></article><button className="button button-outline" onClick={() => { if (!document.fullscreenElement) document.documentElement.requestFullscreen?.(); setExhibition(true); }}>⛶ Exhibition view</button></section>}
       </>}

@@ -368,3 +368,25 @@ h1, h2, h3, p { margin-top: 0; }
 .vocab-detail { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 18px; align-items: start; padding: 18px; margin-bottom: 16px; }
 @media (max-width: 760px) { .vocab-detail { grid-template-columns: 1fr; } }
 .video-tag { font-size: 11px; color: var(--mint); }
+
+/* Conversation tools (Stage 3) */
+.conversation-row { display: grid; gap: 16px; margin-top: 18px; }
+.sentence-strip, .reply-panel, .quick-phrases { padding: 18px; display: grid; gap: 10px; }
+.sentence-actions, .reply-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
+.sentence-text { font-size: clamp(22px, 3vw, 30px); font-weight: 700; margin: 0; }
+.sentence-glosses { margin: 0; color: var(--muted); font-size: 12px; letter-spacing: .08em; }
+.sentence-strip small, .reply-panel small { color: var(--muted); font-size: 12px; }
+.reply-form { display: grid; gap: 10px; }
+.reply-form textarea { width: 100%; border-radius: 12px; border: 1px solid var(--panel-border); background: var(--panel-2); color: var(--text); padding: 12px; font: inherit; font-size: 16px; resize: vertical; }
+.reply-big { font-size: clamp(24px, 3.2vw, 34px); font-weight: 700; margin: 0; line-height: 1.25; }
+.reply-words { display: flex; flex-wrap: wrap; gap: 6px; }
+.reply-word { border: 1px solid var(--panel-border); border-radius: 999px; padding: 4px 10px; font-size: 13px; color: var(--muted); }
+.reply-word.known { color: var(--text); border-color: rgba(131, 215, 184, .45); }
+.reply-word.playing { background: var(--mint); color: #0d1917; }
+.reply-player { display: grid; gap: 8px; }
+.reply-player video { width: 100%; max-height: 300px; border-radius: 12px; background: #000; }
+.quick-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.quick-phrase { border: 1px solid var(--panel-border); background: var(--panel-2); color: var(--text); border-radius: 12px; padding: 10px 14px; font: inherit; font-size: 15px; cursor: pointer; }
+.quick-phrase:hover { border-color: var(--mint); }
+.emergency-row .quick-phrase { border-color: rgba(240, 120, 110, .55); }
+.section-kicker.emergency { color: #f08a7e; }
