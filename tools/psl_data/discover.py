@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import io
 import json
+import os
 import tempfile
 import urllib.request
 import zipfile
@@ -76,15 +77,16 @@ def signspeak() -> None:
         request = urllib.request.Request(f"https://huggingface.co/datasets/{SIGNSPEAK_HF}/resolve/main/{name}", headers=UA, method="HEAD")
         with urllib.request.urlopen(request, timeout=60) as response:  # noqa: S310
             sizes[name] = int(response.headers.get("Content-Length") or 0)
-    smallest = min(zips, key=lambda n: sizes[n] or 1 << 62)
-    print(f"  downloading the smallest archive: {smallest} ({sizes[smallest]} bytes)")
+    # The first archive is known (docs/handoffs/v3-stage-2-plan.md); look inside the one not opened yet.
+    smallest = os.environ.get("SIGNSPEAK_ARCHIVE") or max(zips, key=lambda n: sizes[n])
+    print(f"  downloading {smallest} ({sizes[smallest]} bytes)")
     with tempfile.TemporaryDirectory() as tmp:
         path = Path(tmp) / "a.zip"
         path.write_bytes(get(f"https://huggingface.co/datasets/{SIGNSPEAK_HF}/resolve/main/{smallest}", timeout=900))
         with zipfile.ZipFile(path) as archive:
             names = archive.namelist()
-            print(f"  {len(names)} members; first 25:")
-            for name in names[:25]:
+            print(f"  {len(names)} members; first 25 and every 5000th:")
+            for name in names[:25] + names[25::5000]:
                 print("   ", name)
             folders = sorted({n.split("/")[0] for n in names})[:10]
             second = sorted({"/".join(n.split("/")[:2]) for n in names if n.count("/") >= 1})[:15]
@@ -113,6 +115,10 @@ def signspeak() -> None:
             print("  word list:", ", ".join(words))
             import numpy as np
 
+            if not frames:
+                for n in [n for n in names if n.lower().endswith(".npy")][:5]:
+                    show_array_like(n, archive.read(n))
+                return
             sample_key = sorted(k for k in frames)[len(frames) // 2]
             stack = np.stack([np.load(io.BytesIO(archive.read(f"{sample_key[0]}/{sample_key[1]}/{sample_key[2]}/{i}.npy")))
                               for i in range(frames[sample_key])])
