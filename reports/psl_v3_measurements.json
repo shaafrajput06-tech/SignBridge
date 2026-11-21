@@ -1,0 +1,5847 @@
+{
+ "date": "2026-11-21",
+ "commit": "c34d8ada666b",
+ "data": {
+  "source": "https://huggingface.co/datasets/mohibkhansherwani/DynamicWordLevelPakistanSignLanguageDataset @ 1ba8b9fc58ad01431e50031fe3fe31e4d01f689d",
+  "samples": 6818,
+  "devices": {
+   "laptop": 3309,
+   "phone": 2308,
+   "webcam": 1201
+  },
+  "camera_shapes_used": {
+   "laptop": 1.3333,
+   "phone": 1.3333,
+   "webcam": 1.3333
+  }
+ },
+ "training": [
+  {
+   "model": "islr_lite",
+   "train_samples": 4059,
+   "epochs": 100,
+   "seconds": 1388.8,
+   "parameters": 1653574,
+   "final_train_loss": 0.944
+  },
+  {
+   "model": "gru",
+   "train_samples": 4059,
+   "epochs": 100,
+   "seconds": 558.8,
+   "parameters": 498502,
+   "final_train_loss": 0.9882
+  },
+  {
+   "model": "islr_lite",
+   "train_samples": 6086,
+   "epochs": 100,
+   "seconds": 2074.6,
+   "parameters": 1653574,
+   "final_train_loss": 0.9329
+  }
+ ],
+ "device_held_out": {
+  "label_conflicts": [
+   {
+    "signs": [
+     "toothbrush",
+     "toothpaste"
+    ],
+    "note": "phone recordings labelled the other way round from the computer-camera ones"
+   }
+  ],
+  "untrained_in_this_protocol": [
+   "come",
+   "give",
+   "want"
+  ],
+  "fair_test": {
+   "samples": 2151,
+   "rule": "phone test signs that have computer-camera training recordings and no label conflict"
+  },
+  "temperature_from_held_out_device": {
+   "plain": 0.55,
+   "mirror_average": 0.55
+  },
+  "islr_lite": {
+   "temperature": 0.5,
+   "plain_all_phone": {
+    "samples": 2308,
+    "top1": 0.9185,
+    "top5": 0.9294,
+    "one_handed": {
+     "samples": 1504,
+     "top1": 0.9049,
+     "top5": 0.9176
+    },
+    "two_handed": {
+     "samples": 795,
+     "top1": 0.9497,
+     "top5": 0.956
+    },
+    "expected_calibration_error": 0.0683,
+    "reliability": [
+     {
+      "from": 0.1,
+      "samples": 1,
+      "confidence": 0.1977,
+      "accuracy": 0.0
+     },
+     {
+      "from": 0.2,
+      "samples": 4,
+      "confidence": 0.251,
+      "accuracy": 0.25
+     },
+     {
+      "from": 0.3,
+      "samples": 2,
+      "confidence": 0.3806,
+      "accuracy": 0.5
+     },
+     {
+      "from": 0.4,
+      "samples": 3,
+      "confidence": 0.447,
+      "accuracy": 0.3333
+     },
+     {
+      "from": 0.5,
+      "samples": 9,
+      "confidence": 0.546,
+      "accuracy": 0.3333
+     },
+     {
+      "from": 0.6,
+      "samples": 15,
+      "confidence": 0.6641,
+      "accuracy": 0.6667
+     },
+     {
+      "from": 0.7,
+      "samples": 18,
+      "confidence": 0.7538,
+      "accuracy": 0.4444
+     },
+     {
+      "from": 0.8,
+      "samples": 26,
+      "confidence": 0.8526,
+      "accuracy": 0.4615
+     },
+     {
+      "from": 0.9,
+      "samples": 2230,
+      "confidence": 0.997,
+      "accuracy": 0.9345
+     }
+    ],
+    "speak_limits": [
+     {
+      "at_least": 0.5,
+      "answered_share": 0.9957,
+      "wrong_share_of_answered": 0.0788
+     },
+     {
+      "at_least": 0.6,
+      "answered_share": 0.9918,
+      "wrong_share_of_answered": 0.0765
+     },
+     {
+      "at_least": 0.7,
+      "answered_share": 0.9853,
+      "wrong_share_of_answered": 0.0748
+     },
+     {
+      "at_least": 0.8,
+      "answered_share": 0.9775,
+      "wrong_share_of_answered": 0.0709
+     },
+     {
+      "at_least": 0.9,
+      "answered_share": 0.9662,
+      "wrong_share_of_answered": 0.0655
+     }
+    ],
+    "confusions": [
+     {
+      "sign": "toothpaste",
+      "taken_for": "toothbrush",
+      "times": 32
+     },
+     {
+      "sign": "come",
+      "taken_for": "elephant",
+      "times": 31
+     },
+     {
+      "sign": "want",
+      "taken_for": "we",
+      "times": 31
+     },
+     {
+      "sign": "give",
+      "taken_for": "beard",
+      "times": 30
+     },
+     {
+      "sign": "toothbrush",
+      "taken_for": "toothpaste",
+      "times": 29
+     },
+     {
+      "sign": "where",
+      "taken_for": "bring",
+      "times": 10
+     },
+     {
+      "sign": "help",
+      "taken_for": "excuseme",
+      "times": 5
+     },
+     {
+      "sign": "bench",
+      "taken_for": "bring",
+      "times": 2
+     },
+     {
+      "sign": "come",
+      "taken_for": "airplane",
+      "times": 2
+     },
+     {
+      "sign": "_unknown",
+      "taken_for": "all",
+      "times": 2
+     },
+     {
+      "sign": "peacock",
+      "taken_for": "hello",
+      "times": 2
+     },
+     {
+      "sign": "thankyou",
+      "taken_for": "garden",
+      "times": 2
+     },
+     {
+      "sign": "toothbrush",
+      "taken_for": "nailcutter",
+      "times": 2
+     },
+     {
+      "sign": "beard",
+      "taken_for": "goodmorning",
+      "times": 1
+     },
+     {
+      "sign": "excuseme",
+      "taken_for": "bring",
+      "times": 1
+     }
+    ],
+    "per_class": {
+     "absolutely": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "aircrash": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "airplane": {
+      "samples": 33,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "all": {
+      "samples": 33,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "also": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "arrival": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "assalam_o_alaikum": {
+      "samples": 51,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "atm": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "bald": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "beach": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "beak": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "bear": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "beard": {
+      "samples": 31,
+      "top1": 0.9677,
+      "top5": 1.0
+     },
+     "bed": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "bench": {
+      "samples": 34,
+      "top1": 0.9412,
+      "top5": 1.0
+     },
+     "bicycle": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "both": {
+      "samples": 32,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "bridge": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "bring": {
+      "samples": 52,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "bulb": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "cartoon": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "chimpanzee": {
+      "samples": 32,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "color_pencils": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "come": {
+      "samples": 33,
+      "top1": 0.0,
+      "top5": 0.0
+     },
+     "cow": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "crow": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "cupboard": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "deer": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "doctor": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "dog": {
+      "samples": 33,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "donttouch": {
+      "samples": 32,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "door": {
+      "samples": 34,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "elephant": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "excuseme": {
+      "samples": 50,
+      "top1": 0.98,
+      "top5": 0.98
+     },
+     "facelotion": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "fan": {
+      "samples": 31,
+      "top1": 0.9677,
+      "top5": 1.0
+     },
+     "garden": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "generator": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "give": {
+      "samples": 30,
+      "top1": 0.0,
+      "top5": 0.0
+     },
+     "goodbye": {
+      "samples": 51,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "goodmorning": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "have_a_good_day": {
+      "samples": 32,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "hello": {
+      "samples": 51,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "help": {
+      "samples": 30,
+      "top1": 0.8333,
+      "top5": 1.0
+     },
+     "hungry": {
+      "samples": 30,
+      "top1": 0.9667,
+      "top5": 1.0
+     },
+     "ihaveacomplaint": {
+      "samples": 33,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "lifejacket": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "mine": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "mobile_phone": {
+      "samples": 32,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "nailcutter": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "need": {
+      "samples": 32,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "peacock": {
+      "samples": 30,
+      "top1": 0.9333,
+      "top5": 0.9333
+     },
+     "policecar": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "razor": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "shampoo": {
+      "samples": 32,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "shower": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "sunglasses": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "thankyou": {
+      "samples": 50,
+      "top1": 0.94,
+      "top5": 1.0
+     },
+     "tissue": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "toothbrush": {
+      "samples": 31,
+      "top1": 0.0,
+      "top5": 0.0323
+     },
+     "toothpaste": {
+      "samples": 32,
+      "top1": 0.0,
+      "top5": 0.0
+     },
+     "umbrella": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "want": {
+      "samples": 31,
+      "top1": 0.0,
+      "top5": 0.0
+     },
+     "water": {
+      "samples": 50,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "we": {
+      "samples": 32,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "welldone": {
+      "samples": 32,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "where": {
+      "samples": 51,
+      "top1": 0.8039,
+      "top5": 1.0
+     },
+     "who": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "you": {
+      "samples": 32,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "_unknown": {
+      "samples": 9,
+      "top1": 0.4444,
+      "top5": 0.5556
+     }
+    }
+   },
+   "plain": {
+    "samples": 2151,
+    "top1": 0.9856,
+    "top5": 0.9967,
+    "one_handed": {
+     "samples": 1379,
+     "top1": 0.9869,
+     "top5": 1.0
+    },
+    "two_handed": {
+     "samples": 763,
+     "top1": 0.9895,
+     "top5": 0.9961
+    },
+    "expected_calibration_error": 0.004,
+    "reliability": [
+     {
+      "from": 0.1,
+      "samples": 1,
+      "confidence": 0.1977,
+      "accuracy": 0.0
+     },
+     {
+      "from": 0.2,
+      "samples": 4,
+      "confidence": 0.251,
+      "accuracy": 0.25
+     },
+     {
+      "from": 0.3,
+      "samples": 2,
+      "confidence": 0.3806,
+      "accuracy": 0.5
+     },
+     {
+      "from": 0.4,
+      "samples": 3,
+      "confidence": 0.447,
+      "accuracy": 0.3333
+     },
+     {
+      "from": 0.5,
+      "samples": 6,
+      "confidence": 0.5438,
+      "accuracy": 0.5
+     },
+     {
+      "from": 0.6,
+      "samples": 14,
+      "confidence": 0.6625,
+      "accuracy": 0.7143
+     },
+     {
+      "from": 0.7,
+      "samples": 12,
+      "confidence": 0.7538,
+      "accuracy": 0.6667
+     },
+     {
+      "from": 0.8,
+      "samples": 16,
+      "confidence": 0.8535,
+      "accuracy": 0.75
+     },
+     {
+      "from": 0.9,
+      "samples": 2093,
+      "confidence": 0.9977,
+      "accuracy": 0.9957
+     }
+    ],
+    "speak_limits": [
+     {
+      "at_least": 0.5,
+      "answered_share": 0.9954,
+      "wrong_share_of_answered": 0.0112
+     },
+     {
+      "at_least": 0.6,
+      "answered_share": 0.9926,
+      "wrong_share_of_answered": 0.0098
+     },
+     {
+      "at_least": 0.7,
+      "answered_share": 0.9861,
+      "wrong_share_of_answered": 0.008
+     },
+     {
+      "at_least": 0.8,
+      "answered_share": 0.9805,
+      "wrong_share_of_answered": 0.0062
+     },
+     {
+      "at_least": 0.9,
+      "answered_share": 0.973,
+      "wrong_share_of_answered": 0.0043
+     }
+    ],
+    "confusions": [
+     {
+      "sign": "where",
+      "taken_for": "bring",
+      "times": 10
+     },
+     {
+      "sign": "help",
+      "taken_for": "excuseme",
+      "times": 5
+     },
+     {
+      "sign": "bench",
+      "taken_for": "bring",
+      "times": 2
+     },
+     {
+      "sign": "_unknown",
+      "taken_for": "all",
+      "times": 2
+     },
+     {
+      "sign": "peacock",
+      "taken_for": "hello",
+      "times": 2
+     },
+     {
+      "sign": "thankyou",
+      "taken_for": "garden",
+      "times": 2
+     },
+     {
+      "sign": "beard",
+      "taken_for": "goodmorning",
+      "times": 1
+     },
+     {
+      "sign": "excuseme",
+      "taken_for": "bring",
+      "times": 1
+     },
+     {
+      "sign": "fan",
+      "taken_for": "you",
+      "times": 1
+     },
+     {
+      "sign": "hungry",
+      "taken_for": "we",
+      "times": 1
+     },
+     {
+      "sign": "_unknown",
+      "taken_for": "have_a_good_day",
+      "times": 1
+     },
+     {
+      "sign": "_unknown",
+      "taken_for": "absolutely",
+      "times": 1
+     },
+     {
+      "sign": "_unknown",
+      "taken_for": "bench",
+      "times": 1
+     },
+     {
+      "sign": "thankyou",
+      "taken_for": "shampoo",
+      "times": 1
+     }
+    ],
+    "per_class": {
+     "absolutely": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "aircrash": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "airplane": {
+      "samples": 33,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "all": {
+      "samples": 33,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "also": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "arrival": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "assalam_o_alaikum": {
+      "samples": 51,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "atm": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "bald": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "beach": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "beak": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "bear": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "beard": {
+      "samples": 31,
+      "top1": 0.9677,
+      "top5": 1.0
+     },
+     "bed": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "bench": {
+      "samples": 34,
+      "top1": 0.9412,
+      "top5": 1.0
+     },
+     "bicycle": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "both": {
+      "samples": 32,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "bridge": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "bring": {
+      "samples": 52,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "bulb": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "cartoon": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "chimpanzee": {
+      "samples": 32,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "color_pencils": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "cow": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "crow": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "cupboard": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "deer": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "doctor": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "dog": {
+      "samples": 33,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "donttouch": {
+      "samples": 32,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "door": {
+      "samples": 34,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "elephant": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "excuseme": {
+      "samples": 50,
+      "top1": 0.98,
+      "top5": 0.98
+     },
+     "facelotion": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "fan": {
+      "samples": 31,
+      "top1": 0.9677,
+      "top5": 1.0
+     },
+     "garden": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "generator": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "goodbye": {
+      "samples": 51,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "goodmorning": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "have_a_good_day": {
+      "samples": 32,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "hello": {
+      "samples": 51,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "help": {
+      "samples": 30,
+      "top1": 0.8333,
+      "top5": 1.0
+     },
+     "hungry": {
+      "samples": 30,
+      "top1": 0.9667,
+      "top5": 1.0
+     },
+     "ihaveacomplaint": {
+      "samples": 33,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "lifejacket": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "mine": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "mobile_phone": {
+      "samples": 32,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "nailcutter": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "need": {
+      "samples": 32,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "peacock": {
+      "samples": 30,
+      "top1": 0.9333,
+      "top5": 0.9333
+     },
+     "policecar": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "razor": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "shampoo": {
+      "samples": 32,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "shower": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "sunglasses": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "thankyou": {
+      "samples": 50,
+      "top1": 0.94,
+      "top5": 1.0
+     },
+     "tissue": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "umbrella": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "water": {
+      "samples": 50,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "we": {
+      "samples": 32,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "welldone": {
+      "samples": 32,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "where": {
+      "samples": 51,
+      "top1": 0.8039,
+      "top5": 1.0
+     },
+     "who": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "you": {
+      "samples": 32,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "_unknown": {
+      "samples": 9,
+      "top1": 0.4444,
+      "top5": 0.5556
+     }
+    }
+   },
+   "validation_plain": {
+    "samples": 451,
+    "top1": 0.9978,
+    "top5": 1.0,
+    "one_handed": {
+     "samples": 279,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "two_handed": {
+     "samples": 171,
+     "top1": 0.9942,
+     "top5": 1.0
+    },
+    "expected_calibration_error": 0.0021,
+    "reliability": [
+     {
+      "from": 0.3,
+      "samples": 1,
+      "confidence": 0.3883,
+      "accuracy": 0.0
+     },
+     {
+      "from": 0.5,
+      "samples": 1,
+      "confidence": 0.5683,
+      "accuracy": 1.0
+     },
+     {
+      "from": 0.9,
+      "samples": 449,
+      "confidence": 0.9997,
+      "accuracy": 1.0
+     }
+    ],
+    "speak_limits": [
+     {
+      "at_least": 0.5,
+      "answered_share": 0.9978,
+      "wrong_share_of_answered": 0.0
+     },
+     {
+      "at_least": 0.6,
+      "answered_share": 0.9956,
+      "wrong_share_of_answered": 0.0
+     },
+     {
+      "at_least": 0.7,
+      "answered_share": 0.9956,
+      "wrong_share_of_answered": 0.0
+     },
+     {
+      "at_least": 0.8,
+      "answered_share": 0.9956,
+      "wrong_share_of_answered": 0.0
+     },
+     {
+      "at_least": 0.9,
+      "answered_share": 0.9956,
+      "wrong_share_of_answered": 0.0
+     }
+    ],
+    "confusions": [
+     {
+      "sign": "dog",
+      "taken_for": "shower",
+      "times": 1
+     }
+    ],
+    "per_class": {
+     "absolutely": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "aircrash": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "airplane": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "all": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "also": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "arrival": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "assalam_o_alaikum": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "atm": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "bald": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "beach": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "beak": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "bear": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "beard": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "bed": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "bench": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "bicycle": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "both": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "bridge": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "bring": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "bulb": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "cartoon": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "chimpanzee": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "color_pencils": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "cow": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "crow": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "cupboard": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "deer": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "doctor": {
+      "samples": 5,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "dog": {
+      "samples": 7,
+      "top1": 0.8571,
+      "top5": 1.0
+     },
+     "donttouch": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "door": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "elephant": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "excuseme": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "facelotion": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "fan": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "garden": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "generator": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "goodbye": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "goodmorning": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "have_a_good_day": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "hello": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "help": {
+      "samples": 5,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "hungry": {
+      "samples": 5,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "ihaveacomplaint": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "lifejacket": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "mine": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "mobile_phone": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "nailcutter": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "need": {
+      "samples": 5,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "peacock": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "policecar": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "razor": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "shampoo": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "shower": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "sunglasses": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "thankyou": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "tissue": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "toothbrush": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "toothpaste": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "umbrella": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "water": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "we": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "welldone": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "where": {
+      "samples": 5,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "who": {
+      "samples": 5,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "you": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "_unknown": {
+      "samples": 1,
+      "top1": 1.0,
+      "top5": 1.0
+     }
+    }
+   },
+   "mirror_average": {
+    "samples": 2151,
+    "top1": 0.9861,
+    "top5": 0.9972,
+    "one_handed": {
+     "samples": 1379,
+     "top1": 0.9877,
+     "top5": 1.0
+    },
+    "two_handed": {
+     "samples": 763,
+     "top1": 0.9895,
+     "top5": 0.9974
+    },
+    "expected_calibration_error": 0.0036,
+    "reliability": [
+     {
+      "from": 0.1,
+      "samples": 1,
+      "confidence": 0.1803,
+      "accuracy": 0.0
+     },
+     {
+      "from": 0.2,
+      "samples": 4,
+      "confidence": 0.2432,
+      "accuracy": 0.25
+     },
+     {
+      "from": 0.4,
+      "samples": 6,
+      "confidence": 0.4468,
+      "accuracy": 0.5
+     },
+     {
+      "from": 0.5,
+      "samples": 11,
+      "confidence": 0.5375,
+      "accuracy": 0.6364
+     },
+     {
+      "from": 0.6,
+      "samples": 7,
+      "confidence": 0.6413,
+      "accuracy": 0.5714
+     },
+     {
+      "from": 0.7,
+      "samples": 14,
+      "confidence": 0.7527,
+      "accuracy": 0.7857
+     },
+     {
+      "from": 0.8,
+      "samples": 18,
+      "confidence": 0.8491,
+      "accuracy": 0.8333
+     },
+     {
+      "from": 0.9,
+      "samples": 2090,
+      "confidence": 0.9976,
+      "accuracy": 0.9952
+     }
+    ],
+    "speak_limits": [
+     {
+      "at_least": 0.5,
+      "answered_share": 0.9949,
+      "wrong_share_of_answered": 0.0107
+     },
+     {
+      "at_least": 0.6,
+      "answered_share": 0.9898,
+      "wrong_share_of_answered": 0.0089
+     },
+     {
+      "at_least": 0.7,
+      "answered_share": 0.9865,
+      "wrong_share_of_answered": 0.0075
+     },
+     {
+      "at_least": 0.8,
+      "answered_share": 0.98,
+      "wrong_share_of_answered": 0.0062
+     },
+     {
+      "at_least": 0.9,
+      "answered_share": 0.9716,
+      "wrong_share_of_answered": 0.0048
+     }
+    ],
+    "confusions": [
+     {
+      "sign": "where",
+      "taken_for": "bring",
+      "times": 10
+     },
+     {
+      "sign": "help",
+      "taken_for": "excuseme",
+      "times": 5
+     },
+     {
+      "sign": "_unknown",
+      "taken_for": "welldone",
+      "times": 2
+     },
+     {
+      "sign": "peacock",
+      "taken_for": "hello",
+      "times": 2
+     },
+     {
+      "sign": "thankyou",
+      "taken_for": "garden",
+      "times": 2
+     },
+     {
+      "sign": "beard",
+      "taken_for": "goodmorning",
+      "times": 1
+     },
+     {
+      "sign": "bench",
+      "taken_for": "bring",
+      "times": 1
+     },
+     {
+      "sign": "excuseme",
+      "taken_for": "bring",
+      "times": 1
+     },
+     {
+      "sign": "fan",
+      "taken_for": "you",
+      "times": 1
+     },
+     {
+      "sign": "_unknown",
+      "taken_for": "have_a_good_day",
+      "times": 1
+     },
+     {
+      "sign": "_unknown",
+      "taken_for": "cow",
+      "times": 1
+     },
+     {
+      "sign": "_unknown",
+      "taken_for": "bench",
+      "times": 1
+     },
+     {
+      "sign": "thankyou",
+      "taken_for": "shampoo",
+      "times": 1
+     },
+     {
+      "sign": "we",
+      "taken_for": "hungry",
+      "times": 1
+     }
+    ],
+    "per_class": {
+     "absolutely": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "aircrash": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "airplane": {
+      "samples": 33,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "all": {
+      "samples": 33,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "also": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "arrival": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "assalam_o_alaikum": {
+      "samples": 51,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "atm": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "bald": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "beach": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "beak": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "bear": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "beard": {
+      "samples": 31,
+      "top1": 0.9677,
+      "top5": 1.0
+     },
+     "bed": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "bench": {
+      "samples": 34,
+      "top1": 0.9706,
+      "top5": 1.0
+     },
+     "bicycle": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "both": {
+      "samples": 32,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "bridge": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "bring": {
+      "samples": 52,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "bulb": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "cartoon": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "chimpanzee": {
+      "samples": 32,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "color_pencils": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "cow": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "crow": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "cupboard": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "deer": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "doctor": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "dog": {
+      "samples": 33,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "donttouch": {
+      "samples": 32,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "door": {
+      "samples": 34,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "elephant": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "excuseme": {
+      "samples": 50,
+      "top1": 0.98,
+      "top5": 1.0
+     },
+     "facelotion": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "fan": {
+      "samples": 31,
+      "top1": 0.9677,
+      "top5": 1.0
+     },
+     "garden": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "generator": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "goodbye": {
+      "samples": 51,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "goodmorning": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "have_a_good_day": {
+      "samples": 32,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "hello": {
+      "samples": 51,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "help": {
+      "samples": 30,
+      "top1": 0.8333,
+      "top5": 1.0
+     },
+     "hungry": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "ihaveacomplaint": {
+      "samples": 33,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "lifejacket": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "mine": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "mobile_phone": {
+      "samples": 32,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "nailcutter": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "need": {
+      "samples": 32,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "peacock": {
+      "samples": 30,
+      "top1": 0.9333,
+      "top5": 0.9333
+     },
+     "policecar": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "razor": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "shampoo": {
+      "samples": 32,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "shower": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "sunglasses": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "thankyou": {
+      "samples": 50,
+      "top1": 0.94,
+      "top5": 1.0
+     },
+     "tissue": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "umbrella": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "water": {
+      "samples": 50,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "we": {
+      "samples": 32,
+      "top1": 0.9688,
+      "top5": 1.0
+     },
+     "welldone": {
+      "samples": 32,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "where": {
+      "samples": 51,
+      "top1": 0.8039,
+      "top5": 1.0
+     },
+     "who": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "you": {
+      "samples": 32,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "_unknown": {
+      "samples": 9,
+      "top1": 0.4444,
+      "top5": 0.5556
+     }
+    }
+   },
+   "validation_mirror_average": {
+    "samples": 451,
+    "top1": 0.9978,
+    "top5": 1.0,
+    "one_handed": {
+     "samples": 279,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "two_handed": {
+     "samples": 171,
+     "top1": 0.9942,
+     "top5": 1.0
+    },
+    "expected_calibration_error": 0.0005,
+    "reliability": [
+     {
+      "from": 0.5,
+      "samples": 2,
+      "confidence": 0.5397,
+      "accuracy": 0.5
+     },
+     {
+      "from": 0.9,
+      "samples": 449,
+      "confidence": 0.9996,
+      "accuracy": 1.0
+     }
+    ],
+    "speak_limits": [
+     {
+      "at_least": 0.5,
+      "answered_share": 1.0,
+      "wrong_share_of_answered": 0.0022
+     },
+     {
+      "at_least": 0.6,
+      "answered_share": 0.9956,
+      "wrong_share_of_answered": 0.0
+     },
+     {
+      "at_least": 0.7,
+      "answered_share": 0.9956,
+      "wrong_share_of_answered": 0.0
+     },
+     {
+      "at_least": 0.8,
+      "answered_share": 0.9956,
+      "wrong_share_of_answered": 0.0
+     },
+     {
+      "at_least": 0.9,
+      "answered_share": 0.9956,
+      "wrong_share_of_answered": 0.0
+     }
+    ],
+    "confusions": [
+     {
+      "sign": "dog",
+      "taken_for": "shower",
+      "times": 1
+     }
+    ],
+    "per_class": {
+     "absolutely": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "aircrash": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "airplane": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "all": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "also": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "arrival": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "assalam_o_alaikum": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "atm": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "bald": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "beach": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "beak": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "bear": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "beard": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "bed": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "bench": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "bicycle": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "both": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "bridge": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "bring": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "bulb": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "cartoon": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "chimpanzee": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "color_pencils": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "cow": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "crow": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "cupboard": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "deer": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "doctor": {
+      "samples": 5,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "dog": {
+      "samples": 7,
+      "top1": 0.8571,
+      "top5": 1.0
+     },
+     "donttouch": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "door": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "elephant": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "excuseme": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "facelotion": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "fan": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "garden": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "generator": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "goodbye": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "goodmorning": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "have_a_good_day": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "hello": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "help": {
+      "samples": 5,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "hungry": {
+      "samples": 5,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "ihaveacomplaint": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "lifejacket": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "mine": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "mobile_phone": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "nailcutter": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "need": {
+      "samples": 5,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "peacock": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "policecar": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "razor": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "shampoo": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "shower": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "sunglasses": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "thankyou": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "tissue": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "toothbrush": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "toothpaste": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "umbrella": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "water": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "we": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "welldone": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "where": {
+      "samples": 5,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "who": {
+      "samples": 5,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "you": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "_unknown": {
+      "samples": 1,
+      "top1": 1.0,
+      "top5": 1.0
+     }
+    }
+   }
+  },
+  "personal_adaptation": {
+   "runs": 10,
+   "confirmations": 20,
+   "top1_before": 0.986,
+   "top1_after": 0.986,
+   "change_points": 0.0,
+   "worst_change_points": 0.0,
+   "settings": {
+    "rate": 0.1,
+    "decay": 0.05,
+    "steps": 1,
+    "limit": 2.0
+   }
+  },
+  "left_right": {
+   "right_top1": 0.9856,
+   "left_top1": 0.987,
+   "gap_points": 0.14
+  },
+  "gru": {
+   "temperature": 0.5,
+   "plain_all_phone": {
+    "samples": 2308,
+    "top1": 0.8761,
+    "top5": 0.9259,
+    "one_handed": {
+     "samples": 1504,
+     "top1": 0.8477,
+     "top5": 0.9122
+    },
+    "two_handed": {
+     "samples": 795,
+     "top1": 0.9371,
+     "top5": 0.9572
+    },
+    "expected_calibration_error": 0.0889,
+    "reliability": [
+     {
+      "from": 0.1,
+      "samples": 3,
+      "confidence": 0.1714,
+      "accuracy": 0.0
+     },
+     {
+      "from": 0.2,
+      "samples": 3,
+      "confidence": 0.2628,
+      "accuracy": 0.0
+     },
+     {
+      "from": 0.3,
+      "samples": 7,
+      "confidence": 0.3257,
+      "accuracy": 0.1429
+     },
+     {
+      "from": 0.4,
+      "samples": 20,
+      "confidence": 0.456,
+      "accuracy": 0.25
+     },
+     {
+      "from": 0.5,
+      "samples": 33,
+      "confidence": 0.5529,
+      "accuracy": 0.3636
+     },
+     {
+      "from": 0.6,
+      "samples": 36,
+      "confidence": 0.6567,
+      "accuracy": 0.3333
+     },
+     {
+      "from": 0.7,
+      "samples": 33,
+      "confidence": 0.7531,
+      "accuracy": 0.4848
+     },
+     {
+      "from": 0.8,
+      "samples": 77,
+      "confidence": 0.8542,
+      "accuracy": 0.6234
+     },
+     {
+      "from": 0.9,
+      "samples": 2096,
+      "confidence": 0.9933,
+      "accuracy": 0.9198
+     }
+    ],
+    "speak_limits": [
+     {
+      "at_least": 0.5,
+      "answered_share": 0.9857,
+      "wrong_share_of_answered": 0.1138
+     },
+     {
+      "at_least": 0.6,
+      "answered_share": 0.9714,
+      "wrong_share_of_answered": 0.1062
+     },
+     {
+      "at_least": 0.7,
+      "answered_share": 0.9558,
+      "wrong_share_of_answered": 0.097
+     },
+     {
+      "at_least": 0.8,
+      "answered_share": 0.9415,
+      "wrong_share_of_answered": 0.0907
+     },
+     {
+      "at_least": 0.9,
+      "answered_share": 0.9081,
+      "wrong_share_of_answered": 0.0802
+     }
+    ],
+    "confusions": [
+     {
+      "sign": "where",
+      "taken_for": "bring",
+      "times": 51
+     },
+     {
+      "sign": "toothpaste",
+      "taken_for": "toothbrush",
+      "times": 32
+     },
+     {
+      "sign": "want",
+      "taken_for": "we",
+      "times": 31
+     },
+     {
+      "sign": "come",
+      "taken_for": "airplane",
+      "times": 26
+     },
+     {
+      "sign": "toothbrush",
+      "taken_for": "toothpaste",
+      "times": 26
+     },
+     {
+      "sign": "give",
+      "taken_for": "bring",
+      "times": 24
+     },
+     {
+      "sign": "fan",
+      "taken_for": "you",
+      "times": 20
+     },
+     {
+      "sign": "help",
+      "taken_for": "excuseme",
+      "times": 13
+     },
+     {
+      "sign": "bench",
+      "taken_for": "bring",
+      "times": 10
+     },
+     {
+      "sign": "come",
+      "taken_for": "elephant",
+      "times": 7
+     },
+     {
+      "sign": "thankyou",
+      "taken_for": "garden",
+      "times": 6
+     },
+     {
+      "sign": "give",
+      "taken_for": "beard",
+      "times": 5
+     },
+     {
+      "sign": "toothbrush",
+      "taken_for": "nailcutter",
+      "times": 5
+     },
+     {
+      "sign": "thankyou",
+      "taken_for": "bring",
+      "times": 4
+     },
+     {
+      "sign": "elephant",
+      "taken_for": "bring",
+      "times": 3
+     }
+    ],
+    "per_class": {
+     "absolutely": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "aircrash": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "airplane": {
+      "samples": 33,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "all": {
+      "samples": 33,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "also": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "arrival": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "assalam_o_alaikum": {
+      "samples": 51,
+      "top1": 0.9804,
+      "top5": 1.0
+     },
+     "atm": {
+      "samples": 30,
+      "top1": 0.9667,
+      "top5": 0.9667
+     },
+     "bald": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "beach": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "beak": {
+      "samples": 30,
+      "top1": 0.9333,
+      "top5": 1.0
+     },
+     "bear": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "beard": {
+      "samples": 31,
+      "top1": 0.9677,
+      "top5": 1.0
+     },
+     "bed": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "bench": {
+      "samples": 34,
+      "top1": 0.7059,
+      "top5": 1.0
+     },
+     "bicycle": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "both": {
+      "samples": 32,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "bridge": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "bring": {
+      "samples": 52,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "bulb": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "cartoon": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "chimpanzee": {
+      "samples": 32,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "color_pencils": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "come": {
+      "samples": 33,
+      "top1": 0.0,
+      "top5": 0.0
+     },
+     "cow": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "crow": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "cupboard": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "deer": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "doctor": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "dog": {
+      "samples": 33,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "donttouch": {
+      "samples": 32,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "door": {
+      "samples": 34,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "elephant": {
+      "samples": 30,
+      "top1": 0.9,
+      "top5": 1.0
+     },
+     "excuseme": {
+      "samples": 50,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "facelotion": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "fan": {
+      "samples": 31,
+      "top1": 0.3548,
+      "top5": 1.0
+     },
+     "garden": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "generator": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "give": {
+      "samples": 30,
+      "top1": 0.0,
+      "top5": 0.0
+     },
+     "goodbye": {
+      "samples": 51,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "goodmorning": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "have_a_good_day": {
+      "samples": 32,
+      "top1": 0.9688,
+      "top5": 1.0
+     },
+     "hello": {
+      "samples": 51,
+      "top1": 0.9804,
+      "top5": 1.0
+     },
+     "help": {
+      "samples": 30,
+      "top1": 0.5,
+      "top5": 1.0
+     },
+     "hungry": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "ihaveacomplaint": {
+      "samples": 33,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "lifejacket": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "mine": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "mobile_phone": {
+      "samples": 32,
+      "top1": 0.9688,
+      "top5": 1.0
+     },
+     "nailcutter": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "need": {
+      "samples": 32,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "peacock": {
+      "samples": 30,
+      "top1": 0.9333,
+      "top5": 0.9333
+     },
+     "policecar": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "razor": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "shampoo": {
+      "samples": 32,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "shower": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "sunglasses": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "thankyou": {
+      "samples": 50,
+      "top1": 0.78,
+      "top5": 0.98
+     },
+     "tissue": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "toothbrush": {
+      "samples": 31,
+      "top1": 0.0,
+      "top5": 0.0323
+     },
+     "toothpaste": {
+      "samples": 32,
+      "top1": 0.0,
+      "top5": 0.0
+     },
+     "umbrella": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "want": {
+      "samples": 31,
+      "top1": 0.0,
+      "top5": 0.0
+     },
+     "water": {
+      "samples": 50,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "we": {
+      "samples": 32,
+      "top1": 0.9375,
+      "top5": 1.0
+     },
+     "welldone": {
+      "samples": 32,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "where": {
+      "samples": 51,
+      "top1": 0.0,
+      "top5": 0.8824
+     },
+     "who": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "you": {
+      "samples": 32,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "_unknown": {
+      "samples": 9,
+      "top1": 0.2222,
+      "top5": 0.4444
+     }
+    }
+   },
+   "plain": {
+    "samples": 2151,
+    "top1": 0.94,
+    "top5": 0.993,
+    "one_handed": {
+     "samples": 1379,
+     "top1": 0.9246,
+     "top5": 0.9942
+    },
+    "two_handed": {
+     "samples": 763,
+     "top1": 0.9764,
+     "top5": 0.9974
+    },
+    "expected_calibration_error": 0.0358,
+    "reliability": [
+     {
+      "from": 0.1,
+      "samples": 2,
+      "confidence": 0.1797,
+      "accuracy": 0.0
+     },
+     {
+      "from": 0.3,
+      "samples": 5,
+      "confidence": 0.3317,
+      "accuracy": 0.2
+     },
+     {
+      "from": 0.4,
+      "samples": 13,
+      "confidence": 0.4545,
+      "accuracy": 0.3846
+     },
+     {
+      "from": 0.5,
+      "samples": 20,
+      "confidence": 0.5525,
+      "accuracy": 0.6
+     },
+     {
+      "from": 0.6,
+      "samples": 23,
+      "confidence": 0.657,
+      "accuracy": 0.5217
+     },
+     {
+      "from": 0.7,
+      "samples": 23,
+      "confidence": 0.7559,
+      "accuracy": 0.6957
+     },
+     {
+      "from": 0.8,
+      "samples": 55,
+      "confidence": 0.8593,
+      "accuracy": 0.8727
+     },
+     {
+      "from": 0.9,
+      "samples": 2010,
+      "confidence": 0.9935,
+      "accuracy": 0.9592
+     }
+    ],
+    "speak_limits": [
+     {
+      "at_least": 0.5,
+      "answered_share": 0.9907,
+      "wrong_share_of_answered": 0.054
+     },
+     {
+      "at_least": 0.6,
+      "answered_share": 0.9814,
+      "wrong_share_of_answered": 0.0507
+     },
+     {
+      "at_least": 0.7,
+      "answered_share": 0.9707,
+      "wrong_share_of_answered": 0.046
+     },
+     {
+      "at_least": 0.8,
+      "answered_share": 0.96,
+      "wrong_share_of_answered": 0.0431
+     },
+     {
+      "at_least": 0.9,
+      "answered_share": 0.9344,
+      "wrong_share_of_answered": 0.0408
+     }
+    ],
+    "confusions": [
+     {
+      "sign": "where",
+      "taken_for": "bring",
+      "times": 51
+     },
+     {
+      "sign": "fan",
+      "taken_for": "you",
+      "times": 20
+     },
+     {
+      "sign": "help",
+      "taken_for": "excuseme",
+      "times": 13
+     },
+     {
+      "sign": "bench",
+      "taken_for": "bring",
+      "times": 10
+     },
+     {
+      "sign": "thankyou",
+      "taken_for": "garden",
+      "times": 6
+     },
+     {
+      "sign": "thankyou",
+      "taken_for": "bring",
+      "times": 4
+     },
+     {
+      "sign": "elephant",
+      "taken_for": "bring",
+      "times": 3
+     },
+     {
+      "sign": "_unknown",
+      "taken_for": "welldone",
+      "times": 3
+     },
+     {
+      "sign": "beak",
+      "taken_for": "you",
+      "times": 2
+     },
+     {
+      "sign": "help",
+      "taken_for": "dog",
+      "times": 2
+     },
+     {
+      "sign": "peacock",
+      "taken_for": "hello",
+      "times": 2
+     },
+     {
+      "sign": "we",
+      "taken_for": "hungry",
+      "times": 2
+     },
+     {
+      "sign": "assalam_o_alaikum",
+      "taken_for": "shower",
+      "times": 1
+     },
+     {
+      "sign": "atm",
+      "taken_for": "bring",
+      "times": 1
+     },
+     {
+      "sign": "beard",
+      "taken_for": "goodmorning",
+      "times": 1
+     }
+    ],
+    "per_class": {
+     "absolutely": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "aircrash": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "airplane": {
+      "samples": 33,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "all": {
+      "samples": 33,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "also": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "arrival": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "assalam_o_alaikum": {
+      "samples": 51,
+      "top1": 0.9804,
+      "top5": 1.0
+     },
+     "atm": {
+      "samples": 30,
+      "top1": 0.9667,
+      "top5": 0.9667
+     },
+     "bald": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "beach": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "beak": {
+      "samples": 30,
+      "top1": 0.9333,
+      "top5": 1.0
+     },
+     "bear": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "beard": {
+      "samples": 31,
+      "top1": 0.9677,
+      "top5": 1.0
+     },
+     "bed": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "bench": {
+      "samples": 34,
+      "top1": 0.7059,
+      "top5": 1.0
+     },
+     "bicycle": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "both": {
+      "samples": 32,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "bridge": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "bring": {
+      "samples": 52,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "bulb": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "cartoon": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "chimpanzee": {
+      "samples": 32,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "color_pencils": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "cow": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "crow": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "cupboard": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "deer": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "doctor": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "dog": {
+      "samples": 33,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "donttouch": {
+      "samples": 32,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "door": {
+      "samples": 34,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "elephant": {
+      "samples": 30,
+      "top1": 0.9,
+      "top5": 1.0
+     },
+     "excuseme": {
+      "samples": 50,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "facelotion": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "fan": {
+      "samples": 31,
+      "top1": 0.3548,
+      "top5": 1.0
+     },
+     "garden": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "generator": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "goodbye": {
+      "samples": 51,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "goodmorning": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "have_a_good_day": {
+      "samples": 32,
+      "top1": 0.9688,
+      "top5": 1.0
+     },
+     "hello": {
+      "samples": 51,
+      "top1": 0.9804,
+      "top5": 1.0
+     },
+     "help": {
+      "samples": 30,
+      "top1": 0.5,
+      "top5": 1.0
+     },
+     "hungry": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "ihaveacomplaint": {
+      "samples": 33,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "lifejacket": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "mine": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "mobile_phone": {
+      "samples": 32,
+      "top1": 0.9688,
+      "top5": 1.0
+     },
+     "nailcutter": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "need": {
+      "samples": 32,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "peacock": {
+      "samples": 30,
+      "top1": 0.9333,
+      "top5": 0.9333
+     },
+     "policecar": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "razor": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "shampoo": {
+      "samples": 32,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "shower": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "sunglasses": {
+      "samples": 31,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "thankyou": {
+      "samples": 50,
+      "top1": 0.78,
+      "top5": 0.98
+     },
+     "tissue": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "umbrella": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "water": {
+      "samples": 50,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "we": {
+      "samples": 32,
+      "top1": 0.9375,
+      "top5": 1.0
+     },
+     "welldone": {
+      "samples": 32,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "where": {
+      "samples": 51,
+      "top1": 0.0,
+      "top5": 0.8824
+     },
+     "who": {
+      "samples": 30,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "you": {
+      "samples": 32,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "_unknown": {
+      "samples": 9,
+      "top1": 0.2222,
+      "top5": 0.4444
+     }
+    }
+   },
+   "validation_plain": {
+    "samples": 451,
+    "top1": 0.9978,
+    "top5": 1.0,
+    "one_handed": {
+     "samples": 279,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "two_handed": {
+     "samples": 171,
+     "top1": 0.9942,
+     "top5": 1.0
+    },
+    "expected_calibration_error": 0.0017,
+    "reliability": [
+     {
+      "from": 0.4,
+      "samples": 1,
+      "confidence": 0.409,
+      "accuracy": 0.0
+     },
+     {
+      "from": 0.9,
+      "samples": 450,
+      "confidence": 0.9992,
+      "accuracy": 1.0
+     }
+    ],
+    "speak_limits": [
+     {
+      "at_least": 0.5,
+      "answered_share": 0.9978,
+      "wrong_share_of_answered": 0.0
+     },
+     {
+      "at_least": 0.6,
+      "answered_share": 0.9978,
+      "wrong_share_of_answered": 0.0
+     },
+     {
+      "at_least": 0.7,
+      "answered_share": 0.9978,
+      "wrong_share_of_answered": 0.0
+     },
+     {
+      "at_least": 0.8,
+      "answered_share": 0.9978,
+      "wrong_share_of_answered": 0.0
+     },
+     {
+      "at_least": 0.9,
+      "answered_share": 0.9978,
+      "wrong_share_of_answered": 0.0
+     }
+    ],
+    "confusions": [
+     {
+      "sign": "dog",
+      "taken_for": "bench",
+      "times": 1
+     }
+    ],
+    "per_class": {
+     "absolutely": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "aircrash": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "airplane": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "all": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "also": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "arrival": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "assalam_o_alaikum": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "atm": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "bald": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "beach": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "beak": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "bear": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "beard": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "bed": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "bench": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "bicycle": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "both": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "bridge": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "bring": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "bulb": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "cartoon": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "chimpanzee": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "color_pencils": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "cow": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "crow": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "cupboard": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "deer": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "doctor": {
+      "samples": 5,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "dog": {
+      "samples": 7,
+      "top1": 0.8571,
+      "top5": 1.0
+     },
+     "donttouch": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "door": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "elephant": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "excuseme": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "facelotion": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "fan": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "garden": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "generator": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "goodbye": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "goodmorning": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "have_a_good_day": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "hello": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "help": {
+      "samples": 5,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "hungry": {
+      "samples": 5,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "ihaveacomplaint": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "lifejacket": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "mine": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "mobile_phone": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "nailcutter": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "need": {
+      "samples": 5,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "peacock": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "policecar": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "razor": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "shampoo": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "shower": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "sunglasses": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "thankyou": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "tissue": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "toothbrush": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "toothpaste": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "umbrella": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "water": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "we": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "welldone": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "where": {
+      "samples": 5,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "who": {
+      "samples": 5,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "you": {
+      "samples": 7,
+      "top1": 1.0,
+      "top5": 1.0
+     },
+     "_unknown": {
+      "samples": 1,
+      "top1": 1.0,
+      "top5": 1.0
+     }
+    }
+   }
+  }
+ },
+ "independent_signer": {
+  "samples": 14,
+  "top1": 0.3571,
+  "top5": 0.7143,
+  "one_handed": {
+   "samples": 9,
+   "top1": 0.3333,
+   "top5": 0.7778
+  },
+  "two_handed": {
+   "samples": 5,
+   "top1": 0.4,
+   "top5": 0.6
+  },
+  "expected_calibration_error": 0.2181,
+  "reliability": [
+   {
+    "from": 0.0,
+    "samples": 1,
+    "confidence": 0.099,
+    "accuracy": 0.0
+   },
+   {
+    "from": 0.1,
+    "samples": 1,
+    "confidence": 0.194,
+    "accuracy": 0.0
+   },
+   {
+    "from": 0.2,
+    "samples": 3,
+    "confidence": 0.2452,
+    "accuracy": 0.0
+   },
+   {
+    "from": 0.3,
+    "samples": 2,
+    "confidence": 0.3565,
+    "accuracy": 0.0
+   },
+   {
+    "from": 0.4,
+    "samples": 1,
+    "confidence": 0.4329,
+    "accuracy": 0.0
+   },
+   {
+    "from": 0.9,
+    "samples": 6,
+    "confidence": 0.9798,
+    "accuracy": 0.8333
+   }
+  ],
+  "speak_limits": [
+   {
+    "at_least": 0.5,
+    "answered_share": 0.4286,
+    "wrong_share_of_answered": 0.1667
+   },
+   {
+    "at_least": 0.6,
+    "answered_share": 0.4286,
+    "wrong_share_of_answered": 0.1667
+   },
+   {
+    "at_least": 0.7,
+    "answered_share": 0.4286,
+    "wrong_share_of_answered": 0.1667
+   },
+   {
+    "at_least": 0.8,
+    "answered_share": 0.4286,
+    "wrong_share_of_answered": 0.1667
+   },
+   {
+    "at_least": 0.9,
+    "answered_share": 0.4286,
+    "wrong_share_of_answered": 0.1667
+   }
+  ],
+  "confusions": [
+   {
+    "sign": "airplane",
+    "taken_for": "also",
+    "times": 1
+   },
+   {
+    "sign": "all",
+    "taken_for": "doctor",
+    "times": 1
+   },
+   {
+    "sign": "cow",
+    "taken_for": "deer",
+    "times": 1
+   },
+   {
+    "sign": "doctor",
+    "taken_for": "beard",
+    "times": 1
+   },
+   {
+    "sign": "dog",
+    "taken_for": "excuseme",
+    "times": 1
+   },
+   {
+    "sign": "elephant",
+    "taken_for": "shower",
+    "times": 1
+   },
+   {
+    "sign": "garden",
+    "taken_for": "bear",
+    "times": 1
+   },
+   {
+    "sign": "peacock",
+    "taken_for": "garden",
+    "times": 1
+   },
+   {
+    "sign": "who",
+    "taken_for": "garden",
+    "times": 1
+   }
+  ],
+  "per_class": {
+   "airplane": {
+    "samples": 1,
+    "top1": 0.0,
+    "top5": 1.0
+   },
+   "all": {
+    "samples": 1,
+    "top1": 0.0,
+    "top5": 0.0
+   },
+   "cartoon": {
+    "samples": 1,
+    "top1": 1.0,
+    "top5": 1.0
+   },
+   "cow": {
+    "samples": 1,
+    "top1": 0.0,
+    "top5": 0.0
+   },
+   "crow": {
+    "samples": 1,
+    "top1": 1.0,
+    "top5": 1.0
+   },
+   "doctor": {
+    "samples": 1,
+    "top1": 0.0,
+    "top5": 1.0
+   },
+   "dog": {
+    "samples": 1,
+    "top1": 0.0,
+    "top5": 1.0
+   },
+   "elephant": {
+    "samples": 1,
+    "top1": 0.0,
+    "top5": 1.0
+   },
+   "garden": {
+    "samples": 1,
+    "top1": 0.0,
+    "top5": 1.0
+   },
+   "give": {
+    "samples": 1,
+    "top1": 1.0,
+    "top5": 1.0
+   },
+   "help": {
+    "samples": 1,
+    "top1": 1.0,
+    "top5": 1.0
+   },
+   "peacock": {
+    "samples": 1,
+    "top1": 0.0,
+    "top5": 0.0
+   },
+   "we": {
+    "samples": 1,
+    "top1": 1.0,
+    "top5": 1.0
+   },
+   "who": {
+    "samples": 1,
+    "top1": 0.0,
+    "top5": 0.0
+   }
+  },
+  "clips": [
+   {
+    "clip_gloss": "slt:airplane",
+    "sign": "airplane",
+    "answer": "also",
+    "probability": 0.355,
+    "top5": true
+   },
+   {
+    "clip_gloss": "slt:all",
+    "sign": "all",
+    "answer": "doctor",
+    "probability": 0.358,
+    "top5": false
+   },
+   {
+    "clip_gloss": "slt:cartoon",
+    "sign": "cartoon",
+    "answer": "cartoon",
+    "probability": 0.985,
+    "top5": true
+   },
+   {
+    "clip_gloss": "slt:cow",
+    "sign": "cow",
+    "answer": "deer",
+    "probability": 0.226,
+    "top5": false
+   },
+   {
+    "clip_gloss": "slt:crow",
+    "sign": "crow",
+    "answer": "crow",
+    "probability": 0.989,
+    "top5": true
+   },
+   {
+    "clip_gloss": "doctor",
+    "sign": "doctor",
+    "answer": "beard",
+    "probability": 0.239,
+    "top5": true
+   },
+   {
+    "clip_gloss": "slt:dog",
+    "sign": "dog",
+    "answer": "excuseme",
+    "probability": 0.194,
+    "top5": true
+   },
+   {
+    "clip_gloss": "slt:elephant",
+    "sign": "elephant",
+    "answer": "shower",
+    "probability": 0.978,
+    "top5": true
+   },
+   {
+    "clip_gloss": "slt:garden",
+    "sign": "garden",
+    "answer": "bear",
+    "probability": 0.27,
+    "top5": true
+   },
+   {
+    "clip_gloss": "slt:give",
+    "sign": "give",
+    "answer": "give",
+    "probability": 0.994,
+    "top5": true
+   },
+   {
+    "clip_gloss": "help",
+    "sign": "help",
+    "answer": "help",
+    "probability": 0.998,
+    "top5": true
+   },
+   {
+    "clip_gloss": "slt:peacock",
+    "sign": "peacock",
+    "answer": "garden",
+    "probability": 0.099,
+    "top5": false
+   },
+   {
+    "clip_gloss": "slt:we",
+    "sign": "we",
+    "answer": "we",
+    "probability": 0.935,
+    "top5": true
+   },
+   {
+    "clip_gloss": "who",
+    "sign": "who",
+    "answer": "garden",
+    "probability": 0.433,
+    "top5": false
+   }
+  ]
+ },
+ "classes": [
+  {
+   "index": 0,
+   "gloss": "absolutely",
+   "english": "Absolutely",
+   "urdu": "بالکل",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "one",
+   "train_samples": 91,
+   "dictionary_url": "https://psl.org.pk/dictionary/2-adverbs/209-absolutely",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 31,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 1,
+   "gloss": "aircrash",
+   "english": "Air crash",
+   "urdu": "ہوائی حادثہ",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "two",
+   "train_samples": 91,
+   "dictionary_url": "https://psl.org.pk/dictionary/3-airport/161-air-crash",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 31,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 2,
+   "gloss": "airplane",
+   "english": "Airplane",
+   "urdu": "ہوائی جہاز",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "one",
+   "train_samples": 93,
+   "dictionary_url": "https://psl.org.pk/dictionary/3-airport/162-airplane",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 33,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 3,
+   "gloss": "all",
+   "english": "All",
+   "urdu": "سب",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "two",
+   "train_samples": 93,
+   "dictionary_url": "https://psl.org.pk/dictionary/63-pronouns/4092-all",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 33,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 4,
+   "gloss": "also",
+   "english": "Also",
+   "urdu": "بھی",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "one",
+   "train_samples": 91,
+   "dictionary_url": "https://psl.org.pk/dictionary/2-adverbs/212-also",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 31,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 5,
+   "gloss": "arrival",
+   "english": "Arrival",
+   "urdu": "آمد",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "one",
+   "train_samples": 90,
+   "dictionary_url": "https://psl.org.pk/dictionary/3-airport/163-arrival",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 30,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 6,
+   "gloss": "assalam_o_alaikum",
+   "english": "Assalam-o-alaikum",
+   "urdu": "السلام علیکم",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "one",
+   "train_samples": 108,
+   "dictionary_url": "https://psl.org.pk/dictionary/65-sentences/4268-assalam-o-alaikum",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 51,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 7,
+   "gloss": "atm",
+   "english": "ATM",
+   "urdu": "اے ٹی ایم",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "one",
+   "train_samples": 90,
+   "dictionary_url": "https://psl.org.pk/dictionary/12-banking/576-atm-automated-teller-machine",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 30,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 8,
+   "gloss": "bald",
+   "english": "Bald",
+   "urdu": "گنجا",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "one",
+   "train_samples": 90,
+   "dictionary_url": "https://psl.org.pk/dictionary/15-beauty/631-bald",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 30,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 9,
+   "gloss": "beach",
+   "english": "Beach",
+   "urdu": "ساحل",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "two",
+   "train_samples": 90,
+   "dictionary_url": "https://psl.org.pk/dictionary/14-beach/609-beach",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 30,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 10,
+   "gloss": "beak",
+   "english": "Beak",
+   "urdu": "چونچ",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "one",
+   "train_samples": 90,
+   "dictionary_url": "https://psl.org.pk/dictionary/17-birds/739-beak",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 30,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 11,
+   "gloss": "bear",
+   "english": "Bear",
+   "urdu": "ریچھ",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "two",
+   "train_samples": 90,
+   "dictionary_url": "https://psl.org.pk/dictionary/51-mammals/2847-bear",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 30,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 12,
+   "gloss": "beard",
+   "english": "Beard",
+   "urdu": "داڑھی",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "one",
+   "train_samples": 91,
+   "dictionary_url": "https://psl.org.pk/dictionary/15-beauty/633-beard",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 31,
+    "top1": 0.9677,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 13,
+   "gloss": "bed",
+   "english": "Bed",
+   "urdu": "بستر",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "two",
+   "train_samples": 90,
+   "dictionary_url": "https://psl.org.pk/dictionary/16-bedroom/717-bed",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 30,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 14,
+   "gloss": "bench",
+   "english": "Bench",
+   "urdu": "بینچ",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "one",
+   "train_samples": 94,
+   "dictionary_url": "https://psl.org.pk/dictionary/10-around-the-house/406-bench",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 34,
+    "top1": 0.9706,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 15,
+   "gloss": "bicycle",
+   "english": "Bicycle",
+   "urdu": "سائیکل",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "two",
+   "train_samples": 90,
+   "dictionary_url": "https://psl.org.pk/dictionary/70-transport/4644-bicycle",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 30,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 16,
+   "gloss": "both",
+   "english": "Both",
+   "urdu": "دونوں",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "one",
+   "train_samples": 92,
+   "dictionary_url": "https://psl.org.pk/dictionary/63-pronouns/4096-both",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 32,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 17,
+   "gloss": "bridge",
+   "english": "Bridge",
+   "urdu": "پل",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "two",
+   "train_samples": 91,
+   "dictionary_url": "https://psl.org.pk/dictionary/70-transport/4646-bridge",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 31,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 18,
+   "gloss": "bring",
+   "english": "Bring",
+   "urdu": "لانا",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "one",
+   "train_samples": 110,
+   "dictionary_url": "https://psl.org.pk/dictionary/72-verbs/4871-bring",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 52,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 19,
+   "gloss": "bulb",
+   "english": "Light bulb",
+   "urdu": "بلب",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "one",
+   "train_samples": 91,
+   "dictionary_url": "https://psl.org.pk/dictionary/9-appliances/293-light-bulb",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 31,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 20,
+   "gloss": "cartoon",
+   "english": "Cartoon",
+   "urdu": "کارٹون",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "two",
+   "train_samples": 90,
+   "dictionary_url": "https://psl.org.pk/dictionary/11-arts/435-cartoon",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 30,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 21,
+   "gloss": "chimpanzee",
+   "english": "Chimpanzee",
+   "urdu": "چمپینزی",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "two",
+   "train_samples": 92,
+   "dictionary_url": "https://psl.org.pk/dictionary/51-mammals/2854-chimpanzee",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 32,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 22,
+   "gloss": "color_pencils",
+   "english": "Coloured pencils",
+   "urdu": "رنگین پنسلیں",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "one",
+   "train_samples": 90,
+   "dictionary_url": "https://psl.org.pk/dictionary/11-arts/439-colored-pencils",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 30,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 23,
+   "gloss": "come",
+   "english": "Come",
+   "urdu": "آئیں",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "one",
+   "train_samples": 30,
+   "vocabulary_id": "come",
+   "urdu_source": "vocabulary",
+   "data_note": "Only phone recordings exist, so it was not measured on recordings the model had not seen."
+  },
+  {
+   "index": 24,
+   "gloss": "cow",
+   "english": "Cow",
+   "urdu": "گائے",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "one",
+   "train_samples": 91,
+   "dictionary_url": "https://psl.org.pk/dictionary/51-mammals/2857-cow",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 31,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 25,
+   "gloss": "crow",
+   "english": "Crow",
+   "urdu": "کوا",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "one",
+   "train_samples": 91,
+   "dictionary_url": "https://psl.org.pk/dictionary/17-birds/742-crow",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 31,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 26,
+   "gloss": "cupboard",
+   "english": "Cupboard",
+   "urdu": "الماری",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "two",
+   "train_samples": 91,
+   "dictionary_url": "https://psl.org.pk/dictionary/16-bedroom/725-cupboard",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 31,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 27,
+   "gloss": "deer",
+   "english": "Deer",
+   "urdu": "ہرن",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "two",
+   "train_samples": 90,
+   "dictionary_url": "https://psl.org.pk/dictionary/51-mammals/2859-deer",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 30,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 28,
+   "gloss": "doctor",
+   "english": "Doctor",
+   "urdu": "ڈاکٹر",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "one",
+   "train_samples": 71,
+   "vocabulary_id": "doctor",
+   "urdu_source": "vocabulary",
+   "device_held_out": {
+    "samples": 30,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 29,
+   "gloss": "dog",
+   "english": "Dog",
+   "urdu": "کتا",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "two",
+   "train_samples": 93,
+   "dictionary_url": "https://psl.org.pk/dictionary/51-mammals/2861-dog",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 33,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 30,
+   "gloss": "donttouch",
+   "english": "Don't touch",
+   "urdu": "ہاتھ مت لگائیں",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "one",
+   "train_samples": 92,
+   "dictionary_url": "https://psl.org.pk/dictionary/65-sentences/4297-don-t-touch",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 32,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 31,
+   "gloss": "door",
+   "english": "Door",
+   "urdu": "دروازہ",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "two",
+   "train_samples": 94,
+   "dictionary_url": "https://psl.org.pk/dictionary/10-around-the-house/412-door",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 34,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 32,
+   "gloss": "elephant",
+   "english": "Elephant",
+   "urdu": "ہاتھی",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "one",
+   "train_samples": 90,
+   "dictionary_url": "https://psl.org.pk/dictionary/51-mammals/2863-elephant",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 30,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 33,
+   "gloss": "excuseme",
+   "english": "Excuse me",
+   "urdu": "معاف کیجیے",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "two",
+   "train_samples": 108,
+   "vocabulary_id": "excuse_me",
+   "dictionary_url": "https://psl.org.pk/dictionary/65-sentences/4299-excuse-me",
+   "urdu_source": "vocabulary",
+   "device_held_out": {
+    "samples": 50,
+    "top1": 0.98,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 34,
+   "gloss": "facelotion",
+   "english": "Face lotion",
+   "urdu": "فیس لوشن",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "one",
+   "train_samples": 90,
+   "dictionary_url": "https://psl.org.pk/dictionary/15-beauty/650-face-lotion",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 30,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 35,
+   "gloss": "fan",
+   "english": "Fan",
+   "urdu": "پنکھا",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "one",
+   "train_samples": 91,
+   "dictionary_url": "https://psl.org.pk/dictionary/10-around-the-house/415-fan",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 31,
+    "top1": 0.9677,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 36,
+   "gloss": "garden",
+   "english": "Garden",
+   "urdu": "باغ",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "one",
+   "train_samples": 91,
+   "dictionary_url": "https://psl.org.pk/dictionary/10-around-the-house/421-garden",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 31,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 37,
+   "gloss": "generator",
+   "english": "Generator",
+   "urdu": "جنریٹر",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "two",
+   "train_samples": 91,
+   "dictionary_url": "https://psl.org.pk/dictionary/9-appliances/292-generator",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 31,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 38,
+   "gloss": "give",
+   "english": "Give",
+   "urdu": "دینا",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "one",
+   "train_samples": 27,
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "data_note": "Only phone recordings exist, so it was not measured on recordings the model had not seen."
+  },
+  {
+   "index": 39,
+   "gloss": "goodbye",
+   "english": "Goodbye",
+   "urdu": "خدا حافظ",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "one",
+   "train_samples": 109,
+   "vocabulary_id": "goodbye",
+   "dictionary_url": "https://psl.org.pk/dictionary/65-sentences/4305-goodbye",
+   "urdu_source": "vocabulary",
+   "device_held_out": {
+    "samples": 51,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 40,
+   "gloss": "goodmorning",
+   "english": "Good morning",
+   "urdu": "صبح بخیر",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "one",
+   "train_samples": 91,
+   "dictionary_url": "https://psl.org.pk/dictionary/65-sentences/4303-good-morning",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 31,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 41,
+   "gloss": "have_a_good_day",
+   "english": "Have a good day",
+   "urdu": "آپ کا دن اچھا گزرے",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "one",
+   "train_samples": 92,
+   "dictionary_url": "https://psl.org.pk/dictionary/81-kfc/6740-have-a-good-day!",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 32,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 42,
+   "gloss": "hello",
+   "english": "Hello",
+   "urdu": "ہیلو",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "one",
+   "train_samples": 109,
+   "vocabulary_id": "hello",
+   "dictionary_url": "https://psl.org.pk/dictionary/65-sentences/4309-hello",
+   "urdu_source": "vocabulary",
+   "device_held_out": {
+    "samples": 51,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 43,
+   "gloss": "help",
+   "english": "Help",
+   "urdu": "مدد",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "two",
+   "train_samples": 72,
+   "vocabulary_id": "help",
+   "urdu_source": "vocabulary",
+   "device_held_out": {
+    "samples": 30,
+    "top1": 0.8333,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 44,
+   "gloss": "hungry",
+   "english": "Hungry",
+   "urdu": "بھوکا",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "one",
+   "train_samples": 72,
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 30,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 45,
+   "gloss": "ihaveacomplaint",
+   "english": "I have a complaint",
+   "urdu": "مجھے ایک شکایت ہے",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "one",
+   "train_samples": 93,
+   "dictionary_url": "https://psl.org.pk/dictionary/81-kfc/6741-i-have-an-complaint",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 33,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 46,
+   "gloss": "lifejacket",
+   "english": "Life jacket",
+   "urdu": "لائف جیکٹ",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "two",
+   "train_samples": 90,
+   "dictionary_url": "https://psl.org.pk/dictionary/14-beach/612-life-jacket",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 30,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 47,
+   "gloss": "mine",
+   "english": "Mine",
+   "urdu": "میرا",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "one",
+   "train_samples": 91,
+   "dictionary_url": "https://psl.org.pk/dictionary/63-pronouns/4106-mine",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 31,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 48,
+   "gloss": "mobile_phone",
+   "english": "Mobile phone",
+   "urdu": "فون",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "two",
+   "train_samples": 92,
+   "vocabulary_id": "phone",
+   "dictionary_url": "https://psl.org.pk/dictionary/9-appliances/296-mobile-phone",
+   "urdu_source": "vocabulary",
+   "device_held_out": {
+    "samples": 32,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 49,
+   "gloss": "nailcutter",
+   "english": "Nail cutter",
+   "urdu": "نیل کٹر",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "two",
+   "train_samples": 90,
+   "dictionary_url": "https://psl.org.pk/dictionary/13-bathroom/560-nail-cutter",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 30,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 50,
+   "gloss": "need",
+   "english": "Need",
+   "urdu": "ضرورت",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "two",
+   "train_samples": 74,
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 32,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 51,
+   "gloss": "peacock",
+   "english": "Peacock",
+   "urdu": "مور",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "two",
+   "train_samples": 90,
+   "dictionary_url": "https://psl.org.pk/dictionary/17-birds/761-peacock",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 30,
+    "top1": 0.9333,
+    "top5": 0.9333
+   }
+  },
+  {
+   "index": 52,
+   "gloss": "policecar",
+   "english": "Police car",
+   "urdu": "پولیس کی گاڑی",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "one",
+   "train_samples": 90,
+   "dictionary_url": "https://psl.org.pk/dictionary/70-transport/4706-police-car",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 30,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 53,
+   "gloss": "razor",
+   "english": "Razor",
+   "urdu": "استرا",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "one",
+   "train_samples": 90,
+   "dictionary_url": "https://psl.org.pk/dictionary/13-bathroom/563-razor",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 30,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 54,
+   "gloss": "shampoo",
+   "english": "Shampoo",
+   "urdu": "شیمپو",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "two",
+   "train_samples": 92,
+   "dictionary_url": "https://psl.org.pk/dictionary/13-bathroom/564-shampoo",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 32,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 55,
+   "gloss": "shower",
+   "english": "Shower",
+   "urdu": "شاور",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "one",
+   "train_samples": 91,
+   "dictionary_url": "https://psl.org.pk/dictionary/13-bathroom/565-shower",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 31,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 56,
+   "gloss": "sunglasses",
+   "english": "Sunglasses",
+   "urdu": "دھوپ کا چشمہ",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "two",
+   "train_samples": 91,
+   "dictionary_url": "https://psl.org.pk/dictionary/14-beach/623-sunglasses",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 31,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 57,
+   "gloss": "thankyou",
+   "english": "Thank you",
+   "urdu": "شکریہ",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "one",
+   "train_samples": 108,
+   "vocabulary_id": "thank_you",
+   "dictionary_url": "https://psl.org.pk/dictionary/65-sentences/4369-thank-you",
+   "urdu_source": "vocabulary",
+   "device_held_out": {
+    "samples": 50,
+    "top1": 0.94,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 58,
+   "gloss": "tissue",
+   "english": "Tissue paper",
+   "urdu": "ٹشو پیپر",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "one",
+   "train_samples": 90,
+   "dictionary_url": "https://psl.org.pk/dictionary/13-bathroom/569-tissue-paper",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 30,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 59,
+   "gloss": "toothbrush",
+   "english": "Toothbrush",
+   "urdu": "ٹوتھ برش",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "one",
+   "train_samples": 63,
+   "dictionary_url": "https://psl.org.pk/dictionary/13-bathroom/572-toothbrush",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "data_note": "The phone recordings of this sign were labelled as 'toothpaste'; it was learned from computer-camera recordings only and not measured on unseen ones."
+  },
+  {
+   "index": 60,
+   "gloss": "toothpaste",
+   "english": "Toothpaste",
+   "urdu": "ٹوتھ پیسٹ",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "two",
+   "train_samples": 63,
+   "dictionary_url": "https://psl.org.pk/dictionary/13-bathroom/573-toothpaste",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "data_note": "The phone recordings of this sign were labelled as 'toothbrush'; it was learned from computer-camera recordings only and not measured on unseen ones."
+  },
+  {
+   "index": 61,
+   "gloss": "umbrella",
+   "english": "Umbrella",
+   "urdu": "چھتری",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "two",
+   "train_samples": 90,
+   "dictionary_url": "https://psl.org.pk/dictionary/14-beach/628-umbrella",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 30,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 62,
+   "gloss": "want",
+   "english": "Want",
+   "urdu": "چاہنا",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "one",
+   "train_samples": 28,
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "data_note": "Only phone recordings exist, so it was not measured on recordings the model had not seen."
+  },
+  {
+   "index": 63,
+   "gloss": "water",
+   "english": "Water",
+   "urdu": "پانی",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "one",
+   "train_samples": 108,
+   "vocabulary_id": "water",
+   "dictionary_url": "https://psl.org.pk/dictionary/31-drinks/7070-water",
+   "urdu_source": "vocabulary",
+   "device_held_out": {
+    "samples": 50,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 64,
+   "gloss": "we",
+   "english": "We",
+   "urdu": "ہم",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "one",
+   "train_samples": 92,
+   "dictionary_url": "https://psl.org.pk/dictionary/63-pronouns/4123-we",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 32,
+    "top1": 0.9688,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 65,
+   "gloss": "welldone",
+   "english": "Well done",
+   "urdu": "شاباش",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "one",
+   "train_samples": 92,
+   "dictionary_url": "https://psl.org.pk/dictionary/65-sentences/4381-well-done!",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 32,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 66,
+   "gloss": "where",
+   "english": "Where",
+   "urdu": "کہاں؟",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "one",
+   "train_samples": 91,
+   "vocabulary_id": "where",
+   "urdu_source": "vocabulary",
+   "device_held_out": {
+    "samples": 51,
+    "top1": 0.8039,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 67,
+   "gloss": "who",
+   "english": "Who",
+   "urdu": "کون؟",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "one",
+   "train_samples": 72,
+   "vocabulary_id": "who",
+   "urdu_source": "vocabulary",
+   "device_held_out": {
+    "samples": 30,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 68,
+   "gloss": "you",
+   "english": "You",
+   "urdu": "آپ",
+   "tier": "B",
+   "validated_by_deaf_signers": false,
+   "hands": "one",
+   "train_samples": 92,
+   "dictionary_url": "https://psl.org.pk/dictionary/63-pronouns/4124-you",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
+   "device_held_out": {
+    "samples": 32,
+    "top1": 1.0,
+    "top5": 1.0
+   }
+  },
+  {
+   "index": 69,
+   "gloss": "_unknown",
+   "english": "Not a sign",
+   "urdu": "",
+   "tier": null,
+   "validated_by_deaf_signers": false,
+   "hands": "one",
+   "train_samples": 19,
+   "device_held_out": {
+    "samples": 9,
+    "top1": 0.4444,
+    "top5": 0.5556
+   }
+  }
+ ],
+ "shipped": {
+  "temperature": 0.55,
+  "mirror_average": true,
+  "validation": {
+   "samples": 669,
+   "top1": 0.9955,
+   "top5": 1.0,
+   "one_handed": {
+    "samples": 422,
+    "top1": 0.9976,
+    "top5": 1.0
+   },
+   "two_handed": {
+    "samples": 245,
+    "top1": 1.0,
+    "top5": 1.0
+   },
+   "expected_calibration_error": 0.0048,
+   "reliability": [
+    {
+     "from": 0.5,
+     "samples": 1,
+     "confidence": 0.5183,
+     "accuracy": 1.0
+    },
+    {
+     "from": 0.6,
+     "samples": 1,
+     "confidence": 0.6703,
+     "accuracy": 0.0
+    },
+    {
+     "from": 0.7,
+     "samples": 1,
+     "confidence": 0.7742,
+     "accuracy": 0.0
+    },
+    {
+     "from": 0.8,
+     "samples": 2,
+     "confidence": 0.8561,
+     "accuracy": 0.5
+    },
+    {
+     "from": 0.9,
+     "samples": 664,
+     "confidence": 0.9992,
+     "accuracy": 1.0
+    }
+   ],
+   "speak_limits": [
+    {
+     "at_least": 0.5,
+     "answered_share": 1.0,
+     "wrong_share_of_answered": 0.0045
+    },
+    {
+     "at_least": 0.6,
+     "answered_share": 0.9985,
+     "wrong_share_of_answered": 0.0045
+    },
+    {
+     "at_least": 0.7,
+     "answered_share": 0.997,
+     "wrong_share_of_answered": 0.003
+    },
+    {
+     "at_least": 0.8,
+     "answered_share": 0.9955,
+     "wrong_share_of_answered": 0.0015
+    },
+    {
+     "at_least": 0.9,
+     "answered_share": 0.9925,
+     "wrong_share_of_answered": 0.0
+    }
+   ],
+   "confusions": [
+    {
+     "sign": "elephant",
+     "taken_for": "hello",
+     "times": 1
+    },
+    {
+     "sign": "_unknown",
+     "taken_for": "absolutely",
+     "times": 1
+    },
+    {
+     "sign": "_unknown",
+     "taken_for": "hello",
+     "times": 1
+    }
+   ],
+   "per_class": {
+    "absolutely": {
+     "samples": 10,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "aircrash": {
+     "samples": 10,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "airplane": {
+     "samples": 10,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "all": {
+     "samples": 10,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "also": {
+     "samples": 10,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "arrival": {
+     "samples": 10,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "assalam_o_alaikum": {
+     "samples": 12,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "atm": {
+     "samples": 10,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "bald": {
+     "samples": 10,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "beach": {
+     "samples": 10,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "beak": {
+     "samples": 10,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "bear": {
+     "samples": 10,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "beard": {
+     "samples": 10,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "bed": {
+     "samples": 10,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "bench": {
+     "samples": 10,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "bicycle": {
+     "samples": 10,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "both": {
+     "samples": 10,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "bridge": {
+     "samples": 10,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "bring": {
+     "samples": 12,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "bulb": {
+     "samples": 10,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "cartoon": {
+     "samples": 10,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "chimpanzee": {
+     "samples": 10,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "color_pencils": {
+     "samples": 10,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "come": {
+     "samples": 3,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "cow": {
+     "samples": 10,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "crow": {
+     "samples": 10,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "cupboard": {
+     "samples": 10,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "deer": {
+     "samples": 10,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "doctor": {
+     "samples": 8,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "dog": {
+     "samples": 10,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "donttouch": {
+     "samples": 10,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "door": {
+     "samples": 10,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "elephant": {
+     "samples": 10,
+     "top1": 0.9,
+     "top5": 1.0
+    },
+    "excuseme": {
+     "samples": 12,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "facelotion": {
+     "samples": 10,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "fan": {
+     "samples": 10,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "garden": {
+     "samples": 10,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "generator": {
+     "samples": 10,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "give": {
+     "samples": 3,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "goodbye": {
+     "samples": 12,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "goodmorning": {
+     "samples": 10,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "have_a_good_day": {
+     "samples": 10,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "hello": {
+     "samples": 12,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "help": {
+     "samples": 8,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "hungry": {
+     "samples": 8,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "ihaveacomplaint": {
+     "samples": 10,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "lifejacket": {
+     "samples": 10,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "mine": {
+     "samples": 10,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "mobile_phone": {
+     "samples": 10,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "nailcutter": {
+     "samples": 10,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "need": {
+     "samples": 8,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "peacock": {
+     "samples": 10,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "policecar": {
+     "samples": 10,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "razor": {
+     "samples": 10,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "shampoo": {
+     "samples": 10,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "shower": {
+     "samples": 10,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "sunglasses": {
+     "samples": 10,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "thankyou": {
+     "samples": 12,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "tissue": {
+     "samples": 10,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "toothbrush": {
+     "samples": 7,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "toothpaste": {
+     "samples": 7,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "umbrella": {
+     "samples": 10,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "want": {
+     "samples": 3,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "water": {
+     "samples": 12,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "we": {
+     "samples": 10,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "welldone": {
+     "samples": 10,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "where": {
+     "samples": 10,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "who": {
+     "samples": 8,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "you": {
+     "samples": 10,
+     "top1": 1.0,
+     "top5": 1.0
+    },
+    "_unknown": {
+     "samples": 2,
+     "top1": 0.0,
+     "top5": 1.0
+    }
+   }
+  },
+  "export": {
+   "keras_top1": 0.9955,
+   "checks": {
+    "float32": {
+     "bytes": 6632044,
+     "top1": 0.9955,
+     "same_top1_as_keras": 1.0,
+     "max_probability_difference": 0.0,
+     "ms_per_sign_python_cpu": 2.25,
+     "io": {
+      "input": [
+       "serve_inputs:0",
+       [
+        32,
+        543,
+        3
+       ]
+      ],
+      "output": [
+       "StatefulPartitionedCall:0",
+       [
+        70
+       ]
+      ]
+     }
+    },
+    "float16": {
+     "bytes": 3356956,
+     "top1": 0.9955,
+     "same_top1_as_keras": 1.0,
+     "max_probability_difference": 0.00032,
+     "ms_per_sign_python_cpu": 2.2,
+     "io": {
+      "input": [
+       "serve_inputs:0",
+       [
+        32,
+        543,
+        3
+       ]
+      ],
+      "output": [
+       "StatefulPartitionedCall:0",
+       [
+        70
+       ]
+      ]
+     }
+    },
+    "int8": {
+     "bytes": 1854048,
+     "top1": 0.9955,
+     "same_top1_as_keras": 1.0,
+     "max_probability_difference": 0.01693,
+     "ms_per_sign_python_cpu": 1.39,
+     "io": {
+      "input": [
+       "serve_inputs:0",
+       [
+        32,
+        543,
+        3
+       ]
+      ],
+      "output": [
+       "StatefulPartitionedCall:0",
+       [
+        70
+       ]
+      ]
+     }
+    }
+   },
+   "chosen": "int8",
+   "bytes": 1854048,
+   "sha256": "72c71f80f17f57fe84717f6fd593d8c776a1ac42c79a270df9e631bc8efcab0e"
+  },
+  "tiers": {
+   "A": 0,
+   "B": 69,
+   "rule": "Tier A needs a signer-independent test (CLAUDE.md 1, 8.3). SignSpeak publishes no signer ids, so no sign can pass that test with this data: every sign is Tier B (\"Suggested — please confirm\")."
+  }
+ }
+}
