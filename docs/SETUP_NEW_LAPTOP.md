@@ -1,11 +1,15 @@
-# Set up SignBridge on another laptop (Windows)
+# Set up SignMate on another laptop (Windows)
 
-Everything SignBridge needs is on GitHub, so any laptop can run and edit it. Nothing has to be copied
+SignMate was called SignBridge until 2026-11-21; some file names (`start_signbridge.bat`) keep the old name.
+
+Everything SignMate needs is on GitHub, so any laptop can run and edit it. Nothing has to be copied
 from your other computer. Total time: about 20-30 minutes, most of it downloads.
 
-**Which address?** The repository is moving to `signmate-pk/signmate-pk.github.io`
-([DOMAIN.md](DOMAIN.md)). Until you have done that move, use the old address
-`shaafrajput06-tech/SignBridge` in step 2. After the move, both work (GitHub forwards the old one).
+**Which address?** The repository is `signmate-pk/signmate-pk.github.io` (moved there on 2026-11-21,
+[DOMAIN.md](DOMAIN.md)); the old address `shaafrajput06-tech/SignBridge` still forwards to it.
+
+**Got a zip from Claude instead?** Unzip it, open the `SignMate` folder inside, and skip step 2: the zip
+already holds the code, its full git history and the downloaded model files.
 
 ## 1. Install three programs (once per laptop)
 
@@ -34,13 +38,11 @@ cd SignBridge
 git checkout v3/master
 ```
 
-(Before the move, use `https://github.com/shaafrajput06-tech/SignBridge.git` in the second line.)
-
 The first time you `git push` from this laptop, a GitHub sign-in window opens: sign in as
 `shaafrajput06-tech`.
 
-`v3/master` is the branch where the v3 work happens. `main` is what the live website shows; it only
-changes when you merge the v3 pull request at the end (Stage 7).
+`v3/master` is the branch where the work happens. `main` is what the live website shows; changes reach
+it through pull requests from `v3/master`.
 
 ## 3. Set everything up with one double-click
 
