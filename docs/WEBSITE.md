@@ -2,9 +2,8 @@
 
 **Address:** <https://signmate-pk.github.io/> (set in `shared_data/site.json`).
 
-Until the owner finishes the move in [DOMAIN.md](DOMAIN.md), the site is still served at the old
-address <https://shaafrajput06-tech.github.io/SignBridge/>; after the move, that address forwards to the
-new one.
+This is the only address. The old one (`https://shaafrajput06-tech.github.io/SignBridge/`) was switched
+off on 2026-11-21 and shows GitHub's 404 page ([DOMAIN.md](DOMAIN.md)).
 
 Open it on any phone, tablet or computer with a camera, in Chrome, Edge or Safari. It is served over
 HTTPS, so browsers allow the camera. The website is built and published automatically by

@@ -19,8 +19,8 @@ SignMate, 2026-11-21). `main` deploys the live site on every push.
 ## Where things live
 - GitHub: `signmate-pk/signmate-pk.github.io` (organisation `signmate-pk`, owned by
   `shaafrajput06-tech`; moved from `shaafrajput06-tech/SignBridge` on 2026-11-21, GitHub forwards the
-  old repository links). Live site: <https://signmate-pk.github.io/> (`shared_data/site.json`); the old
-  address forwards there (`tools/old_address_redirect/`, `docs/DOMAIN.md`).
+  old repository links). Live site: <https://signmate-pk.github.io/> (`shared_data/site.json`), the only one:
+  the old address was switched off on the owner's request (`tools/old_address_cleanup/`, `docs/DOMAIN.md`).
 - Name: **SignMate** (was SignBridge until 2026-11-21). Internal ids keep the old name on purpose:
   bundle id `signbridge-psl`, browser storage keys, Python packages, baseline release names.
 - Any laptop: clone, `git checkout v3/master`, double-click `setup_windows.bat`

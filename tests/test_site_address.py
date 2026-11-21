@@ -23,7 +23,7 @@ MAY_NAME_OLD_ADDRESS = {
     "docs/CONTEXT.md",
     "README.md",
     "docs/prompts/master-v3.md",
-    "tools/old_address_redirect/README.md",
+    "tools/old_address_cleanup/README.md",
     "tools/baseline_v1.py",
     "tests/test_site_address.py",
 }
@@ -62,14 +62,15 @@ class SiteConfigTests(unittest.TestCase):
                 offenders.append(relative)
         self.assertEqual(offenders, [], "these files still name the old website address; use shared_data/site.json")
 
-    def test_forwarding_pages_send_visitors_to_the_current_address(self):
-        folder = ROOT / "tools" / "old_address_redirect"
-        for name in ("SignBridge/index.html", "404.html"):
-            html = (folder / name).read_text(encoding="utf-8")
-            targets = set(re.findall(r'NEW_SITE = "([^"]+)"', html))
-            self.assertEqual(targets, {SITE["site_url"]}, name)
-            for url in re.findall(r'https://[a-z0-9.-]+\.github\.io/[^"\s<]*', html):
-                self.assertTrue(url.startswith(SITE["site_url"]), f"{name}: {url}")
+    def test_old_address_is_switched_off_and_only_clears_old_offline_copies(self):
+        # The owner asked on 2026-11-21 for the old website to disappear: no pages, no forwarding.
+        folder = ROOT / "tools" / "old_address_cleanup"
+        files = {path.relative_to(folder).as_posix() for path in folder.rglob("*") if path.is_file()}
+        self.assertEqual(files, {".nojekyll", "README.md", "SignBridge/sw.js"})
+        worker = (folder / "SignBridge" / "sw.js").read_text(encoding="utf-8")
+        self.assertIn('startsWith("signbridge-")', worker)  # deletes only the old site's caches
+        self.assertIn("registration.unregister()", worker)
+        self.assertNotIn("fetch(", worker)  # serves nothing, sends nothing
 
 
 if __name__ == "__main__":
