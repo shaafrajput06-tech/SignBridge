@@ -67,23 +67,27 @@ jobs:
         run: |
           IND=""; [ -f data/web_learned/v1/manifest.json ] && IND="--independent data/web_learned/v1"
           python -m tools.psl_train --data data/psl-signspeak-words/signspeak.npz --out out/psl --epochs "${{ github.event.inputs.epochs || '100' }}" $IND
-      - name: Push the bundle to a review branch (never to v3/master or main)
+      - name: Push the bundle alone to a review branch (no workflows; never v3/master or main)
         run: |
           set -e
           BRANCH="bundles/psl-run-${{ github.run_number }}"
-          mkdir -p models/psl reports
-          cp out/psl/manifest.json out/psl/psl_v3.tflite models/psl/
-          cp out/psl/parity_cases.json tests/golden/psl_parity_cases.json
-          cp out/psl/report.md reports/psl_v3_run.md
-          cp out/psl/measurements.json reports/psl_v3_measurements.json
-          cp data/psl-signspeak-words/signspeak_summary.json reports/psl_v3_signspeak_summary.json
+          mkdir -p /tmp/pick/models/psl /tmp/pick/tests/golden /tmp/pick/reports
+          cp out/psl/manifest.json out/psl/psl_v3.tflite /tmp/pick/models/psl/
+          cp out/psl/parity_cases.json /tmp/pick/tests/golden/psl_parity_cases.json
+          cp out/psl/report.md /tmp/pick/reports/psl_v3_run.md
+          cp out/psl/measurements.json /tmp/pick/reports/psl_v3_measurements.json
+          cp data/psl-signspeak-words/signspeak_summary.json /tmp/pick/reports/psl_v3_signspeak_summary.json
+          cp -r out /tmp/out-keep
           git config user.name "signbridge-psl-train"
           git config user.email "actions@users.noreply.github.com"
-          git checkout -b "$BRANCH"
-          git add models/psl tests/golden/psl_parity_cases.json reports/psl_v3_run.md reports/psl_v3_measurements.json reports/psl_v3_signspeak_summary.json
-          git commit -m "PSL bundle from training run ${{ github.run_id }} (commit ${{ github.sha }})"
+          git checkout --orphan "$BRANCH"
+          git rm -rf -q --cached .
+          find . -mindepth 1 -maxdepth 1 ! -name .git ! -name data -exec rm -rf {} +
+          cp -r /tmp/pick/. .
+          git add models tests reports
+          git commit -q -m "PSL bundle from training run ${{ github.run_id }} (commit ${{ github.sha }})"
           git push origin "$BRANCH"
-          echo "Pushed $BRANCH for review."
+          cp -r /tmp/out-keep out
       - name: Upload the bundle
         if: always()
         uses: actions/upload-artifact@v4
