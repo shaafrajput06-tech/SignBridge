@@ -135,8 +135,12 @@ jobs:
           out = {}
           for preset in ("desktop", "mobile"):
               d = json.load(open(f"ci-results/lighthouse-{preset}.json"))
-              out[preset] = {k: round(v["score"] * 100) for k, v in d["categories"].items()}
-              out[preset]["lcp_ms"] = round(d["audits"]["largest-contentful-paint"]["numericValue"])
+              out[preset] = {k: (None if v["score"] is None else round(v["score"] * 100)) for k, v in d["categories"].items()}
+              lcp = d["audits"]["largest-contentful-paint"].get("numericValue")
+              out[preset]["lcp_ms"] = None if lcp is None else round(lcp)
+              out[preset]["fcp_ms"] = round(d["audits"]["first-contentful-paint"].get("numericValue") or -1)
+              out[preset]["runtime_error"] = (d.get("runtimeError") or {}).get("code")
+              out[preset]["lcp_error"] = d["audits"]["largest-contentful-paint"].get("errorMessage")
               out[preset]["lighthouse"] = d["lighthouseVersion"]
               failing = []
               for cat in ("accessibility", "best-practices"):
