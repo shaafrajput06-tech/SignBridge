@@ -90,15 +90,15 @@ try {
   console.log(`ASL mode in the app FAILED: ${result.appError}`);
 }
 
-// 3. The PSL screen (the default): capture v2 tracks both hands, PSL recognition says "Not installed yet",
-//    and the Phase 0 gesture demo is off until the person turns it on.
+// 3. The PSL screen (the default): capture v2 tracks both hands, PSL suggestions are on when the bundle
+//    loads, and the Phase 0 gesture demo is off until the person turns it on.
 try {
   const context = await browser.newContext({ permissions: ["camera"] });
   const page = await context.newPage();
   const errors = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto(base);
-  const demoSwitch = page.locator(".psl-status input[type=checkbox]").first();
+  const demoSwitch = page.locator(".psl-status label", { hasText: "Gesture demo" }).locator("input[type=checkbox]");
   const demoOffAtStart = !(await demoSwitch.isChecked());
   await page.getByRole("button", { name: /Enable camera/ }).first().click();
   const consent = page.locator(".help-modal input[type=checkbox]");
