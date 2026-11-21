@@ -2,6 +2,7 @@ import React, { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useStat
 import { classifyGesture, drawLandmarks, normalizeLandmarks } from "./vision.js";
 // MediaPipe (capture_v2) and ASL mode load only when needed, so the first visit stays light (Stage 5).
 const AslMode = lazy(() => import("./AslMode.jsx"));
+const Dictionary = lazy(() => import("./Dictionary.jsx"));
 const HAND_COLOURS = { left: "#f0c876", right: "#83d7b8" };
 import PslSuggestion from "./PslSuggestion.jsx";
 import SignClip, { useClips } from "./SignClip.jsx";
@@ -533,7 +534,7 @@ export default function App() {
     {!exhibition && <header className="topbar">
       <a className="brand" href="#home" onClick={(event) => { event.preventDefault(); setView("translate"); }} aria-label="SignBridge home"><span className="brand-mark">S</span><span><strong>SignBridge</strong><small>Words that connect</small></span></a>
       <nav className="main-nav" aria-label="Main navigation">
-        {[["translate", "Translate"], ["vocabulary", "Vocabulary"], ...(HAS_SERVER ? [["training", "Teach a sign · optional"]] : []), ["report", "Model report"]].map(([id, label]) => <button key={id} className={view === id ? "nav-link active" : "nav-link"} onClick={() => setView(id)}>{label}</button>)}
+        {[["translate", "Translate"], ["vocabulary", "Vocabulary"], ["dictionary", "Dictionary"], ...(HAS_SERVER ? [["training", "Teach a sign · optional"]] : []), ["report", "Model report"]].map(([id, label]) => <button key={id} className={view === id ? "nav-link active" : "nav-link"} onClick={() => setView(id)}>{label}</button>)}
       </nav>
       <div className="top-actions">
         <div className="sign-language-switch" role="group" aria-label="Sign language">
@@ -617,6 +618,7 @@ export default function App() {
         {!exhibition && <section className="feature-row"><article><span className="feature-icon mint">◌</span><div><b>Both hands, body and face</b><small>Tracked on this device, nothing recorded</small></div></article><article><span className="feature-icon gold">Aa</span><div><b>English + Urdu</b><small>Urdu script and Roman fallback</small></div></article><article><span className="feature-icon violet">♪</span><div><b>Speech support</b><small>Uses voices available on your device</small></div></article><button className="button button-outline" onClick={() => { if (!document.fullscreenElement) document.documentElement.requestFullscreen?.(); setExhibition(true); }}>⛶ Exhibition view</button></section>}
       </>}
 
+      {view === "dictionary" && !exhibition && <Suspense fallback={<p role="status">Loading the dictionary…</p>}><Dictionary pslClasses={pslBundle.manifest?.classes || []} /></Suspense>}
       {view === "vocabulary" && !exhibition && <section className="content-section">
         <div className="section-intro"><div><span className="section-kicker">{vocabulary.length} PHRASES · {categories.length - 1} CATEGORIES</span><h1>Vocabulary</h1><p>Every phrase in English and Urdu, with speech. Tap a phrase to hear it{clips.byWord.size ? ` and, for the ${clips.byWord.size} phrases marked ▶, to see a real PSL signer from a community dictionary` : ""}. {pslVocabulary.size ? `${pslVocabulary.size} phrases are also suggested by the PSL camera.` : ""}</p></div><button className="button button-outline" onClick={() => setView("translate")}>Back to translator</button></div>
         <div className="vocab-tools"><label className="search-box"><span>⌕</span><input value={search} onChange={(event) => { setSearch(event.target.value); setPage(0); }} placeholder="Search English, Urdu, Roman Urdu…" aria-label="Search vocabulary" /></label><select value={category} onChange={(event) => { setCategory(event.target.value); setPage(0); }} aria-label="Filter by category">{categories.map((name) => <option key={name}>{name}</option>)}</select><span className="result-count">{filtered.length} phrases</span></div>

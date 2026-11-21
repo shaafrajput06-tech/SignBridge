@@ -396,3 +396,15 @@ h1, h2, h3, p { margin-top: 0; }
 .camera-check b { color: var(--gold); }
 .camera-check.ok { border-color: rgba(131, 215, 184, .45); }
 .camera-check.ok b { color: var(--mint); }
+
+/* PSL dictionary page */
+.dictionary-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 16px; align-items: start; }
+@media (max-width: 860px) { .dictionary-layout { grid-template-columns: 1fr; } }
+.dictionary-list, .dictionary-view { padding: 16px; }
+.dictionary-view { position: sticky; top: 16px; }
+.dictionary-search { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--panel-border); background: var(--panel-2); color: var(--text); font: inherit; font-size: 16px; }
+.dictionary-count { color: var(--muted); font-size: 12px; margin: 8px 0; }
+.dictionary-words { display: flex; flex-wrap: wrap; gap: 6px; max-height: 60vh; overflow: auto; }
+.dictionary-word { border: 1px solid var(--panel-border); background: transparent; color: var(--text); border-radius: 999px; padding: 6px 11px; font: inherit; font-size: 13px; cursor: pointer; }
+.dictionary-word.active, .dictionary-word:hover { border-color: var(--mint); color: var(--mint); }
+.dictionary-view h2 { margin: 0 0 8px; text-transform: capitalize; }

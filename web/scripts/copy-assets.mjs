@@ -80,12 +80,25 @@ for (const item of downloads) {
   }
 }
 
+// The SLT PSL dictionary's GitHub releases (ledger id psl-slt-dictionary, CC BY 4.0): asset name -> URL.
+// Read once per build; uses GITHUB_TOKEN when the build has one (GitHub's limit is 60 calls an hour without).
+let releaseAssets = null;
+async function sltReleaseAssets(repository) {
+  if (releaseAssets) return releaseAssets;
+  const headers = { Accept: "application/vnd.github+json", ...(process.env.GITHUB_TOKEN ? { Authorization: `Bearer ${process.env.GITHUB_TOKEN}` } : {}) };
+  const map = new Map();
+  const response = await fetch(`https://api.github.com/repos/${repository}/releases?per_page=100`, { headers, signal: AbortSignal.timeout(60_000) });
+  if (!response.ok) throw new Error(`GitHub releases: HTTP ${response.status}`);
+  for (const release of await response.json()) for (const asset of release.assets || []) map.set(asset.name, { url: asset.browser_download_url, bytes: asset.size });
+  releaseAssets = map;
+  return map;
+}
+
 // PSL dictionary videos ("how it is signed", shared_data/psl_clips.json): from the restored baseline when it
 // has them, otherwise from the dataset's GitHub releases; each one must match its pinned size and SHA-256.
 async function ensureClips() {
   const clips = JSON.parse(await readFile(path.join(project, "shared_data", "psl_clips.json"), "utf8"));
   const kept = [];
-  let releaseAssets = null;
   for (const clip of clips.clips) {
     const target = path.join(publicDir, ...clip.file.split("/"));
     const fromBaseline = path.join(project, "baseline", "v1-site", ...clip.file.split("/"));
@@ -98,22 +111,14 @@ async function ensureClips() {
     }
     if (!bytes) {
       try {
-        releaseAssets ??= await (async () => {
-          const map = new Map();
-          const response = await fetch(`https://api.github.com/repos/${clips.release_repository}/releases?per_page=100`, { signal: AbortSignal.timeout(60_000) });
-          if (!response.ok) throw new Error(`HTTP ${response.status}`);
-          for (const release of await response.json()) for (const asset of release.assets || []) map.set(asset.name, asset.browser_download_url);
-          return map;
-        })();
-        const url = releaseAssets.get(path.basename(clip.file));
-        if (!url) throw new Error("not in the dataset's releases");
-        const response = await fetch(url, { signal: AbortSignal.timeout(120_000) });
+        const asset = (await sltReleaseAssets(clips.release_repository)).get(path.basename(clip.file));
+        if (!asset) throw new Error("not in the dataset's releases");
+        const response = await fetch(asset.url, { signal: AbortSignal.timeout(120_000) });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const data = Buffer.from(await response.arrayBuffer());
         if (data.length !== clip.bytes || sha256(data) !== clip.sha256) throw new Error("the download is not the pinned file");
         bytes = data;
       } catch (error) {
-        releaseAssets ??= new Map();
         console.warn(`PSL video ${clip.file} not available (${error.message}); that word shows no video.`);
         continue;
       }
@@ -124,8 +129,31 @@ async function ensureClips() {
   }
   await writeFile(path.join(publicDir, "psl_clips.json"), JSON.stringify({ attribution: clips.attribution, ledger_id: clips.ledger_id, clips: kept }, null, 1));
   console.log(`PSL dictionary videos: ${kept.length} of ${clips.clips.length}.`);
+  return clips;
 }
-await ensureClips();
+const clipList = await ensureClips();
+
+// The full dictionary page: every SLT PSL dictionary sign (Stage 1 learned 785 of them as Tier B). Videos are
+// not copied: the page plays them from the dataset's own GitHub release when the visitor presses play.
+async function writeDictionary() {
+  const prefix = "pk-hfad-1_";
+  let entries = [];
+  let note = "";
+  try {
+    for (const [name, asset] of await sltReleaseAssets(clipList.release_repository)) {
+      if (name.startsWith(prefix) && name.endsWith(".mp4")) entries.push({ label: name.slice(prefix.length, -4), url: asset.url, bytes: asset.bytes });
+    }
+    entries.sort((a, b) => a.label.localeCompare(b.label));
+  } catch (error) {
+    note = `The dictionary list could not be read at build time (${error.message}).`;
+    console.warn(note);
+  }
+  const offline = Object.fromEntries(clipList.clips.map((clip) => [clip.label, clip.file]));
+  for (const entry of entries) if (offline[entry.label]) entry.file = offline[entry.label];
+  await writeFile(path.join(publicDir, "psl_dictionary.json"), JSON.stringify({ ledger_id: clipList.ledger_id, attribution: clipList.attribution, release_repository: clipList.release_repository, built: new Date().toISOString().slice(0, 10), note, entries }));
+  console.log(`PSL dictionary page: ${entries.length} signs.`);
+}
+await writeDictionary();
 
 const litert = path.join(web, "node_modules", "@litertjs", "core", "wasm");
 if (await exists(litert)) {
