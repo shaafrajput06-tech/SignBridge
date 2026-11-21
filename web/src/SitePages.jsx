@@ -85,7 +85,7 @@ export function WhatsNew() {
   const pages = usePages();
   if (!pages) return <p role="status">Loading…</p>;
   return <>
-    <div className="section-intro"><div><span className="section-kicker">SIGNBRIDGE 3.0</span><h1>What's new</h1><p>What changed since the previous version of this website.</p></div></div>
+    <div className="section-intro"><div><span className="section-kicker">SIGNMATE 3.0</span><h1>What's new</h1><p>What changed since the previous version of this website.</p></div></div>
     {(pages.whats_new || []).map((section) => <div className="panel report-body" key={section.title}><h2>{section.title}</h2><ul className="report-facts">{section.items.map((item) => <li key={item}>{item}</li>)}</ul></div>)}
   </>;
 }

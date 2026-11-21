@@ -905,7 +905,7 @@
   "outside_vocabulary": 760
  },
  "performance": {
-  "about": "Speed and page measurements for SignBridge 3.0. Each row names where and when it was measured; nothing is estimated.",
+  "about": "Speed and page measurements for SignMate (formerly SignBridge) 3.0. Each row names where and when it was measured; nothing is estimated.",
   "note": "The owner's own laptop and phone were not measured with this version yet (docs/HOW_TO_MEASURE_SPEED.md).",
   "measurements": [
    {
@@ -960,7 +960,7 @@
    },
    {
     "id": "signbridge-psl-model-v3",
-    "name": "SignBridge PSL recogniser v3 (weights trained by this project on SignSpeak)",
+    "name": "SignMate (formerly SignBridge) PSL recogniser v3 (weights trained by this project on SignSpeak)",
     "licence": "project-owned weights, trained on psl-signspeak-words (Apache-2.0)",
     "attribution": "PSL recogniser trained on the Dynamic Word-Level Pakistan Sign Language Dataset by Mohib Ullah Khan Sherwani and the SignSpeak team, COMSATS University Islamabad, Abbottabad Campus (Apache License 2.0, doi:10.57967/hf/8164).",
     "source_url": "project:tools/psl_train",
@@ -1032,7 +1032,7 @@
    },
    {
     "id": "signbridge-vocabulary",
-    "name": "SignBridge vocabulary files (project-authored)",
+    "name": "SignMate (formerly SignBridge) vocabulary files (project-authored)",
     "licence": "project-owned",
     "attribution": "",
     "source_url": "project:vocabulary.json",

@@ -517,7 +517,7 @@ assets:
   # ------------------------------------------------------------------ own project data
 
   - id: signbridge-vocabulary
-    name: SignBridge vocabulary files (project-authored)
+    name: SignMate (formerly SignBridge) vocabulary files (project-authored)
     kind: own_data
     sign_language: PSL
     label_scope: psl
@@ -559,7 +559,7 @@ assets:
     notes: "Local only (git-ignored). Each training path must still call training_use_refusal() per recording."
 
   - id: signbridge-psl-model-v3
-    name: "SignBridge PSL recogniser v3 (weights trained by this project on SignSpeak)"
+    name: "SignMate (formerly SignBridge) PSL recogniser v3 (weights trained by this project on SignSpeak)"
     kind: model_weights
     sign_language: PSL
     label_scope: psl

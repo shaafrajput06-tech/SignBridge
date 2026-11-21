@@ -1,5 +1,5 @@
 {
- "about": "Speed and page measurements for SignBridge 3.0. Each row names where and when it was measured; nothing is estimated.",
+ "about": "Speed and page measurements for SignMate (formerly SignBridge) 3.0. Each row names where and when it was measured; nothing is estimated.",
  "note": "The owner's own laptop and phone were not measured with this version yet (docs/HOW_TO_MEASURE_SPEED.md).",
  "measurements": [
   {
