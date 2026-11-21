@@ -1,7 +1,7 @@
 # Forwarding page for the old SignBridge address
 
 SignBridge moved from `https://shaafrajput06-tech.github.io/SignBridge/` to
-`https://signbridge-pk.github.io/` (see `docs/DOMAIN.md` in the SignBridge repository).
+`https://signmate-pk.github.io/` (see `docs/DOMAIN.md` in the SignBridge repository).
 
 GitHub Pages does not forward a project site after its repository moves to another account, so these
 files do it. They belong in a repository called **`shaafrajput06-tech.github.io`** on the owner's own

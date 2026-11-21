@@ -1,4 +1,4 @@
-# SignBridge exhibition kit (master-v3 Stage 6)
+# SignMate exhibition kit (master-v3 Stage 6)
 
 Everything here matches what the app really does on 2026-11-21. The numbers come from the project's
 reports: the "How well it works" page shows the same numbers, each with its dataset, test and date.
@@ -6,12 +6,12 @@ reports: the "How well it works" page shows the same numbers, each with its data
 ## 1. Two-minute pitch
 
 > In Pakistan, most hearing people don't know Pakistan Sign Language, and most Deaf people meet that wall
-> every day: at the doctor, at a shop counter, at school. SignBridge is a translator that runs **on your own
+> every day: at the doctor, at a shop counter, at school. SignMate is a translator that runs **on your own
 > phone or laptop**. The camera follows **both hands, the shoulders and the face**, entirely on the
 > device; no video leaves it.
 >
-> You sign a PSL word, lower your hands, and SignBridge suggests the word in English and Urdu. You confirm
-> it, and it speaks. Confirmed words build a sentence. The hearing person types a reply, and SignBridge
+> You sign a PSL word, lower your hands, and SignMate suggests the word in English and Urdu. You confirm
+> it, and it speaks. Confirmed words build a sentence. The hearing person types a reply, and SignMate
 > shows it in large text and plays the PSL dictionary video for each word it knows. One tap speaks an
 > emergency phrase.
 >
@@ -20,7 +20,7 @@ reports: the "How well it works" page shows the same numbers, each with its data
 > signers and approval by Deaf signers. Every dataset and video is licensed and credited. A separate ASL
 > mode exists, clearly labelled, and is never mixed with PSL.
 >
-> SignBridge works offline after one visit, in Urdu and English, and it learns from your own confirmations
+> SignMate works offline after one visit, in Urdu and English, and it learns from your own confirmations
 > without uploading anything.
 
 ## 2. Five-minute technical walkthrough
@@ -70,7 +70,7 @@ reply (typed or spoken) ──► known words ──► PSL dictionary videos, i
   Express Tribune, 2024).
 - Most hearing people cannot sign.
 
-**Middle panel: what SignBridge does.**
+**Middle panel: what SignMate does.**
 - Sign a PSL word, see it in English and Urdu, confirm it, hear it.
 - Write back: big text plus PSL dictionary videos.
 - Quick and emergency phrases, one tap.
@@ -158,7 +158,7 @@ reply (typed or spoken) ──► known words ──► PSL dictionary videos, i
 ## 7. Backup plan (bad light, no Wi-Fi, dead laptop)
 
 - **No Wi-Fi:** press "Save for offline use" at home the day before; the whole site then works offline.
-  The offline copy (Start SignBridge.bat) also runs from a USB stick.
+  The offline copy (Start SignMate.bat) also runs from a USB stick.
 - **Bad light:** the camera check will say so. Stand facing the window or a lamp; avoid a bright window
   behind you.
 - **Dead laptop:** open the site on a phone (it works in the phone browser), or show your recorded demo

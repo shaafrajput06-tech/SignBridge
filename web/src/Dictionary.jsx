@@ -19,7 +19,7 @@ export default function Dictionary({ pslClasses = [] }) {
   const [picked, setPicked] = useState(null);
   useEffect(() => {
     let alive = true;
-    fetch(assetUrl("psl_dictionary.json")).then((r) => (r.ok ? r.json() : null)).then((value) => { if (alive) setData(value || { entries: [], note: "The dictionary list is not in this copy of SignBridge." }); })
+    fetch(assetUrl("psl_dictionary.json")).then((r) => (r.ok ? r.json() : null)).then((value) => { if (alive) setData(value || { entries: [], note: "The dictionary list is not in this copy of SignMate." }); })
       .catch(() => { if (alive) setData({ entries: [], note: "The dictionary list could not be loaded." }); });
     return () => { alive = false; };
   }, []);
@@ -34,7 +34,7 @@ export default function Dictionary({ pslClasses = [] }) {
   const pickedWord = picked && readable(picked.label);
   return <section className="content-section dictionary">
     <div className="section-intro"><div><span className="section-kicker">{entries.length} PSL SIGNS · COMMUNITY DICTIONARY · TIER B</span><h1>PSL dictionary</h1>
-      <p>Every sign of the SLT community PSL dictionary, signed by one real signer. SignBridge learned their hand movements in Stage 1 as suggestions (Tier B). <b>Not yet validated by Deaf signers.</b> Videos marked ⬇ are stored with SignBridge and work offline; the others play from the dictionary's GitHub page and need internet.</p></div></div>
+      <p>Every sign of the SLT community PSL dictionary, signed by one real signer. SignMate learned their hand movements in Stage 1 as suggestions (Tier B). <b>Not yet validated by Deaf signers.</b> Videos marked ⬇ are stored with SignMate and work offline; the others play from the dictionary's GitHub page and need internet.</p></div></div>
     {data.note && <p className="inline-warning">{data.note}</p>}
     <div className="dictionary-layout">
       <div className="panel dictionary-list">
@@ -49,7 +49,7 @@ export default function Dictionary({ pslClasses = [] }) {
           <video key={picked.label} src={picked.file ? assetUrl(picked.file) : picked.url} controls loop muted playsInline autoPlay preload="metadata" aria-label={`PSL dictionary video: ${pickedWord}`} />
           <figcaption>
             <b>Community dictionary video · not yet validated by Deaf signers</b>
-            <span>{picked.file ? "Stored with SignBridge (works offline)." : "Plays from the dictionary's GitHub release (internet needed)."}{camera.has(plain(picked.label.split(".")[0])) ? " The PSL camera can also suggest this sign." : ""}</span>
+            <span>{picked.file ? "Stored with SignMate (works offline)." : "Plays from the dictionary's GitHub release (internet needed)."}{camera.has(plain(picked.label.split(".")[0])) ? " The PSL camera can also suggest this sign." : ""}</span>
             <small>{data.attribution}</small>
           </figcaption>
         </figure> : <p>Choose a sign to see how it is signed.</p>}

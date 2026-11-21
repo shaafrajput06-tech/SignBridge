@@ -1,5 +1,5 @@
 // The offline helper's answers (used by HelperChat.jsx; tested in web/tests/helper-chat.test.mjs). It answers only
-// from SignBridge's own data and never describes or invents a sign.
+// from SignMate's own data and never describes or invents a sign.
 import { assetUrl } from "./paths.js";
 
 const plain = (text) => String(text).toLowerCase().replace(/[^a-z0-9؀-ۿ ]/g, " ").replace(/\s+/g, " ").trim();
@@ -12,7 +12,7 @@ export function answer(question, { dictionary = [], vocabulary = [], pslClasses 
     const signs = pslClasses.filter((entry) => entry.tier).map((entry) => entry.english);
     return { text: signs.length ? `The PSL camera suggests ${signs.length} signs, for example: ${signs.slice(0, 12).join(", ")}. The full list with measured accuracy is on "How well it works".` : "The PSL camera is not available on this device." };
   }
-  if (/\b(privacy|private|record|recorded|video saved|upload|data)\b/.test(q)) return { text: "The camera picture stays on your device. SignBridge works with hand and face points, not video, and saves nothing unless you choose to." };
+  if (/\b(privacy|private|record|recorded|video saved|upload|data)\b/.test(q)) return { text: "The camera picture stays on your device. SignMate works with hand and face points, not video, and saves nothing unless you choose to." };
   if (/\b(offline|internet|airplane)\b/.test(q)) return { text: "After your first visit, \"Save for offline use\" (bottom of the page) stores everything on your device. Dictionary videos marked ⬇ work offline too." };
   if (/\b(accura|how good|how well|trust|wrong|mistake)\b/.test(q)) return { text: "Every PSL answer is a suggestion you confirm, and none is validated by Deaf signers yet. The measured numbers, and how they were measured, are on \"How well it works\"." };
   if (/\b(urdu|english|language|asl)\b/.test(q) && !SIGN_QUESTION.test(q)) return { text: "Choose English or اردو at the top. PSL is the main sign language; ASL is a separate mode with its own model, never mixed with PSL." };

@@ -1,6 +1,6 @@
 """The website's address lives in one place (shared_data/site.json); every file that names it agrees.
 
-The owner chose https://signbridge-pk.github.io/ on 2026-11-20 (docs/DOMAIN.md). The old address
+The owner chose https://signmate-pk.github.io/ on 2026-11-20 (docs/DOMAIN.md). The old address
 (shaafrajput06-tech.github.io/SignBridge) may only appear where a file talks about the move itself.
 """
 
@@ -41,7 +41,7 @@ def text_files():
 class SiteConfigTests(unittest.TestCase):
     def test_config_is_complete_and_consistent(self):
         self.assertTrue(SITE["site_url"].startswith("https://") and SITE["site_url"].endswith("/"))
-        self.assertEqual(SITE["name"], "SignBridge")
+        self.assertEqual(SITE["name"], "SignMate")
         owner, repo = SITE["repository"].split("/")
         self.assertEqual(SITE["repository_url"], f"https://github.com/{owner}/{repo}")
         # An organisation's main website comes from the repository named <owner>.github.io.

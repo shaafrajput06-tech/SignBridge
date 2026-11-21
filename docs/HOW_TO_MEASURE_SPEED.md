@@ -12,8 +12,8 @@ model** (Settings > About phone). Send everything to Claude in this chat.
 2. Click the newest run with a green tick. Scroll to **Artifacts** at the bottom and click
    **shared-copy**. A zip downloads.
 3. Right-click the zip > **Extract All...** > **Extract**. Inside, open the folder, then extract
-   `SignBridge-shared-copy.zip` the same way, and open the `SignBridge` folder.
-4. Double-click **Start SignBridge.bat** (if Windows warns: **More info** > **Run anyway**).
+   `SignMate-shared-copy.zip` the same way, and open the `SignBridge` folder.
+4. Double-click **Start SignMate.bat** (if Windows warns: **More info** > **Run anyway**).
    Chrome or Edge opens SignBridge.
 5. In the address bar, change the address to `http://localhost:8765/asl-selftest.html` and press Enter.
 6. Wait until the top line starts with **Done.** (10-60 seconds).
@@ -28,14 +28,14 @@ model** (Settings > About phone). Send everything to Claude in this chat.
 ## B. Laptop: the frozen baseline (for the side-by-side comparison)
 
 1. Extract the `SignBridge.zip` you already have (the shared copy of 2026-11-19), open the folder and
-   double-click **Start SignBridge.bat**.
+   double-click **Start SignMate.bat**.
 2. Do steps A5-A7 again and save the file as `laptop-baseline-selftest.txt`.
 
 ## C. Phone: the live website
 
 1. On your phone (Chrome on Android), open
    <https://shaafrajput06-tech.github.io/SignBridge/asl-selftest.html>
-   (after the move in `DOMAIN.md`: <https://signbridge-pk.github.io/asl-selftest.html>). Use Wi-Fi:
+   (after the move in `DOMAIN.md`: <https://signmate-pk.github.io/asl-selftest.html>). Use Wi-Fi:
    the first visit downloads about 40 MB.
 2. Wait until the top line starts with **Done.**
 3. Take screenshots of the page from the top down to the end of the `"signs"` part (about 3-4

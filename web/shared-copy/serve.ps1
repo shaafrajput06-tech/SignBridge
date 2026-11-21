@@ -1,11 +1,11 @@
-# SignBridge, shared copy: a tiny web server for this folder, using only Windows PowerShell (no Python or
+# SignMate, shared copy: a tiny web server for this folder, using only Windows PowerShell (no Python or
 # Node needed). It listens on this computer only (http://localhost), where browsers allow the camera, and
-# opens the app in the default browser. Close this window to stop SignBridge.
+# opens the app in the default browser. Close this window to stop SignMate.
 param([int]$Port = 8765, [switch]$NoBrowser)
 
 $ErrorActionPreference = "Stop"
 $root = Join-Path $PSScriptRoot "site"
-if (-not (Test-Path (Join-Path $root "index.html"))) { Write-Host "The 'site' folder is missing. Unzip the whole SignBridge zip first, then run Start SignBridge.bat again."; Read-Host "Press Enter to close"; exit 1 }
+if (-not (Test-Path (Join-Path $root "index.html"))) { Write-Host "The 'site' folder is missing. Unzip the whole SignMate zip first, then run Start SignMate.bat again."; Read-Host "Press Enter to close"; exit 1 }
 
 $types = @{
   ".html" = "text/html; charset=utf-8"; ".js" = "text/javascript; charset=utf-8"; ".mjs" = "text/javascript; charset=utf-8"
@@ -23,8 +23,8 @@ if (-not $chosen) { Write-Host "Could not open a local port ($Port to $($Port + 
 
 $url = "http://localhost:$chosen/"
 Write-Host ""
-Write-Host "  SignBridge is running at $url"
-Write-Host "  Keep this window open while you use it. Close it to stop SignBridge."
+Write-Host "  SignMate is running at $url"
+Write-Host "  Keep this window open while you use it. Close it to stop SignMate."
 Write-Host ""
 if (-not $NoBrowser) { Start-Process $url }
 

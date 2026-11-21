@@ -1,6 +1,9 @@
-# What's new in SignBridge 3.0
+# What's new in SignMate 3.0
 
 The website's "What's new" page and the GitHub Release notes are made from this file (tools/site_pages.py).
+
+## New name and address
+- SignBridge is now called **SignMate**, at https://signmate-pk.github.io/ (the old address forwards there).
 
 ## PSL from the camera
 - The camera now suggests Pakistan Sign Language words. It learned them from a public PSL dataset of hand movements (SignSpeak).
@@ -11,7 +14,7 @@ The website's "What's new" page and the GitHub Release notes are made from this 
 
 ## Talking both ways
 - Confirmed signs build a sentence in English or Urdu, with the signs you made shown underneath.
-- The hearing person can type a reply. It is shown in large text, and the words SignBridge knows play as PSL dictionary videos, word by word.
+- The hearing person can type a reply. It is shown in large text, and the words SignMate knows play as PSL dictionary videos, word by word.
 - Quick phrases and emergency phrases speak with one tap.
 
 ## Seeing how signs are made

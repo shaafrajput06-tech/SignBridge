@@ -964,7 +964,7 @@
     "licence": "project-owned weights, trained on psl-signspeak-words (Apache-2.0)",
     "attribution": "PSL recogniser trained on the Dynamic Word-Level Pakistan Sign Language Dataset by Mohib Ullah Khan Sherwani and the SignSpeak team, COMSATS University Islamabad, Abbottabad Campus (Apache License 2.0, doi:10.57967/hf/8164).",
     "source_url": "project:tools/psl_train",
-    "used_for": "The PSL recogniser itself (weights trained by SignBridge on SignSpeak).",
+    "used_for": "The PSL recogniser itself (weights trained by SignMate on SignSpeak).",
     "checked": ""
    },
    {
@@ -1070,6 +1070,12 @@
  },
  "whats_new": [
   {
+   "title": "New name and address",
+   "items": [
+    "SignBridge is now called **SignMate**, at https://signmate-pk.github.io/ (the old address forwards there)."
+   ]
+  },
+  {
    "title": "PSL from the camera",
    "items": [
     "The camera now suggests Pakistan Sign Language words. It learned them from a public PSL dataset of hand movements (SignSpeak).",
@@ -1083,7 +1089,7 @@
    "title": "Talking both ways",
    "items": [
     "Confirmed signs build a sentence in English or Urdu, with the signs you made shown underneath.",
-    "The hearing person can type a reply. It is shown in large text, and the words SignBridge knows play as PSL dictionary videos, word by word.",
+    "The hearing person can type a reply. It is shown in large text, and the words SignMate knows play as PSL dictionary videos, word by word.",
     "Quick phrases and emergency phrases speak with one tap."
    ]
   },

@@ -38,7 +38,7 @@ export function HowWellItWorks() {
         {psl.device_held_out.left_right && <li>Left-handed signing (the same tests mirrored): {pct(psl.device_held_out.left_right.left_top1)}; right-handed: {pct(psl.device_held_out.left_right.right_top1)}.</li>}
         {psl.device_held_out.top1_all_phone != null && <li>All phone recordings, including signs this test cannot learn: {pct(psl.device_held_out.top1_all_phone)}.</li>}
         {psl.device_held_out.not_measured?.length > 0 && <li>Not measured (only phone recordings exist): {psl.device_held_out.not_measured.join(", ")}.</li>}
-        {psl.device_held_out.label_conflicts?.map((c) => <li key={c.signs.join()}>Data problem: in the dataset's phone recordings, {c.signs.join(" and ")} are labelled the other way round. SignBridge learned them from the computer-camera recordings only.</li>)}
+        {psl.device_held_out.label_conflicts?.map((c) => <li key={c.signs.join()}>Data problem: in the dataset's phone recordings, {c.signs.join(" and ")} are labelled the other way round. SignMate learned them from the computer-camera recordings only.</li>)}
         <li>A simpler model (GRU) scored {pct(psl.device_held_out.gru_top1)} on the same test; the better one ships.</li>
         {psl.independent_signer ? <li>One new signer (the SLT dictionary's, never in the training data), {psl.independent_signer.samples} signs: top-1 {pct(psl.independent_signer.top1)}, top-5 {pct(psl.independent_signer.top5)}. A miss can also be a regional variant of the sign.</li> : <li>A test on new signers has not been possible: the dataset has no signer names. That is why no sign is Tier A.</li>}
         {psl.personal_adaptation?.runs > 0 && <li>After 20 confirmations by the same person (simulated with phone recordings): {pct(psl.personal_adaptation.top1_before)} → {pct(psl.personal_adaptation.top1_after)}.</li>}
@@ -47,7 +47,7 @@ export function HowWellItWorks() {
       <table className="report-table"><thead><tr><th>Sign</th><th>اردو</th><th>Hands</th><th>Tests</th><th>Top-1</th><th>Top-5</th></tr></thead>
         <tbody>{psl.per_sign.map((s) => <tr key={s.english} title={s.note}><td>{s.dictionary_url ? <a href={s.dictionary_url} target="_blank" rel="noreferrer">{s.english}</a> : s.english}{s.note ? " *" : ""}</td><td dir="rtl">{s.urdu}</td><td>{s.hands}</td><td>{s.tested}</td><td>{pct(s.top1)}</td><td>{pct(s.top5)}</td></tr>)}</tbody></table>
       <p className="asl-credit">* see the data note (hover). Sign names link to the PSL dictionary page the dataset's signers learned from.</p>
-    </div> : <div className="panel report-body"><h2>PSL camera</h2><p>No PSL model in this copy of SignBridge.</p></div>}
+    </div> : <div className="panel report-body"><h2>PSL camera</h2><p>No PSL model in this copy of SignMate.</p></div>}
 
     {asl && <div className="panel report-body"><div className="report-summary"><div><span className="section-kicker">ASL MODE · A SEPARATE LANGUAGE</span><h2>250 ASL words · ready-made model</h2>
       <p>{asl.dataset}: {asl.samples.toLocaleString()} signs by signers the model never saw, measured {asl.measured_on} ({asl.where}).</p></div>
@@ -71,7 +71,7 @@ export function Credits() {
   if (!pages) return <p role="status">Loading…</p>;
   const credits = pages.credits || { assets: [], software: [] };
   return <>
-    <div className="section-intro"><div><span className="section-kicker">FROM data/LICENSES.yaml</span><h1>Credits and licences</h1><p>SignBridge is built on other people's work. Every dataset, model and video it uses is listed here with the credit its licence asks for.</p></div></div>
+    <div className="section-intro"><div><span className="section-kicker">FROM data/LICENSES.yaml</span><h1>Credits and licences</h1><p>SignMate is built on other people's work. Every dataset, model and video it uses is listed here with the credit its licence asks for.</p></div></div>
     <div className="panel report-body"><h2>Data, models and videos</h2>
       <table className="report-table"><thead><tr><th>What</th><th>Used for</th><th>Licence</th><th>Credit</th></tr></thead>
         <tbody>{credits.assets.map((a) => <tr key={a.id}><td>{a.source_url?.startsWith("http") ? <a href={a.source_url} target="_blank" rel="noreferrer">{a.name}</a> : a.name}</td><td>{a.used_for}</td><td>{a.licence}</td><td>{a.attribution}</td></tr>)}</tbody></table></div>

@@ -52,13 +52,13 @@ test("build:shared --from packages a site with the Windows launcher, and leaves 
   }
   const out = path.join(root, "out");
   execFileSync(process.execPath, [path.join(web, "scripts", "build-shared.mjs"), "--from", site, "--out", out], { stdio: "pipe" });
-  const files = readZip(readFileSync(path.join(out, "SignBridge-shared-copy.zip")));
-  for (const name of ["SignBridge/Start SignBridge.bat", "SignBridge/serve.ps1", "SignBridge/README.txt", "SignBridge/site/index.html", "SignBridge/site/assets/app.js", "SignBridge/site/models/asl/model.tflite"]) {
+  const files = readZip(readFileSync(path.join(out, "SignMate-shared-copy.zip")));
+  for (const name of ["SignMate/Start SignMate.bat", "SignMate/serve.ps1", "SignMate/README.txt", "SignMate/site/index.html", "SignMate/site/assets/app.js", "SignMate/site/models/asl/model.tflite"]) {
     assert.ok(files.has(name), name);
   }
   assert.ok(![...files.keys()].some((name) => name.includes("/ci/")), "CI results are not shipped");
-  assert.match(files.get("SignBridge/Start SignBridge.bat").toString(), /serve\.ps1/);
-  assert.ok(files.get("SignBridge/Start SignBridge.bat").includes(Buffer.from("\r\n")), "the .bat keeps Windows line endings");
+  assert.match(files.get("SignMate/Start SignMate.bat").toString(), /serve\.ps1/);
+  assert.ok(files.get("SignMate/Start SignMate.bat").includes(Buffer.from("\r\n")), "the .bat keeps Windows line endings");
 });
 
 test("build:shared refuses a site without the models", () => {

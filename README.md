@@ -1,13 +1,13 @@
-# SignBridge
+# SignMate
 
 It is a sign language translator which will help deaf people to communicate.
 
-**Try it in a browser:** <https://signbridge-pk.github.io/> (camera needed; nothing leaves your device).
+**Try it in a browser:** <https://signmate-pk.github.io/> (camera needed; nothing leaves your device).
 Until the move to that address is finished ([docs/DOMAIN.md](docs/DOMAIN.md)), the site is still at
 <https://shaafrajput06-tech.github.io/SignBridge/>. How the website is built and what works there:
 [docs/WEBSITE.md](docs/WEBSITE.md). Setting up on another computer: [docs/SETUP_NEW_LAPTOP.md](docs/SETUP_NEW_LAPTOP.md).
 
-SignBridge is a Pakistan Sign Language (PSL) ↔ Urdu/English translator that runs on your own device.
+SignMate is a Pakistan Sign Language (PSL) ↔ Urdu/English translator that runs on your own device.
 It is being built on a **fast track** ([docs/prompts/fast-track.md](docs/prompts/fast-track.md)): nobody has
 to record, label or train signs for it to work.
 
@@ -23,7 +23,7 @@ to record, label or train signs for it to work.
 | Personal signs (Tier C) | Optional extra in the desktop app: teach your own signs. Never a required step. |
 | Licences | Every model and dataset is in [data/LICENSES.yaml](data/LICENSES.yaml); a checker blocks anything not allowed. |
 
-The proposal's 90% figure is treated as a target. SignBridge reports measured model results only when a real dataset supports a validation split, and it names the validation method.
+The proposal's 90% figure is treated as a target. SignMate reports measured model results only when a real dataset supports a validation split, and it names the validation method.
 
 ## Start the exhibition
 
@@ -55,7 +55,7 @@ python main.py --threshold 0.72 --hold 8
 
 ## Modes and demo gestures
 
-- **AI Demo Mode / Demo Recognition Mode:** MediaPipe provides AI hand tracking; fixed landmark geometry maps a small set of held poses. The app does not call this a trained SignBridge model.
+- **AI Demo Mode / Demo Recognition Mode:** MediaPipe provides AI hand tracking; fixed landmark geometry maps a small set of held poses. The app does not call this a trained SignMate model.
 - **AI Trained Mode / Trained Model Mode:** scikit-learn predictions are used for classes with enough collected examples. A model can only be created by running the training step below.
 - Vocabulary items without a demo gesture can still be searched, selected, displayed, and spoken. They are labeled “Vocabulary Mode — training data required for camera recognition.”
 
@@ -114,7 +114,7 @@ Browser speech uses installed system voices. Urdu script uses the browser's righ
 
 See `mobile/README.md`. Install Flutter, run `mobile\prepare_mobile.bat` once, then run `flutter run` in the mobile folder. Enter the exhibition computer's local API address on the phone. The app bundles the vocabulary and stores preferences and offline training uploads locally.
 
-Camera recognition remains off until the user confirms the privacy notice. During an active mobile recognition session, the app sends occasional individual JPEG frames over the local Wi-Fi to the configured SignBridge server for MediaPipe processing. The server processes each frame in memory and never stores image files or video. This mobile route requires the local server; mobile vocabulary browsing and text remain available without it.
+Camera recognition remains off until the user confirms the privacy notice. During an active mobile recognition session, the app sends occasional individual JPEG frames over the local Wi-Fi to the configured SignMate server for MediaPipe processing. The server processes each frame in memory and never stores image files or video. This mobile route requires the local server; mobile vocabulary browsing and text remain available without it.
 
 ## Data collection
 
@@ -170,7 +170,7 @@ Classes without sufficient examples remain demo-only or vocabulary-only. Train m
 
 The FastAPI service documents its REST routes at `http://localhost:8000/docs`. It serves vocabulary and categories, settings, consented landmark uploads, recognition history, reports, classifier status, prediction, and transient mobile-camera frame recognition. SQLite is the local default. Persistent models and route handlers are separated in `backend/storage.py`; set `SIGNBRIDGE_DATABASE_URL` to a SQLAlchemy URL such as `postgresql+psycopg://user:password@host/signbridge` and install `requirements-postgres.txt` to move to PostgreSQL later.
 
-The website can use the bundled vocabulary and local MediaPipe assets when the backend is offline. The mobile app uses bundled vocabulary without a server; camera recognition and synchronization need the local server. SignBridge does not send images to Google or use hosted translation, speech, storage, or recognition services. MediaPipe Tasks may send aggregate performance and usage metrics to Google while online; see [MediaPipe's privacy notice](https://github.com/google-ai-edge/mediapipe/blob/master/mediapipe/tasks/web/vision/README.md#privacy-notice).
+The website can use the bundled vocabulary and local MediaPipe assets when the backend is offline. The mobile app uses bundled vocabulary without a server; camera recognition and synchronization need the local server. SignMate does not send images to Google or use hosted translation, speech, storage, or recognition services. MediaPipe Tasks may send aggregate performance and usage metrics to Google while online; see [MediaPipe's privacy notice](https://github.com/google-ai-edge/mediapipe/blob/master/mediapipe/tasks/web/vision/README.md#privacy-notice).
 
 ## Speech and Urdu fonts
 
@@ -212,7 +212,7 @@ Add `--smoke` to also run the fake-camera browser test (`npm run test:smoke` in 
 
 `docs/BASELINE.md` records the versions and results of the last full verification.
 
-## SignBridge v2 work in progress
+## SignMate v2 work in progress
 
 v2 is planned in phases; the rules and prompts are in `CLAUDE.md` and `docs/prompts/`, and the current state is in `docs/CONTEXT.md`. Phase 1 added holistic capture and the v2 data contract (details in `docs/PHASE1_CAPTURE.md`):
 

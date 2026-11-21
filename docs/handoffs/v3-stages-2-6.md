@@ -38,5 +38,5 @@ See `reports/psl_v3.md` and `reports/final_v3.md`. Every row names its dataset, 
 
 ## Needs the owner [ME]
 - Attach the offline zip to the GitHub Release v3.0.0 (this session cannot create releases).
-- Optionally, move the site to signbridge-pk.github.io (`docs/DOMAIN.md`).
+- Optionally, move the site to signmate-pk.github.io (`docs/DOMAIN.md`).
 - Try three PSL signs on the live site with a laptop camera and a phone.

@@ -2,7 +2,7 @@
 //  - SentenceStrip: the signs the person confirmed, turned into a sentence by rules (sentence.js), with the
 //    raw glosses always shown underneath.
 //  - ReplyPanel: the hearing person types (or, if they choose, speaks) a reply; it is shown large, and the
-//    words SignBridge knows play as PSL dictionary videos one after another. A word-by-word aid, not signed
+//    words SignMate knows play as PSL dictionary videos one after another. A word-by-word aid, not signed
 //    translation, and it says so.
 //  - QuickPhrases: one tap speaks a common or emergency phrase.
 import React, { useMemo, useRef, useState } from "react";
@@ -72,7 +72,7 @@ export function ReplyPanel({ entries, clips, language }) {
         <video ref={videoRef} muted playsInline controls aria-label="PSL dictionary videos for the reply" />
         <button className="button button-outline" onClick={() => play(0)}>Play the {playable.length} {playable.length === 1 ? "video" : "videos"} in order</button>
         <small>Community dictionary videos (SLT, CC BY 4.0), not yet validated by Deaf signers. Words without ▶ have no licensed video yet.</small>
-      </div> : <small>None of these words has a licensed PSL video yet. SignBridge never makes up how a sign looks.</small>}
+      </div> : <small>None of these words has a licensed PSL video yet. SignMate never makes up how a sign looks.</small>}
     </>}
   </div>;
 }

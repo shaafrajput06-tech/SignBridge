@@ -9,7 +9,7 @@ function word(entry, language) {
 
 export default function PslSuggestion({ result, signing, language, badge, onConfirm, onDismiss }) {
   if (signing) return <div className="psl-suggestion watching" role="status"><span className="signing-chip">Watching your sign…</span><small>Lower your hands when you finish the sign.</small></div>;
-  if (!result) return <div className="psl-suggestion idle"><b>Sign one PSL word, then lower your hands.</b><small>SignBridge suggests what it saw; you confirm it.</small></div>;
+  if (!result) return <div className="psl-suggestion idle"><b>Sign one PSL word, then lower your hands.</b><small>SignMate suggests what it saw; you confirm it.</small></div>;
   const choices = result.top.filter((entry) => !entry.unknown).slice(0, 3);
   const best = choices[0];
   const dir = language === "ur" ? "rtl" : "auto";
