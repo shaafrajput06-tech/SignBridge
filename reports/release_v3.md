@@ -30,4 +30,4 @@
 - Camera on a laptop and on a phone: one PSL sign, one ASL sign, one two-handed sign, one sentence.
 - Offline after the first visit, on the live site.
 - Lighthouse on the live site (the preview measurements are in `reports/performance_v3.json`).
-- The move to signbridge-pk.github.io is optional (`docs/DOMAIN.md`); the old address is still the live one.
+- The move to signmate-pk.github.io is optional (`docs/DOMAIN.md`); the old address is still the live one.
