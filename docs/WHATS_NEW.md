@@ -30,5 +30,5 @@ The website's "What's new" page and the GitHub Release notes are made from this 
 
 ## Still limited
 - No sign is Tier A ("Recognised") yet. That needs a test on people the model has never seen, and a Deaf validator's sign-off.
-- Finger-spelling is not included: there is no licensed PSL letter data the app could learn from yet.
-- The PSL camera knows 70+ words, not full sentences signed without pauses.
+- Finger-spelling is not included yet. The Urdu alphabet data (UAlpha40, CC BY 4.0) is licensed and its converter is written, but the letter model is not trained and tested yet.
+- The PSL camera knows single words signed one at a time, with a pause between them, not full sentences signed without pauses.
