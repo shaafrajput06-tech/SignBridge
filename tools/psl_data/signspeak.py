@@ -43,7 +43,7 @@ MEMBER = re.compile(r"^(?:.*/)?(MP_Data[^/]*|laptop_data|webcam_data|mobile_data
 # Second archive (Kaggle version 3): laptop_data, webcam_data, mobile_data.
 DEVICES = {"MP_Data": "desktop", "MP_Data_mobile": "phone", "laptop_data": "laptop", "webcam_data": "webcam", "mobile_data": "phone"}
 UNKNOWN_FOLDERS = {"nothing"}  # becomes the "not a sign" class
-NOT_WORDS = {"left_hand", "s", "test_word"}  # test folders of the dataset's authors; not PSL words
+NOT_WORDS = {"left_hand", "s", "test_word", "test2"}  # test folders of the dataset's authors; not PSL words
 FULL_LENGTH = 60
 MIN_LENGTH = 45
 COMMON_ASPECTS = (9 / 16, 3 / 4, 1.0, 4 / 3, 16 / 9)
@@ -153,7 +153,7 @@ def convert(archives: list[Path], out: Path) -> dict:
         samples = read_archive(path)
         report[f"samples_in_{path.name}"] = len(samples)
         for (folder, word, sample), raw in sorted(samples.items()):
-            if word.lower() in NOT_WORDS:
+            if word.lower() in NOT_WORDS or word.lower().startswith("test"):
                 dropped_folders[word] += 1
                 continue
             digest = hashlib.sha256(np.ascontiguousarray(raw, dtype=np.float64).tobytes()).hexdigest()

@@ -232,7 +232,9 @@ def independent_clips(folder: Path | None, classes: list[str]) -> dict:
     index = {key(c): i for i, c in enumerate(classes) if c != UNKNOWN}
     picked = []
     for record in manifest["clips"]:
-        label = index.get(key(str(record.get("gloss", "")).split(".")[0]))
+        gloss = str(record.get("gloss", ""))
+        gloss = gloss.split(":", 1)[1] if gloss.startswith("slt:") else gloss
+        label = index.get(key(gloss.split(".")[0]))
         if label is None or record.get("language") != "PSL":
             continue
         try:
@@ -352,7 +354,8 @@ def markdown(result: dict) -> str:
         "",
         "## Device held out (weaker: no signer ids, the same people may be in both parts)",
         "",
-        "Trained on the computer-camera folders (desktop, laptop, webcam), tested on the phone folders (never seen in training).",
+        "Trained on the computer-camera folders (desktop, laptop, webcam), tested on the phone folders (never seen in training). "
+        f"Fair test: {result['device_held_out']['fair_test']['samples']} phone signs that have computer-camera training recordings and no label conflict.",
         "",
         "| Model | Test signs | Top-1 | Top-5 | One-handed top-1 | Two-handed top-1 | Calibration error |",
         "|---|---|---|---|---|---|---|",
@@ -360,6 +363,11 @@ def markdown(result: dict) -> str:
     for name, m in (("islr_lite (shipped recipe)", d["plain"]), ("islr_lite + mirror averaging", d["mirror_average"]), ("GRU baseline", g["plain"])):
         lines.append(f"| {name} | {m['samples']} | {pct(m['top1'])} | {pct(m['top5'])} | {pct(m['one_handed']['top1'])} ({m['one_handed']['samples']}) "
                      f"| {pct(m['two_handed']['top1'])} ({m['two_handed']['samples']}) | {m['expected_calibration_error']:.3f} |")
+    held_info = result["device_held_out"]
+    lines += ["", f"All {d['plain_all_phone']['samples']} phone signs, including those this protocol cannot learn: top-1 {pct(d['plain_all_phone']['top1'])}.",
+              "Signs with only phone recordings (no training data in this protocol, not measured): " + (", ".join(held_info["untrained_in_this_protocol"]) or "none") + ".",
+              "Label conflicts (phone recordings labelled the other way round; left out of the shipped model and the fair test): "
+              + ("; ".join(" ↔ ".join(c["signs"]) for c in held_info["label_conflicts"]) or "none") + "."]
     lr = result["device_held_out"]["left_right"]
     lines += [
         "",
@@ -376,6 +384,12 @@ def markdown(result: dict) -> str:
     for s in shown["speak_limits"]:
         lines.append(f"| {s['at_least']:.1f} | {pct(s['answered_share'])} | {pct(s['wrong_share_of_answered'])} |")
     lines += ["", "Most frequent confusions: " + "; ".join(f"{c['sign']} → {c['taken_for']} ({c['times']})" for c in shown["confusions"][:10]), ""]
+    adaptation = result["device_held_out"].get("personal_adaptation", {})
+    if adaptation.get("runs"):
+        lines += ["## Personal adaptation (Stage 4)", "",
+                  f"A simulated person confirms {adaptation['confirmations']} of their own signs (phone recordings, one person per phone folder, "
+                  f"{adaptation['runs']} random repeats); top-1 on their other signs: {pct(adaptation['top1_before'])} before, "
+                  f"{pct(adaptation['top1_after'])} after ({adaptation['change_points']:+.2f} points; worst repeat {adaptation['worst_change_points']:+.2f}).", ""]
     ind = result.get("independent_signer")
     lines += ["## Independent signer (shipped model)", ""]
     if ind:
@@ -459,26 +473,58 @@ def main(argv: list[str] | None = None) -> int:
     train_idx, val_idx = computer[keep], computer[val]
     hands_per_class = class_hands(data, usable, labels, classes)
     held: dict = {}
+    trained = set(labels[train_idx].tolist())
     for arch, epochs in (("islr_lite", args.epochs), ("gru", args.gru_epochs or args.epochs)):
         model = train(arch, data, train_idx, labels, classes, epochs, args.seed, log)
         t = fit_temperature(logits(model, data, val_idx), labels[val_idx])
-        held[arch] = {"temperature": t, "plain": measure(probabilities(model, data, phone, t, False), labels[phone], classes, hands_per_class),
-                      "validation_plain": measure(probabilities(model, data, val_idx, t, False), labels[val_idx], classes, hands_per_class)}
         if arch == "islr_lite":
             phone_logits = logits(model, data, phone)
             phone_mirrored = logits(model, data, phone, mirrored=True)
+            # Signs the phone recordings label the other way round: the model (trained without phones) calls
+            # most of sign a "b" and most of sign b "a". Which side is right cannot be known from the data,
+            # so those phone recordings are left out of the shipped model and of the fair test.
+            answer = phone_logits.argmax(1)
+            conflicts = []
+            for a in sorted(set(labels[phone].tolist()) & trained):
+                for b in sorted(set(labels[phone].tolist()) & trained):
+                    if a < b:
+                        ab = np.mean(answer[labels[phone] == a] == b)
+                        ba = np.mean(answer[labels[phone] == b] == a)
+                        if ab >= 0.6 and ba >= 0.6:
+                            conflicts.append((a, b))
+            conflicted = sorted({c for pair in conflicts for c in pair})
+            held["label_conflicts"] = [{"signs": [classes[a], classes[b]], "note": "phone recordings labelled the other way round from the computer-camera ones"} for a, b in conflicts]
+            held["untrained_in_this_protocol"] = sorted(classes[c] for c in set(labels[phone].tolist()) - trained)
+            fair_mask = np.isin(labels[phone], sorted(trained)) & ~np.isin(labels[phone], conflicted)
+            fair = phone[fair_mask]
+            held["fair_test"] = {"samples": int(len(fair)), "rule": "phone test signs that have computer-camera training recordings and no label conflict"}
             held["temperature_from_held_out_device"] = {
-                "plain": fit_temperature(phone_logits, labels[phone]),
-                "mirror_average": fit_temperature(phone_logits, labels[phone], phone_mirrored)}
-            held[arch]["mirror_average"] = measure(probabilities(model, data, phone, t, True), labels[phone], classes, hands_per_class)
+                "plain": fit_temperature(phone_logits[fair_mask], labels[fair]),
+                "mirror_average": fit_temperature(phone_logits[fair_mask], labels[fair], phone_mirrored[fair_mask])}
+        held[arch] = {"temperature": t,
+                      "plain_all_phone": measure(probabilities(model, data, phone, t, False), labels[phone], classes, hands_per_class),
+                      "plain": measure(probabilities(model, data, fair, t, False), labels[fair], classes, hands_per_class),
+                      "validation_plain": measure(probabilities(model, data, val_idx, t, False), labels[val_idx], classes, hands_per_class)}
+        if arch == "islr_lite":
+            held[arch]["mirror_average"] = measure(probabilities(model, data, fair, t, True), labels[fair], classes, hands_per_class)
+            # Stage 4: a person who confirms 20 of their own signs (each phone folder = one simulated person).
+            from tools.psl_train import personal
+
+            t_ship = held["temperature_from_held_out_device"]["mirror_average"]
+            ship_probs = (softmax(phone_logits[fair_mask], t_ship) + softmax(phone_mirrored[fair_mask], t_ship)) / 2
+            held["personal_adaptation"] = personal.measure(np.log(ship_probs + 1e-9), labels[fair], data["archive"][fair])
             held[arch]["validation_mirror_average"] = measure(probabilities(model, data, val_idx, t, True), labels[val_idx], classes, hands_per_class)
-            mirrored = softmax(logits(model, data, phone, mirrored=True), t)
-            left = float((mirrored.argmax(1) == labels[phone]).mean())
+            mirrored = softmax(phone_mirrored[fair_mask], t)
+            left = float((mirrored.argmax(1) == labels[fair]).mean())
             right = held[arch]["plain"]["top1"]
             held["left_right"] = {"right_top1": right, "left_top1": round(left, 4), "gap_points": round(100 * abs(right - left), 2)}
-        print(f"device held out, {arch}: top-1 {held[arch]['plain']['top1']}, top-5 {held[arch]['plain']['top5']}")
+        print(f"device held out, {arch}: top-1 {held[arch]['plain']['top1']} (fair test), {held[arch]['plain_all_phone']['top1']} (all phone)")
     result["device_held_out"] = held
     mirror_average = held["islr_lite"]["validation_mirror_average"]["top1"] >= held["islr_lite"]["validation_plain"]["top1"]
+    if conflicted:
+        dropped = usable[(data["device"][usable] == "phone") & np.isin(labels[usable], conflicted)]
+        usable = np.setdiff1d(usable, dropped)
+        print(f"left out of the shipped model: {len(dropped)} phone recordings of {[classes[c] for c in conflicted]} (label conflict)")
 
     # 2. shipped model on everything but a calibration part
     keep, val = stratified_split(labels[usable], 0.1, rng)
@@ -521,6 +567,12 @@ def main(argv: list[str] | None = None) -> int:
         test = (held["islr_lite"]["mirror_average"] if mirror_average else held["islr_lite"]["plain"])["per_class"].get(gloss)
         if test:
             entry["device_held_out"] = test
+        for conflict in held["label_conflicts"]:
+            if gloss in conflict["signs"]:
+                other = [g for g in conflict["signs"] if g != gloss][0]
+                entry["data_note"] = f"The phone recordings of this sign were labelled as '{other}'; it was learned from computer-camera recordings only and not measured on unseen ones."
+        if gloss in held["untrained_in_this_protocol"]:
+            entry["data_note"] = "Only phone recordings exist, so it was not measured on recordings the model had not seen."
         class_entries.append(entry)
     result["classes"] = class_entries
     tiers = {"A": 0, "B": sum(1 for c in class_entries if c["tier"] == "B"),
@@ -550,6 +602,8 @@ def main(argv: list[str] | None = None) -> int:
         "attribution": [json.loads(json.dumps(_attribution(i))) for i in LEDGER_IDS],
         "metrics": {
             "device_held_out": {"protocol": "trained on computer-camera recordings, tested on phone recordings; weaker (no signer ids)",
+                                "fair_test": held["fair_test"], "top1_all_phone": held["islr_lite"]["plain_all_phone"]["top1"],
+                                "not_measured": held["untrained_in_this_protocol"], "label_conflicts": held["label_conflicts"],
                                 "top1": (held["islr_lite"]["mirror_average"] if mirror_average else held["islr_lite"]["plain"])["top1"],
                                 "top5": (held["islr_lite"]["mirror_average"] if mirror_average else held["islr_lite"]["plain"])["top5"],
                                 "measured_on": "the same recipe trained without the phone folder (the shipped model also learned from it)"},

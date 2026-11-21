@@ -446,6 +446,56 @@
    "urdu": "جوار بھاٹا",
    "urdu_source": "agent translation of the English word (not a sign description); to be reviewed",
    "dictionary_url": "https://psl.org.pk/dictionary/14-beach/627-tide"
+  },
+  "come": {
+   "english": "Come",
+   "urdu": "آئیں",
+   "urdu_source": "vocabulary",
+   "vocabulary_id": "come"
+  },
+  "help": {
+   "english": "Help",
+   "urdu": "مدد",
+   "urdu_source": "vocabulary",
+   "vocabulary_id": "help"
+  },
+  "doctor": {
+   "english": "Doctor",
+   "urdu": "ڈاکٹر",
+   "urdu_source": "vocabulary",
+   "vocabulary_id": "doctor"
+  },
+  "who": {
+   "english": "Who",
+   "urdu": "کون؟",
+   "urdu_source": "vocabulary",
+   "vocabulary_id": "who"
+  },
+  "where": {
+   "english": "Where",
+   "urdu": "کہاں؟",
+   "urdu_source": "vocabulary",
+   "vocabulary_id": "where"
+  },
+  "give": {
+   "english": "Give",
+   "urdu": "دینا",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed"
+  },
+  "want": {
+   "english": "Want",
+   "urdu": "چاہنا",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed"
+  },
+  "hungry": {
+   "english": "Hungry",
+   "urdu": "بھوکا",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed"
+  },
+  "need": {
+   "english": "Need",
+   "urdu": "ضرورت",
+   "urdu_source": "agent translation of the English word (not a sign description); to be reviewed"
   }
  }
 }
