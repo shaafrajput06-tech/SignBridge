@@ -3,7 +3,7 @@
 The website's "What's new" page and the GitHub Release notes are made from this file (tools/site_pages.py).
 
 ## New name and address
-- SignBridge is now called **SignMate**, at https://signmate-pk.github.io/ (the old address forwards there).
+- SignBridge is now called **SignMate**, at https://signmate-pk.github.io/ (the old address was switched off; this is the only website).
 
 ## PSL from the camera
 - The camera now suggests Pakistan Sign Language words. It learned them from a public PSL dataset of hand movements (SignSpeak).

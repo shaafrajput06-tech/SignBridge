@@ -44,3 +44,8 @@
   "ASK SIGNBRIDGE"; fixed in the follow-up commit.
 - The GitHub Release v3.0.0 and its asset moved with the repository (its file is still named
   `SignBridge-shared-copy.zip`; later builds are named `SignMate-shared-copy.zip`).
+- Old address: first set to forward to the new site (checked: the home page and
+  `/SignBridge/asl-selftest.html?x=1` both landed on the same page at the new address). Then, on the
+  owner's request ("make old website disappear only the newest one should exist"), the forwarding pages
+  were removed from `shaafrajput06-tech/shaafrajput06-tech.github.io`; only a worker that clears old
+  offline copies remains (`tools/old_address_cleanup/`).

@@ -6,6 +6,12 @@ source, and <https://signmate-pk.github.io/> serves the site (checked in a brows
 "69 PSL signs · suggestions", "Community dataset — not yet validated"). The owner also chose a new
 name, **SignMate** (PR #4). The steps below are kept as the record of how it was done.
 
+**Old address switched off (2026-11-21).** At first the old address forwarded to the new one (step 6).
+The owner then asked for the old website to disappear, so the forwarding pages were removed:
+`https://shaafrajput06-tech.github.io/SignBridge/` now shows GitHub's 404 page. Only
+`SignBridge/sw.js` is left there, to delete the old offline copy from browsers that saved it
+(`tools/old_address_cleanup/README.md`).
+
 Chosen by the owner on 2026-11-20 (master-v3.md section 3, Stage 7 B.4, free option).
 
 **Why not `signbridge.github.io`?** That address belongs to whoever owns the GitHub name `signbridge`.
@@ -55,14 +61,14 @@ After the move, the repository has a new name, so Claude needs permission again:
 - If GitHub asks you to **install or approve the Claude app for the `signmate-pk` organisation**,
   choose the organisation and allow access to the `signmate-pk.github.io` repository.
 
-### 6. Make the old address forward to the new one
+### 6. Make the old address forward to the new one (later switched off, see the top)
 GitHub only forwards the old *repository* address, not the old *website* address
 (`shaafrajput06-tech.github.io/SignBridge/`), so a tiny forwarding site does that:
 1. Open <https://github.com/new> (still as `shaafrajput06-tech`). **Repository name:**
    `shaafrajput06-tech.github.io`, **Public**, tick **Add a README file**, click **Create repository**.
 2. In the new repository click **Add file** > **Upload files** and drag in the three files from the
-   SignBridge folder `tools/old_address_redirect/`: `404.html`, `.nojekyll` and the folder `SignBridge`
-   (it holds `index.html`). Windows hides files starting with a dot: if `.nojekyll` does not show, skip
+   SignBridge folder `tools/old_address_redirect/` (now `tools/old_address_cleanup/`): `404.html`, `.nojekyll`
+   and the folder `SignBridge` (it held `index.html`). Windows hides files starting with a dot: if `.nojekyll` does not show, skip
    it, it is optional here. Click **Commit changes**.
 3. Open its **Settings** > **Pages**: **Source** = *Deploy from a branch*, **Branch** = `main`, folder
    `/ (root)`, **Save**.
@@ -83,7 +89,7 @@ git remote set-url origin https://github.com/signmate-pk/signmate-pk.github.io.g
 - `shared_data/site.json` holds the new address, the new repository and the old ones.
 - README, `docs/WEBSITE.md` and the baseline download tool use the new address, falling back to the
   old one until the move is finished.
-- `tools/old_address_redirect/`: the forwarding pages for step 6.
+- `tools/old_address_cleanup/`: what is left at the old address (no pages; a worker that clears old offline copies).
 - `tests/test_site_address.py` fails if any file gives an address that disagrees with `site.json`.
 - Later stages (PWA manifest, service-worker scope, `sitemap.xml`, `robots.txt`, Open Graph tags,
   Flutter links) read the address from `site.json` when they are added.
