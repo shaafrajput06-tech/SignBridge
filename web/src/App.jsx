@@ -173,7 +173,8 @@ export default function App() {
 
   useEffect(() => {
     let active = true;
-    fetch(`${API}/vocabulary?page_size=128`).then((response) => response.ok ? response.json() : Promise.reject()).then((data) => {
+    // Without a local server (GitHub Pages, offline copy) go straight to the bundled file: no failing request.
+    (HAS_SERVER ? fetch(`${API}/vocabulary?page_size=128`) : Promise.reject(new Error("no server"))).then((response) => response.ok ? response.json() : Promise.reject()).then((data) => {
       if (active) setVocabulary(data.items || []);
     }).catch(async () => {
       try {
