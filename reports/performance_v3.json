@@ -1,0 +1,42 @@
+{
+ "about": "Speed and page measurements for SignBridge 3.0. Each row names where and when it was measured; nothing is estimated.",
+ "note": "The owner's own laptop and phone were not measured with this version yet (docs/HOW_TO_MEASURE_SPEED.md).",
+ "measurements": [
+  {
+   "what": "PSL model, one sign, in the browser (LiteRT.js, Web Worker)",
+   "result": "median 14.4 ms over 6 signs (23.4 ms in a second run)",
+   "where": "Claude's workspace: headless Chromium 153, 2 cores, software graphics (tools/psl_browser/run.mjs)",
+   "date": "2026-11-21"
+  },
+  {
+   "what": "PSL model, one sign, Python CPU (int8)",
+   "result": "1.39 ms",
+   "where": "GitHub Actions runner (psl-train run 44884632047)",
+   "date": "2026-11-21"
+  },
+  {
+   "what": "ASL model, one sign, v3 preview build, Web Worker",
+   "result": "16.3 / 10.9 / 9.8 ms (signs of 10 / 32 / 57 frames); compile 569 ms",
+   "where": "GitHub Actions, HeadlessChrome 159, 4 cores (preview run 44709553244)",
+   "date": "2026-11-20"
+  },
+  {
+   "what": "ASL model, one sign, old live build (page thread)",
+   "result": "51.8 / 49.4 / 46.9 ms; 13.1 s from opening the page to a ready model",
+   "where": "Owner's Windows laptop, Chromium 156",
+   "date": "2026-11-20"
+  },
+  {
+   "what": "Lighthouse, mobile preset (simulated slow phone)",
+   "result": "performance 90, accessibility 100, best practices 96; largest contentful paint 3.0 s (budget 2.5 s: missed)",
+   "where": "GitHub Actions runner, Lighthouse 12.8.2 (preview run 44888042012)",
+   "date": "2026-11-21"
+  },
+  {
+   "what": "Lighthouse, desktop preset",
+   "result": "accessibility 100, best practices 96; first contentful paint 0.52 s; performance score not given (Lighthouse reported no largest contentful paint: NO_LCP)",
+   "where": "GitHub Actions runner, Lighthouse 12.8.2 (preview run 44888042012)",
+   "date": "2026-11-21"
+  }
+ ]
+}

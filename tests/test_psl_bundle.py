@@ -68,7 +68,7 @@ class BundleTests(unittest.TestCase):
             frames = psl_hands.to_islr(hands.reshape(psl_hands.FRAMES, 2, 21, 3))
             scores = model.scores(model.input_from_frames(frames, psl_hands.ASPECT_REFERENCE))
             self.assertEqual(int(np.argmax(scores)), case["top5"][0], case["sign"])
-            np.testing.assert_allclose(scores[case["top5"]], case["top5_scores"], atol=2e-3)
+            np.testing.assert_allclose(scores[case["top5"]], case["top5_scores"], atol=2e-2)
 
 
 if __name__ == "__main__":

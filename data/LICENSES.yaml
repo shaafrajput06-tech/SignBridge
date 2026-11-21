@@ -557,3 +557,22 @@ assets:
       - path: models/*.joblib
       - path: models/model_metadata.json
     notes: "Local only (git-ignored). Each training path must still call training_use_refusal() per recording."
+
+  - id: signbridge-psl-model-v3
+    name: "SignBridge PSL recogniser v3 (weights trained by this project on SignSpeak)"
+    kind: model_weights
+    sign_language: PSL
+    label_scope: psl
+    source_url: project:tools/psl_train
+    licence: "project-owned weights, trained on psl-signspeak-words (Apache-2.0)"
+    licence_evidence: "Trained by .github/workflows/psl-train.yml (run 44884632047, 2026-11-21) only on psl-signspeak-words, whose Apache-2.0 licence allows training and redistributing derived weights with attribution (see that entry). Manifest: models/psl/manifest.json (SHA-256 of the model inside)."
+    allowed_uses: {pretrain_encoder: true, train_labels: false, evaluate: true, reference_clip: false, redistribute_weights: true, redistribute_data: false}
+    conditions: [attribution]
+    attribution: "PSL recogniser trained on the Dynamic Word-Level Pakistan Sign Language Dataset by Mohib Ullah Khan Sherwani and the SignSpeak team, COMSATS University Islamabad, Abbottabad Campus (Apache License 2.0, doi:10.57967/hf/8164)."
+    status: cleared_with_conditions
+    checked_on: "2026-11-21"
+    checked_by: agent
+    files:
+      - path: models/psl/psl_v3.tflite
+        sha256: 72c71f80f17f57fe84717f6fd593d8c776a1ac42c79a270df9e631bc8efcab0e
+      - path: models/psl/manifest.json

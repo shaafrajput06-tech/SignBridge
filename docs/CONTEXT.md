@@ -1,4 +1,4 @@
-# SignBridge — Context pack (master v3: Stage 1 done, Stage 2 in progress, 2026-11-21)
+# SignBridge — Context pack (master v3: Stages 0-6 done, release prepared, 2026-11-21)
 
 ## Product goal
 A Deaf PSL signer and a hearing Urdu/English speaker hold a real conversation through one device.
@@ -11,7 +11,8 @@ CLAUDE.md section 8) and adds CLAUDE.md section 9 (baseline protection, licensed
 learning, language purity, AI never invents a sign, measured performance budgets).
 All work happens on branch **`v3/master`**; `main` is the live website and changes only when the
 owner merges the v3 pull request in Stage 7. Stage 0 is done up to its gate (see "Waiting for");
-Stage 1 passed its gate (`reports/v3_stage1_web_learn.md`); Stage 2 (PSL recogniser) is in progress.
+Stage 1 passed its gate (`reports/v3_stage1_web_learn.md`). Stages 2-6 are done with the limits in
+`reports/final_v3.md` (PSL v3: `reports/psl_v3.md`; exhibition kit: `docs/EXHIBITION_KIT.md`).
 PR #1 (interim release of Stages 0-1) was merged on 2026-11-20, but its website deploy was stopped on the
 owner's request ("complete all things then publish it"): the live site is still the old build, and
 nobody should press "Run workflow" on `main` until the final release.
@@ -39,9 +40,14 @@ nobody should press "Run workflow" on `main` until the final release.
 - A new model replaces it only if better on top-1 on the same set and within the latency budget.
 
 ## Current state
-- PSL: capture v2 (both hands + pose + face) on the PSL screen; PSL recognition "Not installed yet";
-  Phase 0 gesture demo off by default. Coverage: Tier A 0, Tier B 0, Tier C optional (server only),
-  Tier D 64. No trained PSL model.
+- PSL: bundle `models/psl/` (v3.0.0-20261121, int8 1.85 MB, 69 signs + "not a sign", all Tier B,
+  "Community dataset — not yet validated"), trained on SignSpeak by `.github/workflows/psl-train.yml`
+  (run 44884632047). Fair phone test 98.6 % top-1 (weaker); one independent signer 35.7 % (14 clips).
+  Runs in the same LiteRT.js worker code as ASL; never spoken until the person confirms.
+- New on the site: PSL dictionary videos (31 offline) and a Dictionary page (788 SLT signs), sentence
+  builder, reply panel, quick/emergency phrases, AI helpers switch (camera check, personal adaptation,
+  helper), offline service worker, How well it works / Credits / What's new pages from
+  `shared_data/site_pages.json` (`tools/site_pages.py`, tested).
 - ASL mode: ISLR 1st-place TFLite (250 signs, MIT) — browser (LiteRT.js in a Web Worker, 32 frames)
   and server (ai-edge-litert, native length). On v3 the worker works again (`web/src/wasm_locate.js`);
   on the live `main` build it falls back to the page thread. GISLR rerun set (39,443 signs, Kaggle,

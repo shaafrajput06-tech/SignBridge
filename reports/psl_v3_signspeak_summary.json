@@ -1,0 +1,453 @@
+{
+  "ledger_id": "psl-signspeak-words",
+  "source": "https://huggingface.co/datasets/mohibkhansherwani/DynamicWordLevelPakistanSignLanguageDataset @ 1ba8b9fc58ad01431e50031fe3fe31e4d01f689d",
+  "archives": [
+    "PakistanSignLanguageDatasetV2.zip",
+    "PakistanSignLanguageDataset.zip"
+  ],
+  "counts": {
+    "samples_in_PakistanSignLanguageDatasetV2.zip": 7097,
+    "partial_samples_dropped": 3,
+    "samples_with_under_6_hand_frames_dropped": 18,
+    "exact_duplicates_dropped": 4356,
+    "samples_in_PakistanSignLanguageDataset.zip": 4399
+  },
+  "folders_dropped_as_not_words": {
+    "left_hand": 171,
+    "s": 4,
+    "test_word": 106,
+    "test2": 17
+  },
+  "samples_kept": 6821,
+  "words": 71,
+  "per_word": {
+    "_unknown": {
+      "laptop": 10,
+      "phone": 9,
+      "webcam": 2
+    },
+    "absolutely": {
+      "laptop": 50,
+      "phone": 31,
+      "webcam": 20
+    },
+    "aircrash": {
+      "laptop": 50,
+      "phone": 31,
+      "webcam": 20
+    },
+    "airplane": {
+      "laptop": 50,
+      "phone": 33,
+      "webcam": 20
+    },
+    "all": {
+      "laptop": 50,
+      "phone": 33,
+      "webcam": 20
+    },
+    "also": {
+      "laptop": 50,
+      "phone": 31,
+      "webcam": 20
+    },
+    "arrival": {
+      "laptop": 50,
+      "phone": 30,
+      "webcam": 20
+    },
+    "assalam_o_alaikum": {
+      "laptop": 50,
+      "phone": 51,
+      "webcam": 19
+    },
+    "atm": {
+      "laptop": 50,
+      "phone": 30,
+      "webcam": 20
+    },
+    "bald": {
+      "laptop": 50,
+      "phone": 30,
+      "webcam": 20
+    },
+    "beach": {
+      "laptop": 50,
+      "phone": 30,
+      "webcam": 20
+    },
+    "beak": {
+      "laptop": 50,
+      "phone": 30,
+      "webcam": 20
+    },
+    "bear": {
+      "laptop": 50,
+      "phone": 30,
+      "webcam": 20
+    },
+    "beard": {
+      "laptop": 50,
+      "phone": 31,
+      "webcam": 20
+    },
+    "bed": {
+      "laptop": 50,
+      "phone": 30,
+      "webcam": 20
+    },
+    "bench": {
+      "laptop": 50,
+      "phone": 34,
+      "webcam": 20
+    },
+    "bicycle": {
+      "laptop": 50,
+      "phone": 30,
+      "webcam": 20
+    },
+    "bird": {
+      "laptop": 3
+    },
+    "both": {
+      "laptop": 50,
+      "phone": 32,
+      "webcam": 20
+    },
+    "bridge": {
+      "laptop": 50,
+      "phone": 31,
+      "webcam": 20
+    },
+    "bring": {
+      "laptop": 50,
+      "phone": 52,
+      "webcam": 20
+    },
+    "bulb": {
+      "laptop": 50,
+      "phone": 31,
+      "webcam": 20
+    },
+    "cartoon": {
+      "laptop": 50,
+      "phone": 30,
+      "webcam": 20
+    },
+    "chimpanzee": {
+      "laptop": 50,
+      "phone": 32,
+      "webcam": 20
+    },
+    "color_pencils": {
+      "laptop": 50,
+      "phone": 30,
+      "webcam": 20
+    },
+    "come": {
+      "phone": 33
+    },
+    "cow": {
+      "laptop": 50,
+      "phone": 31,
+      "webcam": 20
+    },
+    "crow": {
+      "laptop": 50,
+      "phone": 31,
+      "webcam": 20
+    },
+    "cupboard": {
+      "laptop": 50,
+      "phone": 31,
+      "webcam": 20
+    },
+    "deer": {
+      "laptop": 50,
+      "phone": 30,
+      "webcam": 20
+    },
+    "doctor": {
+      "laptop": 49,
+      "phone": 30
+    },
+    "dog": {
+      "laptop": 50,
+      "phone": 33,
+      "webcam": 20
+    },
+    "donttouch": {
+      "laptop": 50,
+      "phone": 32,
+      "webcam": 20
+    },
+    "door": {
+      "laptop": 50,
+      "phone": 34,
+      "webcam": 20
+    },
+    "elephant": {
+      "laptop": 50,
+      "phone": 30,
+      "webcam": 20
+    },
+    "excuseme": {
+      "laptop": 50,
+      "phone": 50,
+      "webcam": 20
+    },
+    "facelotion": {
+      "laptop": 50,
+      "phone": 30,
+      "webcam": 20
+    },
+    "fan": {
+      "laptop": 50,
+      "phone": 31,
+      "webcam": 20
+    },
+    "garden": {
+      "laptop": 50,
+      "phone": 31,
+      "webcam": 20
+    },
+    "generator": {
+      "laptop": 50,
+      "phone": 31,
+      "webcam": 20
+    },
+    "give": {
+      "phone": 30
+    },
+    "goodbye": {
+      "laptop": 50,
+      "phone": 51,
+      "webcam": 20
+    },
+    "goodmorning": {
+      "laptop": 50,
+      "phone": 31,
+      "webcam": 20
+    },
+    "have_a_good_day": {
+      "laptop": 50,
+      "phone": 32,
+      "webcam": 20
+    },
+    "hello": {
+      "laptop": 50,
+      "phone": 51,
+      "webcam": 20
+    },
+    "help": {
+      "laptop": 50,
+      "phone": 30
+    },
+    "hungry": {
+      "laptop": 50,
+      "phone": 30
+    },
+    "ihaveacomplaint": {
+      "laptop": 50,
+      "phone": 33,
+      "webcam": 20
+    },
+    "lifejacket": {
+      "laptop": 50,
+      "phone": 30,
+      "webcam": 20
+    },
+    "mine": {
+      "laptop": 50,
+      "phone": 31,
+      "webcam": 20
+    },
+    "mobile_phone": {
+      "laptop": 50,
+      "phone": 32,
+      "webcam": 20
+    },
+    "nailcutter": {
+      "laptop": 50,
+      "phone": 30,
+      "webcam": 20
+    },
+    "need": {
+      "laptop": 50,
+      "phone": 32
+    },
+    "peacock": {
+      "laptop": 50,
+      "phone": 30,
+      "webcam": 20
+    },
+    "policecar": {
+      "laptop": 50,
+      "phone": 30,
+      "webcam": 20
+    },
+    "razor": {
+      "laptop": 50,
+      "phone": 30,
+      "webcam": 20
+    },
+    "shampoo": {
+      "laptop": 50,
+      "phone": 32,
+      "webcam": 20
+    },
+    "shower": {
+      "laptop": 50,
+      "phone": 31,
+      "webcam": 20
+    },
+    "sunglasses": {
+      "laptop": 50,
+      "phone": 31,
+      "webcam": 20
+    },
+    "thankyou": {
+      "laptop": 50,
+      "phone": 50,
+      "webcam": 20
+    },
+    "tissue": {
+      "laptop": 50,
+      "phone": 30,
+      "webcam": 20
+    },
+    "toothbrush": {
+      "laptop": 50,
+      "phone": 31,
+      "webcam": 20
+    },
+    "toothpaste": {
+      "laptop": 50,
+      "phone": 32,
+      "webcam": 20
+    },
+    "umbrella": {
+      "laptop": 50,
+      "phone": 30,
+      "webcam": 20
+    },
+    "want": {
+      "phone": 31
+    },
+    "water": {
+      "laptop": 50,
+      "phone": 50,
+      "webcam": 20
+    },
+    "we": {
+      "laptop": 50,
+      "phone": 32,
+      "webcam": 20
+    },
+    "welldone": {
+      "laptop": 50,
+      "phone": 32,
+      "webcam": 20
+    },
+    "where": {
+      "laptop": 50,
+      "phone": 51
+    },
+    "who": {
+      "laptop": 50,
+      "phone": 30
+    },
+    "you": {
+      "laptop": 50,
+      "phone": 32,
+      "webcam": 20
+    }
+  },
+  "devices": {
+    "laptop": 3312,
+    "phone": 2308,
+    "webcam": 1201
+  },
+  "hand_order": {
+    "one_handed_samples_led_by_first_block": 2,
+    "one_handed_samples_led_by_second_block": 3734,
+    "two_handed_frames": 110811,
+    "share_of_two_handed_frames_with_first_block_further_right_in_image": 0.9939085469854075,
+    "decision": "first block = signer's left hand, second = signer's right (unmirrored capture; most signers right-handed)"
+  },
+  "camera_shape": {
+    "laptop": {
+      "estimate": 1.42,
+      "nearest_common": 1.3333,
+      "hands_used": 586,
+      "rigidity_curve": {
+        "0.50": 0.18904,
+        "0.60": 0.17209,
+        "0.70": 0.15878,
+        "0.80": 0.14843,
+        "0.90": 0.14061,
+        "1.00": 0.13494,
+        "1.10": 0.13108,
+        "1.20": 0.12864,
+        "1.30": 0.1273,
+        "1.40": 0.1268,
+        "1.50": 0.12696,
+        "1.60": 0.12763,
+        "1.70": 0.12871,
+        "1.80": 0.13009,
+        "1.90": 0.13169,
+        "2.00": 0.13345
+      }
+    },
+    "phone": {
+      "estimate": 1.26,
+      "nearest_common": 1.3333,
+      "hands_used": 572,
+      "rigidity_curve": {
+        "0.50": 0.16411,
+        "0.60": 0.15016,
+        "0.70": 0.1396,
+        "0.80": 0.13173,
+        "0.90": 0.12606,
+        "1.00": 0.12226,
+        "1.10": 0.12004,
+        "1.20": 0.11905,
+        "1.30": 0.11899,
+        "1.40": 0.11962,
+        "1.50": 0.12076,
+        "1.60": 0.12227,
+        "1.70": 0.12406,
+        "1.80": 0.12603,
+        "1.90": 0.12812,
+        "2.00": 0.13027
+      }
+    },
+    "webcam": {
+      "estimate": 1.39,
+      "nearest_common": 1.3333,
+      "hands_used": 588,
+      "rigidity_curve": {
+        "0.50": 0.18612,
+        "0.60": 0.1695,
+        "0.70": 0.15628,
+        "0.80": 0.14587,
+        "0.90": 0.13787,
+        "1.00": 0.13202,
+        "1.10": 0.1281,
+        "1.20": 0.12574,
+        "1.30": 0.12455,
+        "1.40": 0.12423,
+        "1.50": 0.12457,
+        "1.60": 0.12543,
+        "1.70": 0.12667,
+        "1.80": 0.1282,
+        "1.90": 0.12994,
+        "2.00": 0.13183
+      }
+    }
+  },
+  "frames_per_sample": {
+    "60": 6820,
+    "56": 1
+  }
+}
