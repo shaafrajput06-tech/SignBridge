@@ -120,8 +120,9 @@ jobs:
         id: lighthouse
         continue-on-error: true
         run: |
-          # A server that compresses like GitHub Pages does (python's http.server does not).
-          npx --yes serve@14 web/dist -l 4173 > ci-results/lighthouse-server.log 2>&1 &
+          # python's server does not compress (GitHub Pages does), so "text compression" findings here are not real.
+          # (serve@14 was tried; Lighthouse then reported NO_LCP.)
+          python -m http.server 4173 --directory web/dist > ci-results/lighthouse-server.log 2>&1 &
           for i in $(seq 1 60); do curl -fsS -o /dev/null http://127.0.0.1:4173/ && break; sleep 2; done  # wait until it answers
           export CHROME_PATH="$(cd web && node -e "console.log(require('playwright').chromium.executablePath())")"
           for preset in desktop mobile; do
