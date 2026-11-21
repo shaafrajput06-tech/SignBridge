@@ -40,7 +40,7 @@ export async function createServerAsl({ aslSpec, labels, api = API_BASE }) {
   };
 }
 
-function workerChannel(worker) {
+export function workerChannel(worker) {
   let nextId = 1;
   const waiting = new Map();
   worker.onmessage = (event) => {
@@ -51,7 +51,7 @@ function workerChannel(worker) {
     if (ok) entry.resolve(result); else entry.reject(new Error(error));
   };
   worker.onerror = (event) => {
-    for (const entry of waiting.values()) entry.reject(new Error(event.message || "the ASL worker stopped"));
+    for (const entry of waiting.values()) entry.reject(new Error(event.message || "the model worker stopped"));
     waiting.clear();
   };
   return (type, payload, transfer = []) => new Promise((resolve, reject) => {

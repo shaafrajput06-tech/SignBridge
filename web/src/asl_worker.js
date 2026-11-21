@@ -1,4 +1,4 @@
-// Web Worker that runs the ASL model off the page's main thread, so the camera view stays smooth.
+// Web Worker that runs the ASL model (or the PSL model: same code, another file) off the page's main thread, so the camera view stays smooth.
 // Messages: { id, type: "init", payload: { modelUrl, wasmPath, frames, sha256 } } and
 //           { id, type: "run", payload: { input: Float32Array } }. Replies: { id, ok, result | error }.
 import { createLiteRtAslModel } from "./asl_litert.js";
@@ -18,7 +18,7 @@ self.onmessage = async (event) => {
       model = await createLiteRtAslModel(payload);
       result = { ...model.info, importScriptsShim: shimInstalled };
     } else if (type === "run") {
-      if (!model) throw new Error("the ASL model is not loaded yet");
+      if (!model) throw new Error("the model is not loaded yet");
       result = await model.run(payload.input);
     } else {
       throw new Error(`unknown message ${type}`);

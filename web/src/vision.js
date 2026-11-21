@@ -1,11 +1,12 @@
-import { FilesetResolver, HandLandmarker } from "@mediapipe/tasks-vision";
 import { assetUrl } from "./paths.js";
+// MediaPipe is loaded only when a detector is created, so the page's first load stays small (Stage 5).
 
 let detectorPromise;
 
 export async function createHandDetector() {
   if (!detectorPromise) {
     detectorPromise = (async () => {
+      const { FilesetResolver, HandLandmarker } = await import("@mediapipe/tasks-vision");
       const files = await FilesetResolver.forVisionTasks(assetUrl("wasm"));
       const options = {
         baseOptions: { modelAssetPath: assetUrl("models/hand_landmarker.task"), delegate: "GPU" },
