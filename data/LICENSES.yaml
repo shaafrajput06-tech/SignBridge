@@ -576,3 +576,4 @@ assets:
       - path: models/psl/psl_v3.tflite
         sha256: 72c71f80f17f57fe84717f6fd593d8c776a1ac42c79a270df9e631bc8efcab0e
       - path: models/psl/manifest.json
+        sha256: b96dba023104b5d8838e0475ec5e925b2bbbffa60fc8234af749779267d49253
