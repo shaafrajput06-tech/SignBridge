@@ -13,14 +13,16 @@ All work happens on branch **`v3/master`**; `main` is the live website and chang
 owner merges the v3 pull request in Stage 7. Stage 0 is done up to its gate (see "Waiting for");
 Stage 1 passed its gate (`reports/v3_stage1_web_learn.md`). Stages 2-6 are done with the limits in
 `reports/final_v3.md` (PSL v3: `reports/psl_v3.md`; exhibition kit: `docs/EXHIBITION_KIT.md`).
-PR #1 (interim release of Stages 0-1) was merged on 2026-11-20, but its website deploy was stopped on the
-owner's request ("complete all things then publish it"): the live site is still the old build, and
-nobody should press "Run workflow" on `main` until the final release.
+Released: PR #2 (v3.0.0, GitHub Release with the shared copy), PR #3 (3.0.1 fixes), PR #4 (rename to
+SignMate, 2026-11-21). `main` deploys the live site on every push.
 
 ## Where things live
-- GitHub: `shaafrajput06-tech/SignBridge` (moving to `signmate-pk/signmate-pk.github.io`,
-  `docs/DOMAIN.md`). Live site today: <https://shaafrajput06-tech.github.io/SignBridge/>; chosen
-  address <https://signmate-pk.github.io/> (`shared_data/site.json`).
+- GitHub: `signmate-pk/signmate-pk.github.io` (organisation `signmate-pk`, owned by
+  `shaafrajput06-tech`; moved from `shaafrajput06-tech/SignBridge` on 2026-11-21, GitHub forwards the
+  old repository links). Live site: <https://signmate-pk.github.io/> (`shared_data/site.json`); the old
+  address forwards there (`tools/old_address_redirect/`, `docs/DOMAIN.md`).
+- Name: **SignMate** (was SignBridge until 2026-11-21). Internal ids keep the old name on purpose:
+  bundle id `signbridge-psl`, browser storage keys, Python packages, baseline release names.
 - Any laptop: clone, `git checkout v3/master`, double-click `setup_windows.bat`
   (`docs/SETUP_NEW_LAPTOP.md`). The owner has no folder shared with Claude; GitHub is the only home.
 - CI: `.github/workflows/website.yml` (main only: tests, build, deploy to Pages, results at `/ci/`);
@@ -68,8 +70,8 @@ nobody should press "Run workflow" on `main` until the final release.
 ## Waiting for (owner [ME])
 1. Phone self-test and a camera check with a person signing ASL (`docs/HOW_TO_MEASURE_SPEED.md`).
    (Kaggle run: done. The owner's Kaggle account is not phone-verified: no internet or GPU in notebooks.)
-3. Optional before Stage 7: the move to `signmate-pk.github.io` (`docs/DOMAIN.md`); after it,
-   Claude needs repo access again under the new name.
+3. Done 2026-11-21: the move to `signmate-pk.github.io`. For Claude to push again, the Claude GitHub
+   App must be allowed on the `signmate-pk` organisation (`docs/DOMAIN.md` step 5).
 
 ## Open findings
 - The open web has almost no licensed PSL video: growth needs permissions from Deaf organisations.

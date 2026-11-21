@@ -3,8 +3,8 @@
 It is a sign language translator which will help deaf people to communicate.
 
 **Try it in a browser:** <https://signmate-pk.github.io/> (camera needed; nothing leaves your device).
-Until the move to that address is finished ([docs/DOMAIN.md](docs/DOMAIN.md)), the site is still at
-<https://shaafrajput06-tech.github.io/SignBridge/>. How the website is built and what works there:
+SignMate was called SignBridge until 2026-11-21; the old address <https://shaafrajput06-tech.github.io/SignBridge/>
+forwards here ([docs/DOMAIN.md](docs/DOMAIN.md)). How the website is built and what works there:
 [docs/WEBSITE.md](docs/WEBSITE.md). Setting up on another computer: [docs/SETUP_NEW_LAPTOP.md](docs/SETUP_NEW_LAPTOP.md).
 
 SignMate is a Pakistan Sign Language (PSL) ↔ Urdu/English translator that runs on your own device.

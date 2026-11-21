@@ -1,5 +1,11 @@
 # Moving SignBridge to https://signmate-pk.github.io/
 
+**Status: done on 2026-11-21.** The organisation `signmate-pk` was created, the repository was moved
+into it and renamed `signmate-pk.github.io` in the same transfer, Pages kept its "GitHub Actions"
+source, and <https://signmate-pk.github.io/> serves the site (checked in a browser: "SignMate",
+"69 PSL signs · suggestions", "Community dataset — not yet validated"). The owner also chose a new
+name, **SignMate** (PR #4). The steps below are kept as the record of how it was done.
+
 Chosen by the owner on 2026-11-20 (master-v3.md section 3, Stage 7 B.4, free option).
 
 **Why not `signbridge.github.io`?** That address belongs to whoever owns the GitHub name `signbridge`.

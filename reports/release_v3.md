@@ -30,4 +30,17 @@
 - Camera on a laptop and on a phone: one PSL sign, one ASL sign, one two-handed sign, one sentence.
 - Offline after the first visit, on the live site.
 - Lighthouse on the live site (the preview measurements are in `reports/performance_v3.json`).
-- The move to signmate-pk.github.io is optional (`docs/DOMAIN.md`); the old address is still the live one.
+- The move to signmate-pk.github.io was optional at release time; it was done later the same day (below).
+
+## New name and address (2026-11-21)
+- The owner renamed the app **SignMate** and chose the address **https://signmate-pk.github.io/**.
+- PR #4 (rename) was merged into `main` as d6e0774 after preview run 44896124848 passed on 94b7d26.
+- The free organisation `signmate-pk` was created (owner: `shaafrajput06-tech`), and the repository was
+  transferred from `shaafrajput06-tech/SignBridge` to `signmate-pk/signmate-pk.github.io` in one step.
+  Pages kept its "GitHub Actions" source; the settings page reported "Your site is live at
+  https://signmate-pk.github.io/".
+- Checked in the owner's browser at the new address: title "SignMate — Hand signs into words",
+  "69 PSL signs · suggestions", "Community dataset — not yet validated". One label still said
+  "ASK SIGNBRIDGE"; fixed in the follow-up commit.
+- The GitHub Release v3.0.0 and its asset moved with the repository (its file is still named
+  `SignBridge-shared-copy.zip`; later builds are named `SignMate-shared-copy.zip`).
