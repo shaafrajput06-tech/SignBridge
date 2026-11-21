@@ -1,7 +1,7 @@
-// npm run build:shared: the offline "shared copy" of SignBridge for Windows, with nothing to install.
+// npm run build:shared: the offline "shared copy" of SignMate for Windows, with nothing to install.
 //
-//   web/dist-shared/SignBridge/                       the folder: Start SignBridge.bat, serve.ps1, README.txt, site/
-//   web/dist-shared/SignBridge-shared-copy.zip        the same folder zipped (what people download)
+//   web/dist-shared/SignMate/                       the folder: Start SignMate.bat, serve.ps1, README.txt, site/
+//   web/dist-shared/SignMate-shared-copy.zip        the same folder zipped (what people download)
 //
 // site/ is the website built with no server (VITE_API_BASE=none, like GitHub Pages): everything runs in the
 // browser. serve.ps1 is a tiny PowerShell web server for localhost, where browsers allow the camera.
@@ -22,7 +22,7 @@ const args = process.argv.slice(2);
 const option = (name) => (args.includes(name) ? args[args.indexOf(name) + 1] : null);
 const outDir = path.resolve(option("--out") || path.join(web, "dist-shared"));
 const from = option("--from") ? path.resolve(option("--from")) : null;
-const folder = path.join(outDir, "SignBridge");
+const folder = path.join(outDir, "SignMate");
 const siteDir = path.join(folder, "site");
 
 // Files that must be in every shared copy, or it cannot start / recognise anything.
@@ -97,7 +97,7 @@ async function main() {
   const missing = [];
   for (const relative of REQUIRED) if (!existsSync(path.join(siteDir, relative))) missing.push(relative);
   if (missing.length) throw new Error(`the site is missing files the shared copy needs: ${missing.join(", ")}. Run npm run assets with internet once (or python tools/fetch_assets.py).`);
-  for (const name of ["Start SignBridge.bat", "serve.ps1", "README.txt"]) await cp(path.join(web, "shared-copy", name), path.join(folder, name));
+  for (const name of ["Start SignMate.bat", "serve.ps1", "README.txt"]) await cp(path.join(web, "shared-copy", name), path.join(folder, name));
 
   const files = await listFiles(folder);
   let total = 0;
@@ -105,10 +105,10 @@ async function main() {
   console.log(`Shared copy folder: ${path.relative(process.cwd(), folder) || folder} (${files.length} files, ${(total / 1e6).toFixed(1)} MB)`);
   if (args.includes("--no-zip")) return;
   const entries = [];
-  for (const relative of files) entries.push({ name: `SignBridge/${relative}`, data: await readFile(path.join(folder, relative)) });
-  const zipPath = path.join(outDir, "SignBridge-shared-copy.zip");
+  for (const relative of files) entries.push({ name: `SignMate/${relative}`, data: await readFile(path.join(folder, relative)) });
+  const zipPath = path.join(outDir, "SignMate-shared-copy.zip");
   await writeFile(zipPath, zipFiles(entries));
-  console.log(`Shared copy zip:    ${path.relative(process.cwd(), zipPath) || zipPath} (${((await stat(zipPath)).size / 1e6).toFixed(1)} MB). Unzip it on Windows and double-click "Start SignBridge.bat".`);
+  console.log(`Shared copy zip:    ${path.relative(process.cwd(), zipPath) || zipPath} (${((await stat(zipPath)).size / 1e6).toFixed(1)} MB). Unzip it on Windows and double-click "Start SignMate.bat".`);
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

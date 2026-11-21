@@ -5,7 +5,7 @@
 #
 # What you get (Actions tab > the run > Artifacts, at the bottom of the summary page):
 #   site-preview         the website as GitHub Pages would serve it; unzip and open with any local web server
-#   shared-copy          SignBridge-shared-copy.zip: unzip on Windows and double-click "Start SignBridge.bat"
+#   shared-copy          SignMate-shared-copy.zip: unzip on Windows and double-click "Start SignMate.bat"
 #   check-results        every test's output, the ASL browser self-test and the baseline comparison
 name: Preview build and checks
 
@@ -208,7 +208,7 @@ jobs:
         if: steps.shared.outcome == 'success'
         with:
           name: shared-copy
-          path: web/dist-shared/SignBridge-shared-copy.zip
+          path: web/dist-shared/SignMate-shared-copy.zip
           if-no-files-found: error
 
       - name: Fail the run if a required check failed

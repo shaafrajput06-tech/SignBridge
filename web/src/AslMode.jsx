@@ -155,7 +155,7 @@ export default function AslMode({ requestCamera, voiceEnabled }) {
   return <section className="asl-mode">
     <div className="asl-banner panel" role="note">
       <span className="asl-tag">ASL</span>
-      <div><strong>American Sign Language mode</strong><p>This is <b>not</b> Pakistan Sign Language. It recognises 250 everyday ASL words with a ready-made model. PSL stays the main language of SignBridge.</p></div>
+      <div><strong>American Sign Language mode</strong><p>This is <b>not</b> Pakistan Sign Language. It recognises 250 everyday ASL words with a ready-made model. PSL stays the main language of SignMate.</p></div>
     </div>
     <section className="translator-grid">
       <div className="camera-card panel">
@@ -191,7 +191,7 @@ export default function AslMode({ requestCamera, voiceEnabled }) {
           {result?.band === "sure" && <div className="translation-output has-result"><div className="asl-confidence sure">Pretty sure</div><div className="translation-main">{best.display}</div></div>}
           {result?.band === "unsure" && <div className="translation-output"><div className="asl-confidence unsure">Not sure. Is it one of these?</div><div className="asl-choices">{result.top.slice(0, 3).map((item) => <span key={item.label} className="asl-choice">{item.display}</span>)}</div></div>}
           {result?.band === "none" && <div className="translation-output"><div className="asl-confidence none">I'm not sure. Try once more.</div><div className="translation-helper">Keep both hands and your face in view, and sign a little slower.</div></div>}
-          {result && <p className="asl-details">{result.frames} frames · {result.twoHandFrames} with both hands · {Math.round(result.ms)} ms · {result.runtime === "server" ? "ran on the SignBridge server on this computer" : "ran in this browser"}</p>}
+          {result && <p className="asl-details">{result.frames} frames · {result.twoHandFrames} with both hands · {Math.round(result.ms)} ms · {result.runtime === "server" ? "ran on the SignMate server on this computer" : "ran in this browser"}</p>}
           {history.length > 1 && <div className="asl-history"><span className="section-kicker">EARLIER</span>{history.slice(1).map((item) => <span key={item.at} className={`asl-history-item ${item.band}`}>{item.band === "sure" ? item.display : `${item.display}?`}</span>)}</div>}
           <p className="asl-credit">Runs {runtime ? (runtime.frames ? `in this browser (LiteRT.js, ${runtime.frames}-frame input)` : `on ${runtime.runtime}`) : "on this device"}. Model: 1st place of Google's Isolated Sign Language Recognition competition by Hoyeol Sohn (MIT licence), trained on signs by Deaf signers from the Deaf Professional Arts Network and Georgia Tech (CC BY 4.0). Results are spoken only when it is very sure (70 % or more).</p>
         </div>

@@ -1,6 +1,6 @@
-# SignBridge website (GitHub Pages)
+# SignMate website (GitHub Pages)
 
-**Address:** <https://signbridge-pk.github.io/> (set in `shared_data/site.json`).
+**Address:** <https://signmate-pk.github.io/> (set in `shared_data/site.json`).
 
 Until the owner finishes the move in [DOMAIN.md](DOMAIN.md), the site is still served at the old
 address <https://shaafrajput06-tech.github.io/SignBridge/>; after the move, that address forwards to the
@@ -15,7 +15,7 @@ HTTPS, so browsers allow the camera. The website is built and published automati
 GitHub only publishes the site after this is switched on once:
 
 1. Open the repository's **Settings > Pages** (signed in to GitHub): after the move
-   <https://github.com/signbridge-pk/signbridge-pk.github.io/settings/pages>.
+   <https://github.com/signmate-pk/signmate-pk.github.io/settings/pages>.
 2. Under **Build and deployment**, set **Source** to **GitHub Actions**. There is no Save button; the
    choice is stored straight away.
 3. Open the **Actions** tab, click **Website and checks**, then **Run workflow** > **Run workflow**.
@@ -44,7 +44,7 @@ caches the files after that.
 
 Each build runs every test and a real-browser ASL check, and publishes the results with the site:
 
-- <https://signbridge-pk.github.io/ci/status.json>: pass or fail for each check, the
+- <https://signmate-pk.github.io/ci/status.json>: pass or fail for each check, the
   commit and a link to the run;
 - `ci/tests.txt`, `ci/licences-release.txt`, `ci/asl-selftest.json`: the full output.
 

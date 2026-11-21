@@ -60,7 +60,7 @@ const manifest = {
 test("bundles are checked before use", () => {
   assert.equal(checkPslManifest(structuredClone(manifest)).classes.length, 3);
   assert.throws(() => checkPslManifest({ ...structuredClone(manifest), feature_version: "psl-hands-v9" }), /does not support/);
-  assert.throws(() => checkPslManifest({ ...structuredClone(manifest), sign_language: "ASL" }), /not a SignBridge PSL bundle/);
+  assert.throws(() => checkPslManifest({ ...structuredClone(manifest), sign_language: "ASL" }), /not a SignMate PSL bundle/);
   assert.throws(() => checkPslManifest({ ...structuredClone(manifest), output: { shape: [4] } }), /does not match/);
 });
 

@@ -18,9 +18,9 @@ owner's request ("complete all things then publish it"): the live site is still 
 nobody should press "Run workflow" on `main` until the final release.
 
 ## Where things live
-- GitHub: `shaafrajput06-tech/SignBridge` (moving to `signbridge-pk/signbridge-pk.github.io`,
+- GitHub: `shaafrajput06-tech/SignBridge` (moving to `signmate-pk/signmate-pk.github.io`,
   `docs/DOMAIN.md`). Live site today: <https://shaafrajput06-tech.github.io/SignBridge/>; chosen
-  address <https://signbridge-pk.github.io/> (`shared_data/site.json`).
+  address <https://signmate-pk.github.io/> (`shared_data/site.json`).
 - Any laptop: clone, `git checkout v3/master`, double-click `setup_windows.bat`
   (`docs/SETUP_NEW_LAPTOP.md`). The owner has no folder shared with Claude; GitHub is the only home.
 - CI: `.github/workflows/website.yml` (main only: tests, build, deploy to Pages, results at `/ci/`);
@@ -61,14 +61,14 @@ nobody should press "Run workflow" on `main` until the final release.
   of every manifest entry: PASSED. All web-learned signs are Tier B (single source).
 - Features v2 (971 values/frame), recording format v2, licence ledger (`data/LICENSES.yaml`, 23 assets,
   `data_engine.ledger.assert_allowed`), vocabulary 64 entries — unchanged since fast-track Stage 2.
-- `npm run build:shared` (in `web/`) makes `web/dist-shared/SignBridge-shared-copy.zip`.
+- `npm run build:shared` (in `web/`) makes `web/dist-shared/SignMate-shared-copy.zip`.
 - Tests: `python tools/run_all_tests.py [--smoke]`. CI (preview run 44709553244): 180 Python tests
   (2 skipped), licence check, Node v1 + v2 suites, baseline browser comparison — all passed.
 
 ## Waiting for (owner [ME])
 1. Phone self-test and a camera check with a person signing ASL (`docs/HOW_TO_MEASURE_SPEED.md`).
    (Kaggle run: done. The owner's Kaggle account is not phone-verified: no internet or GPU in notebooks.)
-3. Optional before Stage 7: the move to `signbridge-pk.github.io` (`docs/DOMAIN.md`); after it,
+3. Optional before Stage 7: the move to `signmate-pk.github.io` (`docs/DOMAIN.md`); after it,
    Claude needs repo access again under the new name.
 
 ## Open findings
@@ -86,7 +86,7 @@ nobody should press "Run workflow" on `main` until the final release.
 
 ## People and decisions
 - Deaf validation partner: none yet (requests drafted in `docs/permission_requests.md` [ME]).
-- Website address: `signbridge-pk.github.io` (2026-11-20; `signbridge.github.io` is taken).
+- Website address: `signmate-pk.github.io` (2026-11-20; `signbridge.github.io` is taken).
 - Compute: free Kaggle / Colab GPU via notebooks the owner starts; GitHub Actions for builds/checks.
 
 ## Environment notes

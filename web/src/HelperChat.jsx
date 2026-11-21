@@ -1,4 +1,4 @@
-// "Ask SignBridge": a small offline helper (master-v3 Stage 4). It answers only from SignBridge's own data:
+// "Ask SignMate": a small offline helper (master-v3 Stage 4). It answers only from SignMate's own data:
 // the dictionary videos, the PSL camera's sign list and the help text. It never describes how to make a sign in
 // words and never invents one: if there is no licensed video, it says so.
 import React, { useEffect, useRef, useState } from "react";
@@ -21,9 +21,9 @@ export default function HelperChat({ vocabulary, pslClasses }) {
     setText("");
   };
   return <div className="helper-chat panel">
-    <div className="panel-heading"><div><span className="section-kicker">ASK SIGNBRIDGE · WORKS OFFLINE</span><h2>Helper</h2></div><small>Answers only from SignBridge's own data.</small></div>
+    <div className="panel-heading"><div><span className="section-kicker">ASK SIGNBRIDGE · WORKS OFFLINE</span><h2>Helper</h2></div><small>Answers only from SignMate's own data.</small></div>
     <div className="helper-messages" aria-live="polite">{messages.length === 0 && <p className="helper-hint">Try: “how do I sign doctor”, “which signs does the camera know”, “does it work offline?”</p>}
       {messages.map((m, i) => <div key={i} className={`helper-message ${m.from}`}><p dir="auto">{m.text}</p>{m.video && <video src={m.video} controls loop muted playsInline autoPlay aria-label="PSL dictionary video" />}</div>)}<div ref={end} /></div>
-    <form className="helper-form" onSubmit={ask}><input value={text} onChange={(event) => setText(event.target.value)} placeholder="Ask a question" aria-label="Ask SignBridge" dir="auto" /><button className="button button-primary" type="submit">Ask</button></form>
+    <form className="helper-form" onSubmit={ask}><input value={text} onChange={(event) => setText(event.target.value)} placeholder="Ask a question" aria-label="Ask SignMate" dir="auto" /><button className="button button-primary" type="submit">Ask</button></form>
   </div>;
 }

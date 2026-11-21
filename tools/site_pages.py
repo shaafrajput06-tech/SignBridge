@@ -20,7 +20,7 @@ OUT = ROOT / "shared_data" / "site_pages.json"
 # Ledger entries the shipped website uses, and how (descriptions only; licences come from the ledger).
 SHIPPED = {
     "psl-signspeak-words": "Trains the PSL recogniser (hand landmarks of its words).",
-    "signbridge-psl-model-v3": "The PSL recogniser itself (weights trained by SignBridge on SignSpeak).",
+    "signbridge-psl-model-v3": "The PSL recogniser itself (weights trained by SignMate on SignSpeak).",
     "psl-slt-dictionary": "PSL dictionary videos (\"how it is signed\", dictionary page) and the independent-signer check.",
     "asl-islr-1st-place-tflite": "The ASL mode recogniser (250 ASL words).",
     "asl-gislr-competition-data": "The data the ASL recogniser was trained on.",

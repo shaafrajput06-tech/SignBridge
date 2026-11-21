@@ -3,7 +3,7 @@
 Everything SignBridge needs is on GitHub, so any laptop can run and edit it. Nothing has to be copied
 from your other computer. Total time: about 20-30 minutes, most of it downloads.
 
-**Which address?** The repository is moving to `signbridge-pk/signbridge-pk.github.io`
+**Which address?** The repository is moving to `signmate-pk/signmate-pk.github.io`
 ([DOMAIN.md](DOMAIN.md)). Until you have done that move, use the old address
 `shaafrajput06-tech/SignBridge` in step 2. After the move, both work (GitHub forwards the old one).
 
@@ -29,7 +29,7 @@ In the new Command Prompt:
 
 ```
 cd %USERPROFILE%\Documents
-git clone https://github.com/signbridge-pk/signbridge-pk.github.io.git SignBridge
+git clone https://github.com/signmate-pk/signmate-pk.github.io.git SignBridge
 cd SignBridge
 git checkout v3/master
 ```

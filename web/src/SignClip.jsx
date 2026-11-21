@@ -1,5 +1,5 @@
 // "How it is signed": a real PSL signer's video from a community dictionary (SLT, CC BY 4.0), carried over
-// from Inference Baseline v1. Shown only when a licensed video exists; SignBridge never makes up how a sign
+// from Inference Baseline v1. Shown only when a licensed video exists; SignMate never makes up how a sign
 // looks (CLAUDE.md 3), and the caption says the video is not yet validated by Deaf signers.
 import React, { useEffect, useState } from "react";
 import { assetUrl } from "./paths.js";
@@ -32,7 +32,7 @@ function labelText(label) {
 export default function SignClip({ word, title, compact = false, showMissing = false }) {
   const { byWord, attribution } = useClips();
   const clip = byWord.get(word);
-  if (!clip) return showMissing ? <p className="sign-clip-missing">No licensed PSL video for “{title}” yet. SignBridge never makes up how a sign looks.</p> : null;
+  if (!clip) return showMissing ? <p className="sign-clip-missing">No licensed PSL video for “{title}” yet. SignMate never makes up how a sign looks.</p> : null;
   const different = clip.label.split(".")[0].replace(/[-_]/g, " ").toLowerCase() !== String(title).replace(/[?.!]/g, "").trim().toLowerCase();
   return <figure className={`sign-clip ${compact ? "compact" : ""}`}>
     <video src={assetUrl(clip.file)} controls loop muted playsInline preload="metadata" aria-label={`PSL video for ${title}`} />

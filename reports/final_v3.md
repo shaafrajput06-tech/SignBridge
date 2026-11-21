@@ -63,7 +63,7 @@ Budgets missed or not measured:
 | Exhibition mode and kit | done (`docs/EXHIBITION_KIT.md`) |
 | How well it works / Credits and licences / What's new pages, generated from the reports | done, with a test |
 | Offline zip on GitHub Release v3.0.0 | needs the owner's browser [ME] |
-| Move to signbridge-pk.github.io | optional, needs the owner [ME] (`docs/DOMAIN.md`) |
+| Move to signmate-pk.github.io | optional, needs the owner [ME] (`docs/DOMAIN.md`) |
 
 ## Known problems
 - No test on new signers. The one independent signer scored 35.7 % top-1.

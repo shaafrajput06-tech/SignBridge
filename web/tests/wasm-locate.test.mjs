@@ -4,7 +4,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { pointWasmAtRuntimeFolder } from "../src/wasm_locate.js";
 
-const WORKER = "https://signbridge-pk.github.io/assets/asl_worker-abc.js";
+const WORKER = "https://signmate-pk.github.io/assets/asl_worker-abc.js";
 
 function workerScope(href = WORKER) {
   return { WorkerGlobalScope: function WorkerGlobalScope() {}, location: { href } };
@@ -12,9 +12,9 @@ function workerScope(href = WORKER) {
 
 test("in a worker, every runtime file resolves inside the runtime folder", () => {
   const scope = workerScope();
-  assert.equal(pointWasmAtRuntimeFolder("https://signbridge-pk.github.io/litert/", scope), true);
-  assert.equal(scope.Module.locateFile("litert_wasm_internal.wasm"), "https://signbridge-pk.github.io/litert/litert_wasm_internal.wasm");
-  assert.equal(scope.Module.locateFile("litert_wasm_threaded_internal.wasm"), "https://signbridge-pk.github.io/litert/litert_wasm_threaded_internal.wasm");
+  assert.equal(pointWasmAtRuntimeFolder("https://signmate-pk.github.io/litert/", scope), true);
+  assert.equal(scope.Module.locateFile("litert_wasm_internal.wasm"), "https://signmate-pk.github.io/litert/litert_wasm_internal.wasm");
+  assert.equal(scope.Module.locateFile("litert_wasm_threaded_internal.wasm"), "https://signmate-pk.github.io/litert/litert_wasm_threaded_internal.wasm");
 });
 
 test("works under a sub-path and with a folder given without the final slash", () => {
@@ -24,7 +24,7 @@ test("works under a sub-path and with a folder given without the final slash", (
 });
 
 test("does nothing on the page or when Module is already set", () => {
-  const page = { location: { href: "https://signbridge-pk.github.io/" } };
+  const page = { location: { href: "https://signmate-pk.github.io/" } };
   assert.equal(pointWasmAtRuntimeFolder("litert/", page), false);
   assert.equal(page.Module, undefined);
   const existing = { locateFile: () => "keep" };

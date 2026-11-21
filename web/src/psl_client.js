@@ -8,8 +8,8 @@ import { PSL_FEATURE_VERSIONS, pslInput } from "./psl_hands.js";
 import { assetUrl } from "./paths.js";
 
 export function checkPslManifest(manifest) {
-  if (manifest?.bundle !== "signbridge-psl" || manifest.sign_language !== "PSL") throw new Error("this is not a SignBridge PSL bundle");
-  if (!PSL_FEATURE_VERSIONS.includes(manifest.feature_version)) throw new Error(`this website does not support PSL feature version ${manifest.feature_version}; update SignBridge`);
+  if (manifest?.bundle !== "signbridge-psl" || manifest.sign_language !== "PSL") throw new Error("this is not a SignMate PSL bundle");
+  if (!PSL_FEATURE_VERSIONS.includes(manifest.feature_version)) throw new Error(`this website does not support PSL feature version ${manifest.feature_version}; update SignMate`);
   const [frames, rows, values] = manifest.input?.shape ?? [];
   if (!Number.isInteger(frames) || rows !== 543 || values !== 3) throw new Error(`unexpected PSL model input ${JSON.stringify(manifest.input?.shape)}`);
   if (!/^[0-9a-f]{64}$/.test(manifest.model?.sha256 ?? "")) throw new Error("the PSL bundle has no SHA-256 for its model");
